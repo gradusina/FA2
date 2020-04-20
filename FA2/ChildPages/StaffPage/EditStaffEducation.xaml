@@ -1,0 +1,122 @@
+﻿<Page x:Class="FA2.ChildPages.StaffPage.EditStaffEducation"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:customControls="clr-namespace:FAIIControlLibrary.CustomControls;assembly=FAIIControlLibrary"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      d:DesignHeight="470" d:DesignWidth="700"
+      Height="400" Width="650"
+      Background="White"
+	Title="EditStaffEducation">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Themes\Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+
+    <Grid Name="StaffEducationOpacityGrid">
+        <Grid Name="StaffEducationViewGrid" Visibility="Visible">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <ListBox Name="StaffEducationListBox" FontSize="16" Margin="10,10,10,5" BorderBrush="LightGray">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="{Binding InstitutionName}" FontSize="14" Foreground="#FF3366CC"/>
+                            <TextBlock Grid.Row="1" FontSize="12" Text="{Binding QualificationName}"
+                                               Foreground="#3FA646"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}"
+                           BasedOn="{StaticResource LightListBoxItemStyle}">
+                        <EventSetter Event="MouseDoubleClick" Handler="StaffEducationListBox_MouseDoubleClick"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+            <Grid Grid.Row="1"
+                  Background="{DynamicResource MidBackground}">
+                <Button Name="ShowSecondStaffEducationButton" Content="Добавить новое учреждение образования"
+                        Margin="10" HorizontalAlignment="Left" Width="250"
+                        Style="{StaticResource BlueBtn}"
+                        Click="ShowSecondStaffEducationButton_Click"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Name="DeleteStaffEducationButton" Width="90" Content="Удалить" Margin="0,10,5,10"
+                            Style="{StaticResource RedBtn}"
+                            Click="DeleteStaffEducationButton_Click"/>
+                    <Button Name="EditStaffEducationButton" Width="90" Content="Изменить" Margin="0,10,5,10"
+                            Click="EditStaffEducationButton_Click"/>
+                    <Button Name="CancelStaffEducationButton" Width="90" Content="Отмена" Margin="0,10,10,10"
+                            Click="CancelStaffEducationButton_Click" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+        <Grid Name="StaffEducationRedactorGrid" Visibility="Hidden">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Тип учреждения образования" FontSize="14" HorizontalAlignment="Left" Margin="10,10,10,0"
+                       Foreground="{DynamicResource AdditTextBlackBrush}"/>
+            <ComboBox Name="StaffEducationInstitutionTypeComboBox" Grid.Row="1" Height="30" Margin="10,5"
+                      SelectedValue="{Binding InstitutionTypeID, Mode=OneWay}" />
+            <TextBlock Text="Название учреждения образования" Grid.Row="2" FontSize="14" HorizontalAlignment="Left" Margin="10,0"
+                       Foreground="{DynamicResource AdditTextBlackBrush}"/>
+            <customControls:AutoCompleteComboBox Name="InstitutionNameCompleteBox" Grid.Row="3"
+                                                 Height="30" Margin="10,5" DeleteButtonWidth="0"
+                                                 MaxDropDownHeight="500" FontSize="14"
+                                                 Text="{Binding InstitutionName, Mode=OneWay}"/>
+            <TextBlock Text="Год оканчания" Grid.Row="4" FontSize="14" HorizontalAlignment="Left" Margin="10,0"
+                       Foreground="{DynamicResource AdditTextBlackBrush}"/>
+            <ComboBox Name="YearGraduationComboBox" Grid.Row="5" Height="30" 
+                      HorizontalAlignment="Left" Width="100" Margin="10,5"
+                      SelectedValue="{Binding YearGraduation, Mode=OneWay}"/>
+            <TextBlock Text="Название специальности" Grid.Row="6" FontSize="14" HorizontalAlignment="Left" Margin="10,0"
+                       Foreground="{DynamicResource AdditTextBlackBrush}"/>
+            <TextBox Name="SpecialtyNameTextBox" Grid.Row="7" Height="30" Margin="10,5"
+                     Text="{Binding SpecialtyName, Mode=OneWay}"/>
+            <TextBlock Text="Название квалификации" Grid.Row="8" FontSize="14" HorizontalAlignment="Left" Margin="10,0"
+                       Foreground="{DynamicResource AdditTextBlackBrush}"/>
+            <TextBox Name="QualificationNameTextBox" Grid.Row="9" Height="30" Margin="10,5"
+                     Text="{Binding QualificationName, Mode=OneWay}"/>
+            <Grid Grid.Row="10" VerticalAlignment="Bottom" 
+                  Background="{DynamicResource MidBackground}">
+                <Grid HorizontalAlignment="Right">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Name="AddStaffEducationButton" Width="90" Content="OK" Margin="0,10,5,10"
+                            Style="{StaticResource BlueBtn}"
+                            Click="AddStaffEducationButton_Click"/>
+                    <Button Name="ChangeStaffEducationButton" Width="90" Content="Изменить" Margin="0,10,5,10"
+                            Style="{StaticResource GreenBtn}"
+                            Click="ChangeStaffEducationButton_Click" />
+                    <Button Name="HideSecondStaffEducationButton" Grid.Column="1" Width="90" 
+                            Content="Отмена" Margin="0,10,10,10"
+                            Click="HideSecondStaffEducationButton_Click"/>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

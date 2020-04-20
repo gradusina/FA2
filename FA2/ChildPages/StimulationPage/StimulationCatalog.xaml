@@ -1,0 +1,105 @@
+﻿<Page x:Class="FA2.ChildPages.StimulationPage.StimulationCatalog"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      d:DesignHeight="360" d:DesignWidth="780"
+      Height="400" Width="600"
+      Background="White"
+	Title="StimulationCatalog" Loaded="Page_Loaded">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Themes\Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+    
+    <Grid Margin="10">
+        <Grid Name="OpacityGrid" x:FieldModifier="private">
+            <TextBlock Name="NewStimulationTextBlock" Text="Новое поощрение/штраф" FontSize="14"
+                       HorizontalAlignment="Right" VerticalAlignment="Top" Margin="5,0" 
+                       Foreground="#FFD84A35" Visibility="Hidden" x:FieldModifier="private"/>
+            <Rectangle Name="FocusRectangle" Stroke="#FFD84A35" StrokeThickness="2" StrokeDashArray="2"
+                       Visibility="Hidden" Margin="0,20,0,0" x:FieldModifier="private"/>
+
+            <Grid Name="ViewGrid" Visibility="Visible">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <ListBox Name="StimulationsListBox" FontSize="16" BorderBrush="LightGray"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="5">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource CommonListBoxItemStyle}">
+                            <EventSetter Event="MouseDoubleClick" Handler="StimulationsListBox_MouseDoubleClick"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <TextBlock Foreground="#FF3366CC" FontSize="18" TextWrapping="Wrap" Margin="10,10,5,2"
+                                                   Text="{Binding Path=Name, Converter={StaticResource StimulationsConverter}, 
+                                                   ConverterParameter='StimulationType'}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </ListBox.GroupStyle>
+                </ListBox>
+                <Button Content="Добавить новую запись" Name="StimulationsAddButton" Margin="5" Grid.Row="1"
+                        HorizontalAlignment="Left" Click="StimulationsAddButton_Click" Width="200"
+                        Style="{StaticResource BlueBtn}"/>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Name="DeleteStimulationButton" Content="Удалить" Margin="5" Width="90" 
+                            Click="DeleteStimulationButton_Click" Style="{StaticResource RedBtn}"/>
+                    <Button Name="ChangeStimulationButton" Content="Изменить" Margin="5" Width="90" 
+                            Click="ChangeStimulationButton_Click"/>
+                    <Button Name="CloseStimulationButton" Content="Отмена" Margin="5" Width="90" 
+                            Click="CloseStimulationButton_Click"/>
+                </StackPanel>
+            </Grid>
+            
+            <Grid Name="RedactorGrid" Visibility="Hidden" Margin="0,15,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="Название" HorizontalAlignment="Left" FontSize="20" Margin="5"/>
+                <TextBox Name="StimulationNameTextBox" Grid.Row="1" Margin="5" MinLines="1" 
+                         MaxLines="3" TextWrapping="Wrap" FontSize="16"
+                         Text="{Binding StimulationName, Mode=OneWay}"
+                         VerticalScrollBarVisibility="Auto"/>
+                <TextBlock Text="Тип" Grid.Row="2" HorizontalAlignment="Left" FontSize="20" Margin="5"/>
+                <ComboBox Name="StimulationsComboBox" Grid.Row="3" Height="35" Margin="5" FontSize="16"
+                          SelectedValue="{Binding StimulationTypeID, Mode=OneWay}"/>
+                <TextBlock Text="Примечания" Grid.Row="4" HorizontalAlignment="Left" FontSize="20" Margin="5"/>
+                <TextBox Name="StimulationNoteTextBox" Grid.Row="5" AcceptsReturn="True" 
+                         VerticalContentAlignment="Top" TextWrapping="Wrap"
+                         VerticalScrollBarVisibility="Auto" Margin="5" FontSize="16" 
+                         Text="{Binding StimulationNotes, Mode=OneWay}"/>
+                <Grid Grid.Row="6" HorizontalAlignment="Right">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Name="OkStimulationButton" Content="OK" Margin="5" Width="90" 
+                            Click="OkStimulationButton_Click" Style="{StaticResource BlueBtn}"/>
+                    <Button Name="SaveStimulationButton" Grid.Column="0" Content="Сохранить" Margin="5" Width="90" 
+                            Click="SaveStimulationButton_Click" Style="{StaticResource GreenBtn}"/>
+                    <Button Name="CancelStimulationButton" Content="Отмена" Margin="5" Width="90" Grid.Column="1"
+                            Click="CancelStimulationButton_Click"/>
+                </Grid>
+            </Grid>
+            
+        </Grid>
+    </Grid>
+</Page>

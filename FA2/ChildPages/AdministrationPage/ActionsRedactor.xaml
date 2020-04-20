@@ -1,0 +1,92 @@
+﻿<Page x:Class="FA2.ChildPages.AdministrationPage.ActionsRedactor"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:customControls="clr-namespace:FAIIControlLibrary.CustomControls;assembly=FAIIControlLibrary"
+      mc:Ignorable="d" 
+      Height="450" Width="700" Background="White"
+	Title="ActionsRedactor" Loaded="Page_Loaded">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Themes\Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+    
+    <Grid Margin="10">
+        <Grid Name="OpacityGrid">
+            <Grid Name="ActionsViewGrid" Visibility="Visible">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <ListBox Name="ActionsViewListBox" DisplayMemberPath="ActionName" Margin="5,0"
+                         SelectedValuePath="ActionTypeID" FontSize="16" BorderBrush="LightGray">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource CommonListBoxItemStyle}">
+                            <EventSetter Event="MouseDoubleClick" Handler="ActionsViewListBox_MouseDoubleClick"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <TextBlock Foreground="#FF3366CC" FontSize="18"
+                                                   Text="{Binding Path=Name, Converter={StaticResource IdToModuleNameConverter}}"
+                                                   TextWrapping="Wrap" Margin="10,10,5,2"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </ListBox.GroupStyle>
+                </ListBox>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Name="ExportActionsListButton" Content="Экспорт" Margin="5" Width="90"
+                            Click="ExportActionsListButton_Click" Style="{StaticResource GreenBtn}"/>
+                    <Button Name="AddActionButton" Content="Добавить" Margin="5" Width="90"
+                            Click="AddActionButton_Click" Style="{StaticResource BlueBtn}"/>
+                    <Button Name="DeleteActionButton" Content="Удалить" Margin="5" Width="90"
+                            Click="DeleteActionButton_Click" Style="{StaticResource RedBtn}"/>
+                    <Button Name="EditActionButton" Content="Изменить" Margin="5" Width="90"
+                            Click="EditActionButton_Click"/>
+                    <Button Name="OkButton" Content="Закрыть" Margin="5" Width="90" Click="OkButton_Click"/>
+                </StackPanel>
+            </Grid>
+            <Grid Name="ActionsRedactorGrid" Grid.Row="1" Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Модуль" FontSize="16" Foreground="#FF444444" Margin="5,20,5,0"/>
+                <ComboBox Name="ModulesComboBox" Grid.Row="1" Margin="5" FontSize="16"
+                          DisplayMemberPath="ModuleName" SelectedValuePath="ModuleID"
+                          SelectedValue="{Binding ModuleID, Mode=OneWay}"/>
+                <TextBlock Text="Название действия" FontSize="16" Foreground="#FF444444" Margin="5,0" Grid.Row="2"/>
+                <customControls:WatermarkTextBox Name="ActionNameTextBox" Grid.Row="3" Margin="5" FontSize="16"
+                                                 VerticalContentAlignment="Top" TextWrapping="Wrap"
+                                                 WatermarkText="Введите название действия"
+                                                 EmphasisText="Необходимо ввести название действия"
+                                                 IsEmphasisEnabled="True"
+                                                 Text="{Binding ActionName, Mode=OneWay}"/>
+                <Grid Grid.Row="4" HorizontalAlignment="Right">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Name="AddNewActionButton" Content="Добавить новое действие" Width="180" MinWidth="0" 
+                            Margin="5" Click="AddNewActionButton_Click" Style="{StaticResource BlueBtn}"/>
+                    <Button Name="ChangeActionButton" Content="Сохранить" Margin="5" Width="90" MinWidth="0"
+                            HorizontalAlignment="Right" Click="ChangeActionButton_Click" Style="{StaticResource GreenBtn}"/>
+                    <Button Name="CancelEditActionButton" Content="Отмена" Margin="5" Width="90"
+                            Grid.Column="1" Click="CancelEditActionButton_Click"/>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

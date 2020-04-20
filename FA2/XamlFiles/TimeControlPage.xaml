@@ -1,0 +1,1744 @@
+﻿<Page x:Class="FA2.XamlFiles.TimeControlPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:customControls="clr-namespace:FAIIControlLibrary.CustomControls;assembly=FAIIControlLibrary"
+      xmlns:userControls="clr-namespace:FAIIControlLibrary.UserControls;assembly=FAIIControlLibrary"
+      xmlns:behaviors="clr-namespace:FA2.Behaviors"
+      xmlns:converters="clr-namespace:FA2.Converters"
+      MinWidth="900" MinHeight="550"
+      mc:Ignorable="d" d:DesignWidth="900"
+	Title="TimeControlPage" Loaded="Page_Loaded">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Themes\Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+    
+    <Grid Name="LayoutRoot">
+        <Grid x:Name="MainGrid" Background="White">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="230"/>
+                <ColumnDefinition/>
+
+            </Grid.ColumnDefinitions>
+            <Grid HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch" Background="Transparent">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Border BorderBrush="{DynamicResource BordersBrush}" BorderThickness="1" CornerRadius="1" HorizontalAlignment="Stretch" Height="Auto" Margin="2" VerticalAlignment="Top">
+                    <Grid Background="White" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                            <RowDefinition  Height="Auto"/>
+
+                        </Grid.RowDefinitions>
+                        <Rectangle  Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="2" Fill="#CC000000" Panel.ZIndex="3" Margin="0,0,2,0"  >
+                            <Rectangle.Effect>
+                                <BlurEffect Radius="5" />
+                            </Rectangle.Effect>
+                        </Rectangle>
+                        <Border Grid.Row="0" Background="{DynamicResource DarkBackground}" Panel.ZIndex="4">
+                            <Label Content="Дата" Foreground="{DynamicResource WhiteBackground}"  HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"></Label>
+                        </Border>
+                        <Grid Grid.Row="1" Background="{DynamicResource WhiteBackground}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Content="с" Foreground="{DynamicResource MainTextBlackBrush}" VerticalContentAlignment="Center"/>
+                            <Label Content="по" Foreground="{DynamicResource MainTextBlackBrush}" Grid.Row="1"
+                                   Grid.Column="0" VerticalContentAlignment="Center"/>
+                            <DatePicker x:Name="FromDatePicker" Style="{DynamicResource CommonDatePickerStyle}"
+                                        Grid.Row="0" Grid.Column="1"  Height="30" Margin="2" VerticalContentAlignment="Center"/>
+                            <DatePicker x:Name="ToDatePicker"  Style="{DynamicResource CommonDatePickerStyle}" Grid.Column="1" Height="30" Margin="2" Grid.Row="1"  VerticalContentAlignment="Center"/>
+
+                        </Grid>
+                        <Button x:Name="ApplyDateFilterButton" Content="Применить" Grid.Row="2" Margin="2" 
+                                Style="{StaticResource BlueBtn}" 
+                                Click="ApplyDateFilterButton_Click"/>
+                    </Grid>
+                </Border>
+
+                <!--Style="{StaticResource NoneTabItemTabControlStyle}"-->
+                <TabControl Grid.Row="1" Name="ModesFilterTabControl" Style="{StaticResource NoneTabItemTabControlStyle}" SelectedIndex="0">
+                    <TabItem Header="WorkersFilter">
+                        <Border BorderBrush="{DynamicResource BordersBrush}" BorderThickness="1" CornerRadius="1" HorizontalAlignment="Stretch" Height="Auto" Margin="2" VerticalAlignment="Stretch" Visibility="Visible">
+                            <Grid Background="White" >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition/>
+                                    <RowDefinition  Height="Auto"/>
+
+                                </Grid.RowDefinitions>
+                                <Rectangle  Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="2" Fill="#CC000000" Panel.ZIndex="3" Margin="0,0,2,0"  >
+                                    <Rectangle.Effect>
+                                        <BlurEffect Radius="5" />
+                                    </Rectangle.Effect>
+                                </Rectangle>
+                                <Border Grid.Row="0" Background="{DynamicResource DarkBackground}" Panel.ZIndex="4">
+                                    <Grid Margin="2">
+                                        <Grid Background="Transparent" Margin="0,0,0,2">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <RadioButton x:Name="ByFactoriesRadioButton" Foreground="White" Grid.ColumnSpan="2" VerticalAlignment="Top" HorizontalAlignment="Left" Content="Группа" Padding="5,0,0,0" VerticalContentAlignment="Center" Margin="0,3,0,0" Grid.Row="0" Checked="WorkersFilterRadioButton_Checked"/>
+                                            <RadioButton x:Name="ByBrigadesRadioButton" Foreground="White" Grid.ColumnSpan="2"
+                                                         Grid.Column="0" VerticalAlignment="Top" Content="Руководитель" HorizontalAlignment="Left" Padding="5,0,0,0" Margin="0,3,0,0" Grid.Row="2" Checked="WorkersFilterRadioButton_Checked"/>
+                                            <StackPanel Grid.Row="1" IsEnabled="{Binding IsChecked, ElementName=ByFactoriesRadioButton}" Margin="15,0,0,0" Grid.ColumnSpan="2"
+                                                        Grid.Column="0">
+                                                <ComboBox Height="25" x:Name="WorkersGroupsComboBox" DisplayMemberPath="WorkerGroupName" SelectedValuePath="WorkerGroupID" SelectionChanged="WorkersGroupsComboBox_SelectionChanged" VerticalAlignment="Top" Margin="2,2,15,2" MinHeight="25" />
+                                                <Label Content="Фабрика" x:Name="FactoryLabel" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top"  Foreground="White" Padding="0" Margin="2,0" />
+                                                <ComboBox Height="25" x:Name="FactoriesComboBox" DisplayMemberPath="FactoryName" SelectedValuePath="FactoryID" SelectionChanged="FactoriesComboBox_SelectionChanged" VerticalAlignment="Top" Margin="2,2,15,2"/>
+                                            </StackPanel>
+                                            <StackPanel IsEnabled="{Binding IsChecked, ElementName=ByBrigadesRadioButton}" Margin="15,0,0,10" Grid.Row="3" Grid.ColumnSpan="2"
+                                                        Grid.Column="0">
+                                                <ComboBox Height="25" x:Name="MainWorkersComboBox" SelectedValuePath="MainWorkerID" VerticalAlignment="Top" Margin="2,2,15,2" SelectionChanged="MainWorkersComboBox_SelectionChanged">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding MainWorkerID, ConverterParameter=ShortName, Converter={StaticResource IdToNameConverter}}" />
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+
+                                                </ComboBox>
+                                                <Label Content="Команда/бригада" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top"  Foreground="White" Padding="0" Margin="2,0" />
+                                                <ComboBox Height="25" x:Name="WorkersBrigadesComboBox" SelectedValuePath="MyWorkersGroupID" DisplayMemberPath="MyWorkerGroupName" VerticalAlignment="Top" Margin="2,2,15,2" SelectionChanged="WorkersBrigadesComboBox_SelectionChanged"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+
+                                <ListBox x:Name="WorkersNamesListBox" Style="{DynamicResource WorkersNameListBox}" 
+                                         SelectedValuePath="WorkerID" BorderThickness="0"  Grid.Row="1" Margin="2" 
+                                         SelectionChanged="WorkersNamesListBox_SelectionChanged" 
+                                         KeyUp="WorkersNamesListBox_KeyUp"/>
+
+                                <Grid Grid.Row="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="SearchTextBox" Margin="1" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" VerticalContentAlignment="Center" FontSize="14" Height="34" TextChanged="SearchTextBox_TextChanged">
+                                        <TextBox.Background>
+                                            <ImageBrush AlignmentX="Right" ImageSource="/Resources/SearchIcon.png" Stretch="None" Viewbox="1,0,1,1" Viewport="0,0,1,1" />
+                                        </TextBox.Background>
+                                    </TextBox>
+                                    <Button x:Name="AddToWorkerListButton"  VerticalAlignment="Center"  Content="+>" Grid.Column="1" Width="32" Height="32" Visibility="Visible" ToolTip="Добавить в список" Margin="1" Style="{DynamicResource BlueBtn}" Click="AddToWorkerListButton_Click" HorizontalAlignment="Center"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </TabItem>
+
+                    <TabItem Header="FactoryFilter" Background="Red">
+                        <Border BorderBrush="{DynamicResource BordersBrush}" Background="{DynamicResource DarkBackground}" BorderThickness="1" CornerRadius="1" HorizontalAlignment="Stretch" Height="Auto" Margin="2" VerticalAlignment="Stretch" Visibility="Visible">
+                            <Grid Background="Transparent" Margin="15,15,15,2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+
+                                <StackPanel Grid.Row="0">
+                                    <CheckBox Content="Фабрика" HorizontalAlignment="Left" Name="FactoryFilterCheckBox" VerticalAlignment="Center" Foreground="{DynamicResource WhiteBackground}" Height="20" MinWidth="2" Margin="2" Unchecked="FactoryFilterCheckBox_Unchecked" />
+                                    <ComboBox DisplayMemberPath="FactoryName" SelectedValuePath="FactoryID" IsEnabled="{Binding ElementName=FactoryFilterCheckBox, Path=IsChecked}" Height="25" MinHeight="25" Name="FactoryFilterComboBox" Margin="0,2" SelectionChanged="FactoryFilterComboBox_SelectionChanged" />
+                                    <CheckBox IsEnabled="{Binding ElementName=FactoryFilterCheckBox, Path=IsChecked}" Foreground="{DynamicResource WhiteBackground}" Height="20" Content="Участок" HorizontalAlignment="Left" Name="UnitsFilterCheckBox" VerticalAlignment="Center" MinWidth="2" Margin="2" Unchecked="UnitsFilterCheckBox_Unchecked" />
+                                    <ComboBox DisplayMemberPath="WorkUnitName" SelectedValuePath="WorkUnitID" IsEnabled="{Binding ElementName=UnitsFilterCheckBox, Path=IsChecked}" Margin="0,2" Name="UnitsFilterComboBox" Height="25" MinHeight="25" SelectionChanged="UnitsFilterComboBox_SelectionChanged" />
+                                    <CheckBox IsEnabled="{Binding ElementName=UnitsFilterCheckBox, Path=IsChecked}" Content="Подучасток" Foreground="{DynamicResource WhiteBackground}" Height="20" HorizontalAlignment="Left" Name="SectionsFilterCheckBox" VerticalAlignment="Center" MinWidth="2" Margin="2" Unchecked="SectionsFilterCheckBox_Unchecked" />
+                                    <ComboBox DisplayMemberPath="WorkSectionName" SelectedValuePath="WorkSectionID"  IsEnabled="{Binding ElementName=SectionsFilterCheckBox, Path=IsChecked}" Name="SectionsFilterComboBox"  Height="25" MinHeight="25" Margin="0,2" SelectionChanged="SectionsFilterComboBox_SelectionChanged" />
+
+                                    <CheckBox IsEnabled="{Binding ElementName=SectionsFilterCheckBox, Path=IsChecked}" Content="Станок" Foreground="{DynamicResource WhiteBackground}" Height="20" HorizontalAlignment="Left" Name="SubsectionsFilterCheckBox" VerticalAlignment="Center" MinWidth="2" Margin="2" Unchecked="SubsectionsFilterCheckBox_Unchecked" />
+
+                                    <ComboBox DisplayMemberPath="WorkSubsectionName" SelectedValuePath="WorkSubsectionID" IsEnabled="{Binding ElementName=SubsectionsFilterCheckBox, Path=IsChecked}" Margin="0,2"  Height="25" MinHeight="25" Name="SubsectionsFilterComboBox" SelectionChanged="SubsectionsFilterComboBox_SelectionChanged" />
+
+                                    <CheckBox IsEnabled="{Binding ElementName=SubsectionsFilterCheckBox, Path=IsChecked}" Content="Операция" Foreground="{DynamicResource WhiteBackground}" Height="20" HorizontalAlignment="Left" Name="OperationsFilterCheckBox" VerticalAlignment="Center" Margin="2"/>
+
+                                    <ComboBox DisplayMemberPath="WorkOperationName" SelectedValuePath="WorkOperationID" IsEnabled="{Binding ElementName=OperationsFilterCheckBox, Path=IsChecked}" Name="OperationsFilterComboBox"  Height="25" MinHeight="25" Margin="0,2"/>
+
+                                    <CheckBox Content="Смена" HorizontalAlignment="Left" Name="ShiftFilterCheckBox" VerticalAlignment="Center" Foreground="{DynamicResource WhiteBackground}" Height="20" Margin="0,4" Width="81" />
+
+                                    <Border BorderThickness="1" BorderBrush="{DynamicResource DarkBackground}" CornerRadius="1" IsEnabled="{Binding ElementName=ShiftFilterCheckBox, Path=IsChecked}" Background="{DynamicResource DarkBackground}" HorizontalAlignment="Stretch">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <RadioButton Content="1"  Width="45" Height="20" FontSize="15" Grid.Column="0" Name="FirstShiftFilterRadioButton" Margin="2" IsChecked="True" Style="{StaticResource ResourceKey=ToggleRadioButtonStyle}"/>
+
+                                            <RadioButton Content="2" Width="45" Height="20" FontSize="15" Grid.Column="1" Margin="2" Name="SecondShiftFilterRadioButton" Style="{StaticResource ResourceKey=ToggleRadioButtonStyle}"/>
+
+                                            <RadioButton Content="3" Width="45" Height="20" FontSize="15" Grid.Column="2" Margin="2" Name="ThirdShiftFilterRadioButton" Style="{StaticResource ResourceKey=ToggleRadioButtonStyle}"/>
+
+                                        </Grid>
+                                    </Border>
+
+                                </StackPanel>
+
+                                <Button Content="Подсчитать статистику" Height="26" Style="{DynamicResource GreenBtn}" Grid.Row="2" HorizontalAlignment="Stretch" 
+                                        Name="CalculateOperationsCommonStatisticsButton" VerticalAlignment="Center" Visibility="Visible" 
+                                        Click="CalculateOperationsCommonStatisticsButton_Click" Padding="2" Margin="0,0,0,2" />
+                            </Grid>
+                        </Border>
+                    </TabItem>
+
+                </TabControl>
+
+            </Grid>
+
+            <!--Style="{StaticResource NoneTabItemTabControlStyle}"-->
+
+
+            <TabControl Name="ModesWorkersStatTabControl" Style="{StaticResource NoneTabItemTabControlStyle}" Grid.Column="1" SelectedIndex="0" SelectionChanged="ModesWorkersStatTabControl_SelectionChanged">
+                <TabItem Header="Контроль рабочего времени">
+                    <Grid x:Name="ControlTimeTrackingGrid" Background="White">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border BorderBrush="{DynamicResource BordersBrush}" Width="225" CornerRadius="1" BorderThickness="1" Margin="2" Padding="0">
+                            <Grid HorizontalAlignment="Stretch" Height="Auto"  VerticalAlignment="Stretch">
+                                <Grid Background="White">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Rectangle Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="2" Fill="#CC000000" Panel.ZIndex="3" Margin="0,0,2,0"  >
+                                        <Rectangle.Effect>
+                                            <BlurEffect Radius="5" />
+                                        </Rectangle.Effect>
+                                    </Rectangle>
+                                    <Border Grid.Row="0" Background="{DynamicResource DarkBackground}" Panel.ZIndex="4">
+                                        <Label Content="Рабочие смены" Foreground="{DynamicResource WhiteBackground}"  HorizontalAlignment="Stretch" 
+                                   HorizontalContentAlignment="Left"></Label>
+                                    </Border>
+
+                                    <ScrollViewer Grid.Row="1" FlowDirection="LeftToRight" Margin="0" 
+                                                  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                        <ListBox x:Name="ShiftsListBox" BorderThickness="0,1,0,1" FlowDirection="LeftToRight" 
+                                                 SelectedValuePath="TimeSpentAtWorkID" BorderBrush="LightGray" 
+                                                 Style="{DynamicResource TimeSpentAtWorkListBoxStyle}" 
+                                                 SelectionChanged="ShiftsListBox_SelectionChanged"/>
+                                    </ScrollViewer>
+
+                                    <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource BordersBrush}" Grid.Row="2">
+                                        <Grid x:Name="TimeSpentAtWorkInfoGrid" Margin="0" Background="{DynamicResource MidBackground}">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="70"/>
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid Margin="0,5,0,0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+                                                <Label Content="№ смены" HorizontalAlignment="Left" Foreground="{DynamicResource MainTextBlackBrush}" Padding="5" 
+                                       VerticalContentAlignment="Center" Margin="0" Width="Auto"/>
+                                                <Grid Grid.Column="1" Margin="5,2,2,2">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition/>
+                                                        <ColumnDefinition/>
+                                                        <ColumnDefinition/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <RadioButton Content="1" Height="20" HorizontalAlignment="Center" Margin="0" x:Name="FirstShiftRadioButton" VerticalAlignment="Center" 
+                                                 FontSize="15" Style="{StaticResource ResourceKey=ToggleRadioButtonStyle}" Width="45" Grid.ColumnSpan="1"/>
+                                                    <RadioButton Content="2" FontSize="15" Height="20" HorizontalAlignment="Center" Margin="0" x:Name="SecondShiftRadioButton" 
+                                                 VerticalAlignment="Center" Style="{StaticResource ToggleRadioButtonStyle}" Width="45" Grid.Column="1"/>
+                                                    <RadioButton Content="3" FontSize="15" Height="20" HorizontalAlignment="Center" Margin="0" x:Name="ThirdShiftRadioButton" 
+                                                 VerticalAlignment="Center" Style="{StaticResource ToggleRadioButtonStyle}" Width="45" Grid.Column="2"/>
+                                                </Grid>
+                                            </Grid>
+                                            <Label Content="Ответственный" HorizontalAlignment="Left" Foreground="{DynamicResource MainTextBlackBrush}" 
+                                   Padding="5" VerticalContentAlignment="Center" Margin="0" Width="Auto" Grid.Row="1"/>
+
+
+
+                                            <Button Content="Сохранить смену" Style="{DynamicResource BlueBtn}" Height="26" HorizontalAlignment="Stretch" 
+                                    x:Name="SaveTimeSpentAtWorkButton" VerticalAlignment="Center" Grid.Row="6" Padding="0" Margin="5,2,5,5" Click="SaveTimeSpentAtWorkButton_Click" />
+
+                                            <Label Content="Фамилия Имя Отчество" Margin="5,0,0,0" FontSize="14" HorizontalAlignment="Left" x:Name="TimeSpentAtWorkWorkerNameLabel" 
+                                   Padding="5" VerticalAlignment="Center" VerticalContentAlignment="Center" Grid.Row="2" ToolTip="Ответственный работник" 
+                                   Foreground="{DynamicResource MainTextBlackBrush}"/>
+
+                                            <Grid  Grid.Row="3">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+                                                <Label Content="Визуальный КТУ" Margin="0" HorizontalAlignment="Left" Foreground="{DynamicResource MainTextBlackBrush}" 
+                                       Padding="5" VerticalContentAlignment="Center" Width="Auto"/>
+                                                <customControls:NumericControl Margin="2" HorizontalAlignment="Left" x:Name="VCLPUpDownControl" VerticalAlignment="Center" 
+                                                               Height="25" Width="68" Maximum="10" FormatString="N2" FontSize="14" Grid.Column="1" 
+                                                               HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Padding="0" />
+                                            </Grid>
+
+
+                                            <Label Content="Примечание" Margin="0,0,0,0" HorizontalAlignment="Left" Foreground="{DynamicResource MainTextBlackBrush}" x:Name="label2_Copy2" Padding="5" VerticalContentAlignment="Center" Width="Auto" Grid.Row="4"/>
+
+                                            <TextBox x:Name="TimeSpentAtWorkNotesTextBox" Grid.Row="5" TextWrapping="Wrap" Text="" BorderThickness="1" BorderBrush="Gray" VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto" FontSize="12" Margin="5,2" Grid.RowSpan="1"/>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+
+
+                            </Grid>
+
+                        </Border>
+                        <Border  x:Name="Bor1" CornerRadius="1" BorderThickness="1" Grid.Column="1"
+                                 HorizontalAlignment="Stretch" Margin="2" VerticalAlignment="Stretch"
+                                 BorderBrush="{DynamicResource BordersBrush}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition />
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Rectangle Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" 
+                                           VerticalAlignment="Bottom" Height="2" Fill="#CC000000" 
+                                           Panel.ZIndex="3" Margin="0,0,2,0">
+                                    <Rectangle.Effect>
+                                        <BlurEffect Radius="5" />
+                                    </Rectangle.Effect>
+                                </Rectangle>
+                                <Border Grid.Row="0" Panel.ZIndex="4"
+                                        Background="{DynamicResource DarkBackground}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="Фотография дня" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left"
+                                               Foreground="{DynamicResource WhiteBackground}"/>
+
+                                        <Label x:Name="TotalTimeLabel"
+                                               Padding="5" Grid.Column="1" Margin="0" 
+                                               VerticalContentAlignment="Center" HorizontalAlignment="Right"
+                                               Foreground="{DynamicResource WhiteBackground}">
+                                            <Label.Content>
+                                                <TextBlock>
+                                                    <TextBlock.Text>
+                                                        <MultiBinding StringFormat="Общее время: {0:00}:{1:00}">
+                                                            <Binding Path="Hours"/>
+                                                            <Binding Path="Minutes"/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </Label.Content>
+                                        </Label>
+                                    </Grid>
+                                </Border>
+                                
+                                <TabControl Grid.Row="1">
+                                    <TabItem Name="OperationsTabItem">
+                                        <TabItem.Header>
+                                            <TextBlock>
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="Операции: {0:00}:{1:00}">
+                                                        <Binding Path="Hours"/>
+                                                        <Binding Path="Minutes"/>
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                        </TabItem.Header>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid x:Name="TimeTrackingFiltersGrid" Grid.Row="0" 
+                                                  Background="{DynamicResource MidBackground}">
+                                                <WrapPanel>
+                                                    <ComboBox x:Name="FactoryTimetrcFilComboBox" Margin="2" Width="140"
+                                                              SelectedValuePath="FactoryID"
+                                                              behaviors:WatermarkComboBoxBehavior.EnableWatermark="True"
+										                      behaviors:WatermarkComboBoxBehavior.Label="Фабрика..."
+										                      behaviors:WatermarkComboBoxBehavior.LabelStyle="{StaticResource WatermarkLabelStyle}" 
+                                                              SelectionChanged="FilterTimeTrackingComboBox_SelectionChanged">
+                                                        <ComboBox.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <TextBlock Text="{Binding FactoryID, Converter={StaticResource IdToFactoryConverter}}"/>
+                                                            </DataTemplate>
+                                                        </ComboBox.ItemTemplate>
+                                                    </ComboBox>
+                                                    <ComboBox x:Name="UnitTimetrcFilComboBox" Margin="2" Width="140"
+                                                              SelectedValuePath="WorkUnitID"
+                                                              behaviors:WatermarkComboBoxBehavior.EnableWatermark="True"
+										                      behaviors:WatermarkComboBoxBehavior.Label="Участок..."
+										                      behaviors:WatermarkComboBoxBehavior.LabelStyle="{StaticResource WatermarkLabelStyle}" 
+                                                              SelectionChanged="FilterTimeTrackingComboBox_SelectionChanged">
+                                                        <ComboBox.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <TextBlock Text="{Binding WorkUnitID, Converter={StaticResource IdToWorkUnitConverter}}"/>
+                                                            </DataTemplate>
+                                                        </ComboBox.ItemTemplate>
+                                                    </ComboBox>
+                                                    <ComboBox x:Name="SectionTimetrcFilComboBox" Margin="2" Width="140"
+                                                              SelectedValuePath="WorkSectionID"
+                                                              behaviors:WatermarkComboBoxBehavior.EnableWatermark="True"
+										                      behaviors:WatermarkComboBoxBehavior.Label="Подучасток..."
+										                      behaviors:WatermarkComboBoxBehavior.LabelStyle="{StaticResource WatermarkLabelStyle}"
+                                                              SelectionChanged="FilterTimeTrackingComboBox_SelectionChanged">
+                                                        <ComboBox.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <TextBlock Text="{Binding WorkSectionID, Converter={StaticResource IdToWorkSectionConverter}}"/>
+                                                            </DataTemplate>
+                                                        </ComboBox.ItemTemplate>
+                                                    </ComboBox>
+                                                    <ComboBox x:Name="SubSectionTimetrcFilComboBox" Margin="2" Width="140"
+                                                              SelectedValuePath="WorkSubsectionID"
+                                                              behaviors:WatermarkComboBoxBehavior.EnableWatermark="True"
+										                      behaviors:WatermarkComboBoxBehavior.Label="Станок..."
+										                      behaviors:WatermarkComboBoxBehavior.LabelStyle="{StaticResource WatermarkLabelStyle}"
+                                                              SelectionChanged="FilterTimeTrackingComboBox_SelectionChanged">
+                                                        <ComboBox.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <TextBlock Text="{Binding WorkSubsectionID, Converter={StaticResource IdToWorkSubSectionConverter}}"/>
+                                                            </DataTemplate>
+                                                        </ComboBox.ItemTemplate>
+                                                    </ComboBox>
+                                                    <ComboBox x:Name="OperationTimetrcFilComboBox" Margin="2" Width="140"
+                                                              SelectedValuePath="WorkOperationID"
+                                                              behaviors:WatermarkComboBoxBehavior.EnableWatermark="True"
+										                      behaviors:WatermarkComboBoxBehavior.Label="Операция..."
+										                      behaviors:WatermarkComboBoxBehavior.LabelStyle="{StaticResource WatermarkLabelStyle}"
+                                                              SelectionChanged="FilterTimeTrackingComboBox_SelectionChanged">
+                                                        <ComboBox.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <TextBlock Text="{Binding WorkOperationID, Converter={StaticResource IdToWorkOperationConverter}}"/>
+                                                            </DataTemplate>
+                                                        </ComboBox.ItemTemplate>
+                                                    </ComboBox>
+                                                    <Button x:Name="ResetFilterButton" Width="140" Content="Сброс" Margin="2" 
+                                                            Style="{DynamicResource RedBtn}"
+                                                            Click="ResetFilterButton_Click"/>
+                                                </WrapPanel>
+                                            </Grid>
+                                            <ScrollViewer FlowDirection="LeftToRight" Margin="0" Grid.Row="1" 
+                                                          VerticalScrollBarVisibility="Auto" 
+                                                          HorizontalScrollBarVisibility="Disabled">
+                                                <ListBox Name="WorkersTimeTrackingListBox" FlowDirection="LeftToRight" 
+                                                         BorderThickness="1,1,0,1" 
+                                                         Style="{StaticResource WorkersTimeTrackingListBoxStyle}" 
+                                                         SelectionChanged="WorkersTimeTrackingListBox_SelectionChanged"/>
+                                            </ScrollViewer>
+                                            <Border Grid.Row="2" BorderThickness="0,1,0,0" Height="Auto"
+                                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                                    Background="{DynamicResource MidBackground}" 
+                                                    BorderBrush="{DynamicResource BordersBrush}">
+                                                <Grid>
+                                                    <ScrollViewer HorizontalScrollBarVisibility="Auto" Margin="5,5,5,0"
+                                                                  VerticalScrollBarVisibility="Disabled">
+                                                        <Grid x:Name="TimeTrackingInfoGrid" Background="Transparent" >
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="160"/>
+                                                                <ColumnDefinition Width="160"/>
+                                                                <ColumnDefinition Width="160"/>
+                                                                <ColumnDefinition Width="170"/>
+                                                                <ColumnDefinition Width="*" MinWidth="200"/>
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <Border BorderThickness="1" BorderBrush="{DynamicResource BordersBrush}" CornerRadius="1" Margin="2" Grid.RowSpan="2">
+                                                                <Grid Background="{DynamicResource WhiteBackground}">
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                    </Grid.RowDefinitions>
+
+                                                                    <Border Background="{DynamicResource DarkBackground}">
+                                                                        <Label Content="1 подтверждение" FontSize="12" HorizontalAlignment="Left" Foreground="{DynamicResource WhiteBackground}" 
+                                                                               Padding="5" VerticalContentAlignment="Center" Grid.Row="0" Margin="0"/>
+                                                                    </Border>
+
+                                                                    <Button x:Name="FSVButton" HorizontalAlignment="Center" Margin="5" VerticalAlignment="Center"
+                                    	                                    Style="{StaticResource VerificationButtonStyle}"
+                                    	                                    Content="{Binding ConverterParameter=FSVContent, Converter={StaticResource VerificationButtonConverter}}" 
+                                                                            IsEnabled="{Binding ConverterParameter=FSVEnable, Converter={StaticResource VerificationButtonConverter}}"
+                                    	                                    Tag="{Binding ConverterParameter=FSVTag, Converter={StaticResource VerificationButtonConverter}}" Grid.Row="1" Click="FSVButton_Click"/>
+                                                                </Grid>
+                                                            </Border>
+
+                                                            <Border BorderThickness="1" BorderBrush="{DynamicResource BordersBrush}" CornerRadius="1" Margin="2" Grid.Column="1"  Grid.RowSpan="2">
+                                                                <Grid  Background="{DynamicResource WhiteBackground}">
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                    </Grid.RowDefinitions>
+
+                                                                    <Border Background="{DynamicResource DarkBackground}">
+                                                                        <Label Content="2 подтверждение" Height="Auto" HorizontalAlignment="Left" Foreground="{DynamicResource WhiteBackground}" 
+                                                                               Padding="5" VerticalContentAlignment="Bottom" Width="Auto" Margin="0" />
+                                                                    </Border>
+                                                                    <Button x:Name="SSVButton" HorizontalAlignment="Center" Margin="5" Grid.Row="1" VerticalAlignment="Center"
+                                    	                                    Style="{StaticResource VerificationButtonStyle}"
+                                    	                                    Content="{Binding ConverterParameter=SSVContent, Converter={StaticResource VerificationButtonConverter}}"
+                                    	                                    IsEnabled="{Binding ConverterParameter=SSVEnable, Converter={StaticResource VerificationButtonConverter}}"
+                                    	                                    Tag="{Binding ConverterParameter=SSVTag, Converter={StaticResource VerificationButtonConverter}}" Grid.Column="1" Click="SSVButton_Click"/>
+                                                                </Grid>
+                                                            </Border>
+
+                                                            <Border BorderThickness="1" BorderBrush="{DynamicResource BordersBrush}" CornerRadius="1" Margin="2" Grid.Column="2" Grid.RowSpan="2">
+                                                                <Grid  Background="{DynamicResource WhiteBackground}">
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                    </Grid.RowDefinitions>
+
+                                                                    <Border Background="{DynamicResource DarkBackground}">
+                                                                        <Label Content="Табельное" Height="Auto" HorizontalAlignment="Left" Foreground="{DynamicResource WhiteBackground}" Padding="5" 
+                                                                               VerticalContentAlignment="Bottom"  Margin="0"/>
+                                                                    </Border>
+                                                                    <Button x:Name="TSVButton" HorizontalAlignment="Center" Margin="5" VerticalAlignment="Center"
+                                    	                                    Style="{StaticResource VerificationButtonStyle}"
+                                    	                                    Content="{Binding ConverterParameter=TSVContent, Converter={StaticResource VerificationButtonConverter}}"
+                                    	                                    IsEnabled="{Binding ConverterParameter=TSVEnable, Converter={StaticResource VerificationButtonConverter}}"
+                                    	                                    Tag="{Binding ConverterParameter=TSVTag, Converter={StaticResource VerificationButtonConverter}}" Grid.Column="2" Grid.Row="1" Click="TSVButton_Click"/>
+                                                                </Grid>
+                                                            </Border>
+
+                                                            <Border BorderThickness="1" BorderBrush="{DynamicResource BordersBrush}" CornerRadius="1" Margin="2" Grid.Column="3" Grid.Row="0">
+                                                                <Grid Margin="0" Background="{DynamicResource WhiteBackground}">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition/>
+                                                                        <ColumnDefinition Width="Auto"/>
+                                                                        <ColumnDefinition Width="Auto"/>
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="*"/>
+                                                                    </Grid.RowDefinitions>
+
+                                                                    <Border Background="{DynamicResource DarkBackground}" Grid.ColumnSpan="3" >
+                                                                        <Label Content="Выполненный объем" Height="Auto" HorizontalAlignment="Left" Foreground="{DynamicResource WhiteBackground}" 
+                                           Padding="5" VerticalContentAlignment="Bottom" Width="Auto" Margin="0" />
+                                                                    </Border>
+
+                                                                    <customControls:NumericControl x:Name="WorkScopeUpDown" FormatString="N2" Foreground="{DynamicResource MainTextBlackBrush}" FontSize="14" Margin="5,2,2,2" 
+                                                                   HorizontalAlignment="Stretch" Padding="0" VerticalContentAlignment="Center" VerticalAlignment="Center" Height="27"
+                                                                   BorderThickness="1" BorderBrush="{DynamicResource BordersBrush}" Grid.Row="1" Grid.Column="0" ValueChanged="WorkScopeUpDown_ValueChanged"/>
+
+                                                                    <Label Foreground="{DynamicResource MainTextBlackBrush}" Content="{Binding WorkOperationID, ConverterParameter=MeasureUnitName, Converter={StaticResource 
+                                    MeasureUnitNameFromOperationIdConverter}}" Margin="2" HorizontalAlignment="Left" Padding="0" 
+                                       VerticalContentAlignment="Center" VerticalAlignment="Center" Height="27" Width="Auto" Grid.Column="1" Grid.Row="1"/>
+
+
+                                                                    <Label Foreground="{DynamicResource RedForeground}" Content="{Binding VCLP, Mode=TwoWay}" ContentStringFormat="КТУ: {0}" Margin="2,2,5,2" 
+                                       HorizontalAlignment="Left" Padding="5" VerticalContentAlignment="Center" Width="Auto"  Grid.Column="2" Grid.Row="1"/>
+                                                                </Grid>
+                                                            </Border>
+
+
+                                                            <Border BorderThickness="1" BorderBrush="{DynamicResource BordersBrush}" CornerRadius="1" Margin="2" Grid.RowSpan="2" Grid.Column="4">
+                                                                <userControls:PopUpTextBox MinWidth="0" x:Name="WorkerNotesTextBox" Foreground="{DynamicResource MainTextBlackBrush}" BorderBrush="LightGray" VerticalContentAlignment="Top" VerticalAlignment="Stretch" 
+                                                               Margin="2" IsReadOnly="True" PopupMinimumWidth="150" WaterMarkSize="12" 
+                                                               WaterMark="Примечание к операции" />
+                                                            </Border>
+                                                        </Grid>
+
+                                                    </ScrollViewer>
+                                                </Grid>
+                                            </Border>
+                                        </Grid>
+                                    </TabItem>
+                                    <TabItem Name="TasksTabItem">
+                                        <TabItem.Header>
+                                            <TextBlock>
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="Задачи: {0:00}:{1:00}">
+                                                        <Binding Path="Hours"/>
+                                                        <Binding Path="Minutes"/>
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                        </TabItem.Header>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <ListBox Name="WorkerTaskTimeTrackingListBox"
+                                                     BorderThickness="0">
+                                                <ListBox.ItemContainerStyle>
+                                                    <Style TargetType="{x:Type ListBoxItem}"
+                                                           BasedOn="{StaticResource LightListBoxItemStyle}">
+                                                        <Setter Property="MinHeight" Value="30"/>
+                                                    </Style>
+                                                </ListBox.ItemContainerStyle>
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                                <ColumnDefinition MinWidth="116" Width="Auto"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            
+                                                            <Border BorderThickness="0,0,1,1" BorderBrush="LightGray"
+                                                                    SnapsToDevicePixels="True">
+                                                                <Grid Margin="2,0">
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="*"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                    </Grid.RowDefinitions>
+                                                                    
+                                                                    <!--TaskName-->
+                                                                    <TextBlock TextWrapping="Wrap" FontSize="14" Margin="2" Grid.Row="0"
+                                                                               Foreground="{DynamicResource BlueForeground}" 
+                                                                               Text="{Binding TaskID, Converter={StaticResource TaskConverter}, ConverterParameter='TaskName'}"
+                                                                               ToolTip="{Binding Path=Text, RelativeSource={RelativeSource Mode=Self}}"/>
+
+                                                                    <!--TaskDescription-->
+                                                                    <TextBlock TextWrapping="Wrap" FontSize="12" Grid.Row="1" Margin="2,0"
+                                                                               Foreground="{DynamicResource MainTextBlackBrush}"
+                                                                               Text="{Binding TaskID, Converter={StaticResource TaskConverter}, ConverterParameter='TaskDescription'}" 
+                                                                               ToolTip="{Binding Path=Text, RelativeSource={RelativeSource Mode=Self}}"/>
+                                                                    
+                                                                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left">
+                                                                        <TextBlock Text="Статус: " FontSize="10" Margin="2,2,0,2"
+                                                                                   Foreground="{DynamicResource AdditTextBlackBrush}"/>
+                                                                        <!--PerformerStatus-->
+                                                                        <TextBlock FontSize="10" Margin="2"
+                                                                                   Text="{Binding PerformerID, Converter={StaticResource TaskConverter}, ConverterParameter='PerformerStatusNameByPerformerID'}"
+                                                                                   Foreground="{Binding PerformerID, Converter={StaticResource TaskConverter}, ConverterParameter='PerformerStatusColorByPerformerID'}"/>
+                                                                    </StackPanel>
+                                                                </Grid>
+                                                            </Border>
+                                                            
+                                                            <Border Grid.Column="1" BorderThickness="0,0,1,1" 
+                                                                    BorderBrush="LightGray" SnapsToDevicePixels="True">
+                                                                <Grid Width="80" Margin="2,0">
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                    </Grid.RowDefinitions>
+                                                                    <TextBlock Text="время начала" FontSize="9" 
+                                                                               HorizontalAlignment="Left" 
+                                                                               Foreground="{DynamicResource AdditTextBlackBrush}"/>
+                                                                    <TextBlock Text="время окончания" FontSize="9" 
+                                                                               HorizontalAlignment="Left" Grid.Row="2"
+                                                                               Foreground="{DynamicResource AdditTextBlackBrush}"/>
+                                                                    <TextBlock HorizontalAlignment="Left" FontSize="14" 
+                                                                               Margin="4,0,0,0" Grid.Row="1" 
+                                                                               Text="{Binding TimeStart, StringFormat={}{0:hh\\:mm}}"/>
+                                                                    <TextBlock HorizontalAlignment="Left" FontSize="14" 
+                                                                               Margin="4,0,0,0" Grid.Row="3"
+                                                                               Text="{Binding TimeEnd, StringFormat={}{0:hh\\:mm}}"/>
+                                                                </Grid>
+                                                            </Border>
+
+                                                            <Border Grid.Column="2" BorderThickness="0,0,1,1"
+                                                                    BorderBrush="LightGray" SnapsToDevicePixels="True">
+                                                                <Grid Margin="5,0,5,0">
+                                                                    <Grid.RowDefinitions>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                        <RowDefinition Height="Auto"/>
+                                                                    </Grid.RowDefinitions>
+                                                                    <TextBlock Text="Подтверждение постановщика задачи" FontSize="9" 
+                                                                               HorizontalAlignment="Left" Width="100" TextWrapping="Wrap"
+                                                                               Foreground="{DynamicResource MainTextBlackBrush}"/>
+                                                                    <TextBlock Grid.Row="1" FontSize="12" 
+                                                                               HorizontalAlignment="Left">
+                                                                        <TextBlock.Text>
+                                                                            <Binding Path="VerificationWorkerID"
+                                                                                     Converter="{StaticResource IdToNameConverter}"
+                                                                                     ConverterParameter="ShortName"
+                                                                                     FallbackValue="Не подтверждено"
+                                                                                     TargetNullValue="Не подтверждено"/>
+                                                                        </TextBlock.Text>
+                                                                        <TextBlock.Foreground>
+                                                                            <Binding Path="IsVerificated">
+                                                                                <Binding.Converter>
+                                                                                    <converters:BooleanToBrushConverter True="#0fa861"
+                                                                                                                        False="#B9E82121"/>
+                                                                                </Binding.Converter>
+                                                                            </Binding>
+                                                                        </TextBlock.Foreground>
+                                                                    </TextBlock>
+                                                                </Grid>
+                                                            </Border>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                            <Border Grid.Row="1" BorderThickness="0,1,0,0"
+                                                    Background="{DynamicResource MidBackground}" 
+                                                    BorderBrush="{DynamicResource BordersBrush}">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid Width="160" HorizontalAlignment="Left" Margin="5,5,5,0">
+                                                        <Border BorderThickness="1" CornerRadius="1" Margin="2"
+                                                                BorderBrush="{DynamicResource BordersBrush}">
+                                                            <Grid Background="{DynamicResource WhiteBackground}">
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="Auto"/>
+                                                                    <RowDefinition Height="Auto"/>
+                                                                </Grid.RowDefinitions>
+
+                                                                <Border Background="{DynamicResource DarkBackground}">
+                                                                    <TextBlock Text="Подтверждение постановщика задачи" FontSize="12" 
+                                                                               HorizontalAlignment="Left" Margin="5,2" TextWrapping="Wrap"
+                                                                               Foreground="{DynamicResource WhiteBackground}"/>
+                                                                </Border>
+
+                                                                <Button x:Name="TaskTimeTrackingVerificationButton" Grid.Row="1" Margin="5" 
+                                                                        VerticalAlignment="Center" HorizontalAlignment="Center"
+                                                                        DataContext="{Binding ElementName=WorkerTaskTimeTrackingListBox, Path=SelectedItem}"
+                                                                        Click="OnTaskTimeTrackingVerificationButtonClick">
+                                                                    <Button.Content>
+                                                                        <StackPanel>
+                                                                            <TextBlock HorizontalAlignment="Center">
+                                                                                <TextBlock.Text>
+                                                                                    <Binding Path="VerificationWorkerID"
+                                                                                             Converter="{StaticResource IdToNameConverter}"
+                                                                                             ConverterParameter="ShortName"
+                                                                                             FallbackValue="Подтвердить"
+                                                                                             TargetNullValue="Подтвердить"/>
+                                                                                </TextBlock.Text>
+                                                                            </TextBlock>
+                                                                            <TextBlock HorizontalAlignment="Center">
+                                                                                <TextBlock.Text>
+                                                                                    <Binding Path="VerificationDate"
+                                                                                             StringFormat="{}{0:dd.MM.yy HH:mm}"/>
+                                                                                </TextBlock.Text>
+                                                                                <TextBlock.Visibility>
+                                                                                    <Binding Path="IsVerificated"
+                                                                                             FallbackValue="Collapsed"
+                                                                                             TargetNullValue="Collapsed">
+                                                                                        <Binding.Converter>
+                                                                                            <converters:BooleanToVisibilityConverter True="Visible"
+                                                                                                                                 False="Collapsed"/>
+                                                                                        </Binding.Converter>
+                                                                                    </Binding>
+                                                                                </TextBlock.Visibility>
+                                                                            </TextBlock>
+                                                                        </StackPanel>
+                                                                    </Button.Content>
+                                                                    <Button.Style>
+                                                                        <Style TargetType="{x:Type Button}"
+                                                                               BasedOn="{StaticResource VerificationButtonStyle}">
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding IsVerificated, FallbackValue=True, TargetNullValue=True}" Value="True">
+                                                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </Button.Style>
+                                                                </Button>
+                                                            </Grid>
+                                                        </Border>
+                                                    </Grid>
+
+                                                    <Grid Grid.Column="1"
+                                                          DataContext="{Binding ElementName=WorkerTaskTimeTrackingListBox, Path=SelectedItem}">
+                                                        <Border MinWidth="250" BorderThickness="1" CornerRadius="1" 
+                                                                Margin="2,7,0,2" HorizontalAlignment="Left"
+                                                                BorderBrush="{DynamicResource BordersBrush}"
+                                                                DataContext="{Binding TaskID, Converter={StaticResource TaskConverter}, ConverterParameter='TaskRowByTaskID'}">
+                                                            <Grid Background="{DynamicResource WhiteBackground}">
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="Auto"/>
+                                                                    <RowDefinition />
+                                                                </Grid.RowDefinitions>
+                                                                <Grid Background="{DynamicResource DarkBackground}">
+                                                                    <TextBlock Text="Подробная информация о задаче" FontSize="12" 
+                                                                               HorizontalAlignment="Left" Margin="5,2" TextWrapping="Wrap"
+                                                                               Foreground="{DynamicResource WhiteBackground}"/>
+                                                                </Grid>
+                                                                <Grid Grid.Row="1" VerticalAlignment="Center">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="Auto"/>
+                                                                        <ColumnDefinition />
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <StackPanel HorizontalAlignment="Left">
+                                                                        <TextBlock FontSize="12" Margin="5,1"
+                                                                                   Foreground="{DynamicResource MainTextBlackBrush}"
+                                                                                   Text="{Binding MainWorkerID, Converter={StaticResource IdToNameConverter}, 
+                                                                                   ConverterParameter=ShortName, StringFormat='Постановщик: {0}', 
+                                                                                   TargetNullValue='Постановщик:', FallbackValue='Постановщик: ---'}"/>
+                                                                        <TextBlock FontSize="12" Margin="5,1"
+                                                                                   Foreground="{DynamicResource MainTextBlackBrush}"
+                                                                                   Text="{Binding CreationDate, StringFormat='Дата создания: {0:dd.MM.yyyy}', 
+                                                                                   FallbackValue='Дата создания: ---', TargetNullValue='Дата создания: ---'}"/>
+                                                                        <TextBlock FontSize="12" Margin="5,1"
+                                                                                   Foreground="{DynamicResource MainTextBlackBrush}"
+                                                                                   Text="{Binding CompletionDate, StringFormat='Дата завершения: {0:dd.MM.yyyy}', 
+                                                                                   FallbackValue='Дата завершения: ---', TargetNullValue='Дата завершения: ---'}"/>
+                                                                        <TextBlock FontSize="12" Margin="5,1"
+                                                                                   Text="{Binding DeadLine, StringFormat='Крайний срок: {0:dd.MM.yyyy}',
+                                                                                   FallbackValue='Крайний срок: ---', TargetNullValue='Крайний срок не задан'}">
+                                                                            <TextBlock.Foreground>
+                                                                                <Binding Path="IsDeadLine" FallbackValue="#DD000000">
+                                                                                    <Binding.Converter>
+                                                                                        <converters:BooleanToBrushConverter True="#FFD84A35" False="#DD000000"/>
+                                                                                    </Binding.Converter>
+                                                                                </Binding>
+                                                                            </TextBlock.Foreground>
+                                                                        </TextBlock>
+                                                                    </StackPanel>
+                                                                    <StackPanel Grid.Column="1" HorizontalAlignment="Right"
+                                                                                VerticalAlignment="Top" Margin="10,0,0,0">
+                                                                        <TextBlock Text="Общий статус задачи" Margin="5,1"
+                                                                                   Foreground="{DynamicResource AdditTextBlackBrush}"/>
+                                                                        <TextBlock FontSize="12" Margin="5,1" HorizontalAlignment="Right"
+                                                                                   Text="{Binding TaskStatusID, Converter={StaticResource TaskConverter}, ConverterParameter='TaskStatusName'}"
+                                                                                   Foreground="{Binding TaskStatusID, Converter={StaticResource TaskConverter}, ConverterParameter='TaskStatusColor'}"/>
+                                                                    </StackPanel>
+                                                                </Grid>
+                                                            </Grid>
+                                                        </Border>
+                                                    </Grid>
+                                                </Grid>
+                                            </Border>
+                                        </Grid>
+                                    </TabItem>
+                                </TabControl>
+
+                                <Grid Grid.Row="2"
+                                      Background="{DynamicResource LightBackground}">
+                                    <Button x:Name="SaveTimeTrackingButton" Content="Сохранить" 
+                                            Width="150" HorizontalAlignment="Right" Margin="5,5,45,5" 
+                                            VerticalAlignment="Center" Padding="0" Height="26" 
+                                            Style="{DynamicResource BlueBtn}"
+                                            Click="SaveTimeTrackingButton_Click"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                    </Grid>
+                </TabItem>
+
+                <TabItem Header="Статистика работника">
+                    <Grid Name="WorkerStatisticsTimeTrackingGrid" Panel.ZIndex="0" Background="White" Opacity="15" d:IsHidden="False">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <Grid Background="{DynamicResource MidBackground}" Margin="2,0,2,0">
+                            <WrapPanel>
+                                <ComboBox x:Name="FactoryStatFilComboBox" Margin="2" Width="140"
+                                          SelectedValuePath="FactoryID"
+                                          behaviors:WatermarkComboBoxBehavior.EnableWatermark="True"
+										  behaviors:WatermarkComboBoxBehavior.Label="Фабрика..."
+										  behaviors:WatermarkComboBoxBehavior.LabelStyle="{StaticResource WatermarkLabelStyle}" 
+                                          SelectionChanged="FilterStatTimeTrackingComboBox_SelectionChanged">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding FactoryID, Converter={StaticResource IdToFactoryConverter}}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+
+                                </ComboBox>
+                                <ComboBox x:Name="UnitStatFilComboBox" Margin="2" Width="140"
+                                          SelectedValuePath="WorkUnitID"
+                                          behaviors:WatermarkComboBoxBehavior.EnableWatermark="True"
+										  behaviors:WatermarkComboBoxBehavior.Label="Участок..."
+										  behaviors:WatermarkComboBoxBehavior.LabelStyle="{StaticResource WatermarkLabelStyle}" 
+                                          SelectionChanged="FilterStatTimeTrackingComboBox_SelectionChanged">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding WorkUnitID, Converter={StaticResource IdToWorkUnitConverter}}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+
+                                </ComboBox>
+                                <ComboBox x:Name="SectionStatFilComboBox" Margin="2" Width="140"
+                                          SelectedValuePath="WorkSectionID"
+                                          behaviors:WatermarkComboBoxBehavior.EnableWatermark="True"
+										  behaviors:WatermarkComboBoxBehavior.Label="Подучасток..."
+										  behaviors:WatermarkComboBoxBehavior.LabelStyle="{StaticResource WatermarkLabelStyle}"
+                                          SelectionChanged="FilterStatTimeTrackingComboBox_SelectionChanged">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding WorkSectionID, Converter={StaticResource IdToWorkSectionConverter}}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+
+                                </ComboBox>
+                                <ComboBox x:Name="SubSectionStatFilComboBox" Margin="2" Width="140"
+                                          SelectedValuePath="WorkSubsectionID"
+                                          behaviors:WatermarkComboBoxBehavior.EnableWatermark="True"
+										  behaviors:WatermarkComboBoxBehavior.Label="Станок..."
+										  behaviors:WatermarkComboBoxBehavior.LabelStyle="{StaticResource WatermarkLabelStyle}"
+                                          SelectionChanged="FilterStatTimeTrackingComboBox_SelectionChanged">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding WorkSubsectionID, Converter={StaticResource IdToWorkSubSectionConverter}}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+
+                                </ComboBox>
+                                <ComboBox x:Name="OperationStatComboBox" Margin="2" Width="140"
+                                          SelectedValuePath="WorkOperationID"
+                                          behaviors:WatermarkComboBoxBehavior.EnableWatermark="True"
+										  behaviors:WatermarkComboBoxBehavior.Label="Операция..."
+										  behaviors:WatermarkComboBoxBehavior.LabelStyle="{StaticResource WatermarkLabelStyle}"
+                                          SelectionChanged="FilterStatTimeTrackingComboBox_SelectionChanged">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding WorkOperationID, Converter={StaticResource IdToWorkOperationConverter}}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+
+                                </ComboBox>
+
+                                <ComboBox x:Name="OperationGroupStatComboBox" Margin="2" Width="140"
+                                          SelectedValuePath="OperationGroupID"
+                                          behaviors:WatermarkComboBoxBehavior.EnableWatermark="True"
+										  behaviors:WatermarkComboBoxBehavior.Label="Группа операций..."
+										  behaviors:WatermarkComboBoxBehavior.LabelStyle="{StaticResource WatermarkLabelStyle}"
+                                          SelectionChanged="FilterStatTimeTrackingComboBox_SelectionChanged">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding OperationGroupID, Converter={StaticResource IdToWorkOperationGroupConverter}, ConverterParameter=GroupID}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+
+                                </ComboBox>
+
+                                <ComboBox x:Name="OperationTypeStatComboBox" Margin="2" Width="140"
+                                          SelectedValuePath="OperationGroupID"
+                                          behaviors:WatermarkComboBoxBehavior.EnableWatermark="True"
+										  behaviors:WatermarkComboBoxBehavior.Label="Тип операций..."
+										  behaviors:WatermarkComboBoxBehavior.LabelStyle="{StaticResource WatermarkLabelStyle}"
+                                          SelectionChanged="FilterStatTimeTrackingComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="Основная"/>
+                                    <ComboBoxItem Content="Общая"/>
+                                    <!--<ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding WorkOperationID, Converter={StaticResource IdToWorkOperationTypeConverter}}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>-->
+
+                                </ComboBox>
+                                <Button x:Name="ResetStatFilterButton" Width="140" Content="Сброс" Style="{DynamicResource RedBtn}" Margin="2" Click="ResetStatFilterButton_Click"/>
+
+                            </WrapPanel>
+                        </Grid>
+
+                        <Border BorderBrush="LightGray" CornerRadius="1" BorderThickness="1" Margin="2" Grid.Row="1">
+                            <Grid Background=" Transparent">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+
+                                <Grid Background="{DynamicResource MidBackground}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel VerticalAlignment="Center">
+                                            <Label x:Name="NameCommonTimeStatOpLabel" FontSize="16" FontWeight="Bold" 
+                                                   Content="-" HorizontalAlignment="Left" Margin="5,2" Padding="1"
+                                                   Foreground="{DynamicResource MainTextBlackBrush}"/>
+                                            <Label x:Name="DateCommonTimeStatOpLabel" Content="-" HorizontalAlignment="Left"
+                                                   Margin="5,0,0,0" Padding="1" FontSize="14" 
+                                                   Foreground="{DynamicResource MainTextBlackBrush}"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical" Grid.Column="1" Margin="2" HorizontalAlignment="Right">
+                                            <Label Name="TotalOperationsTimeStatLabel" Content="-" 
+                                                   FontSize="12"  Margin="5,0" Padding="1"
+                                                   ContentStringFormat="Общее время по операциям:  {0} ч из них:"
+                                                   Foreground="{DynamicResource GreenForeground}"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Label x:Name="WorkerCommonTimeStatOpLabel" Content="-" 
+                                                       ContentStringFormat="рабочий:  {0} ч"
+                                                       FontSize="12" Margin="5,0" Padding="1"
+                                                       Foreground="{DynamicResource MainTextBlackBrush}"/>
+                                                <Label x:Name="MentorCommonTimeStatOpLabel" Content="-" 
+                                                       ContentStringFormat="наставник:  {0} ч"
+                                                       FontSize="12" Margin="0,0,5,0" Padding="1"
+                                                       Foreground="{DynamicResource MainTextBlackBrush}"/>
+                                                <Label x:Name="StudentCommonTimeStatOpLabel" Content="-" 
+                                                       ContentStringFormat="ученик:  {0} ч"
+                                                       FontSize="12" Margin="0,0,5,0" Padding="1"
+                                                       Foreground="{DynamicResource MainTextBlackBrush}"/>
+                                            </StackPanel>
+                                            <Rectangle Height="1" Fill="Gray" SnapsToDevicePixels="True" Margin="0,1,0,0"/>
+                                            <Label Name="TotalTasksTimeStatLabel" Content="-" 
+                                                   ContentStringFormat="Общее время по задачам:  {0} ч"
+                                                   FontSize="12" Margin="5,0" Padding="1"
+                                                   Foreground="{DynamicResource BlueForeground}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
+
+                                <Grid x:Name="ProgressGrid" Visibility="Hidden" Background="#99FFFFFF" Grid.Row="1" ZIndex="1" Height="Auto" VerticalAlignment="Bottom" >
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <ProgressBar Height="12" Margin="2,5,2,2" x:Name="ProgressCommOpStatProgressBar" Visibility="Visible" Width="250" HorizontalAlignment="Center" />
+                                    <Label Content="Подсчет..." FontSize="12" Foreground="{DynamicResource MainTextBlackBrush}" HorizontalAlignment="Center" x:Name="ProgressCommOpStatLabel" Padding="0" VerticalAlignment="Bottom" VerticalContentAlignment="Center" Visibility="Visible" Margin="2,2,2,5" Grid.Row="1" />
+                                </Grid>
+
+                                <DataGrid Style="{DynamicResource CommonDataGridStyle}" Name="StatisticsTimeTrackingDataGrid" CanUserSortColumns="False" IsReadOnly="True" Visibility="Visible" EnableRowVirtualization="False" Margin="0" LoadingRow="StatisticsTimeTrackingDataGrid_LoadingRow" Grid.Row="1">
+                                    <DataGrid.Columns>
+                                        <DataGridTemplateColumn Header="Дата" Width="100">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck"  Text="{Binding Date, Converter={StaticResource DateConverter}, IsAsync=True, ConverterParameter='dd-MM-yyyy HH:mm'}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="Смена" Width="Auto">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding ShiftNumber}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="Фабрика" Width="Auto">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Grid>
+                                                        <TextBlock Text="Задача"
+                                                                   Foreground="{DynamicResource BlueForeground}">
+                                                            <TextBlock.Visibility>
+                                                                <Binding Path="TaskID" FallbackValue="Visible"
+                                                                         TargetNullValue="Collapsed"/>
+                                                            </TextBlock.Visibility>
+                                                        </TextBlock>
+                                                        <TextBlock Name="txtblck" Text="{Binding FactoryID, Converter={StaticResource IdToFactoryConverter}, IsAsync=True}"  TextTrimming="CharacterEllipsis"/>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="Участок/название задачи" Width="*">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" MaxHeight="50" TextTrimming="CharacterEllipsis">
+                                                        <TextBlock.Text>
+                                                            <MultiBinding StringFormat="{}{0}{1}">
+                                                                <Binding Path="WorkUnitID" Converter="{StaticResource IdToWorkUnitConverter}" IsAsync="True"/>
+                                                                <Binding Path="TaskID" Converter="{StaticResource TaskConverter}" 
+                                                                         IsAsync="True" ConverterParameter="TaskName"/>
+                                                            </MultiBinding>
+                                                        </TextBlock.Text>
+                                                        <TextBlock.Foreground>
+                                                            <Binding Path="TaskID"
+                                                                     FallbackValue="{StaticResource BlueForeground}"
+                                                                     TargetNullValue="{StaticResource MainTextBlackBrush}"/>
+                                                        </TextBlock.Foreground>
+                                                        <TextBlock.TextWrapping>
+                                                            <Binding Path="TaskID"
+                                                                     FallbackValue="Wrap"
+                                                                     TargetNullValue="NoWrap"/>
+                                                        </TextBlock.TextWrapping>
+                                                    </TextBlock>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="Подучасток" Width="*">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding WorkSectionID,Converter={StaticResource IdToWorkSectionConverter}, IsAsync=True}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="Станок/приспособление" Width="*">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding WorkSubsectionID,Converter={StaticResource IdToWorkSubSectionConverter}, IsAsync=True}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="Операция" Width="*">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding WorkOperationID,Converter={StaticResource IdToWorkOperationConverter}, IsAsync=True}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+
+                                        <DataGridTemplateColumn Header="Группа" Width="100">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding OperationGroupID,Converter={StaticResource IdToWorkOperationGroupConverter}, IsAsync=True, ConverterParameter=GroupID}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="Тип" Width="60">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding WorkOperationID,Converter={StaticResource IdToWorkOperationTypeConverter}, IsAsync=True}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+
+                                        <DataGridTemplateColumn Header="Введенное время" Width="55">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding TotalTime}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+
+                                        <DataGridTemplateColumn Header="Объем" Width="50">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding WorkScope}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="Е.Изм." Width="50">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding MeasureUnit}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="КТУ" Width="35">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding VCLP}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="1-ый ур." Width="60" Visibility="Hidden">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding FVTime}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="2-ой ур." Width="60" Visibility="Hidden">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding SVTime}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="3-ий ур." Width="60" Visibility="Hidden">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding TVTime}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="Частично" Width="60" Visibility="Hidden">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding OneOfVTime}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="Полностью подтвержденное время" Width="60" Visibility="Hidden">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding AllVTime}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        <!--<DataGridTemplateColumn Header="Дата" Width="110">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck"  Text="{Binding Date}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="Смена" Width="60">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding ShiftNumber}"  TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="Фабрика" Width="120">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding FactoryID}"  TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="Участок" Width="*">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding WorkUnitID}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="Подучасток" Width="*">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding WorkSectionID}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="Станок/приспособление" Width="*">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding WorkSubsectionID}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="Операция" Width="*">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding WorkOperationID}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="Введенное время" Width="60">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding TotalTime}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+
+                                        <DataGridTemplateColumn Header="Объем" Width="Auto">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding WorkScope}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="Е.Изм." Width="Auto">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding MeasureUnit}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="КТУ" Width="40">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding VCLP}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="1-ый ур." Width="60" Visibility="Hidden">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding FVTime}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="2-ой ур." Width="60" Visibility="Hidden">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding SVTime}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="3-ий ур." Width="60" Visibility="Hidden">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding TVTime}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="Частично" Width="60" Visibility="Hidden">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding OneOfVTime}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="Полностью подтвержденное время" Width="60" Visibility="Hidden">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Name="txtblck" Text="{Binding AllVTime}" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>-->
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                                <Border x:Name="FilterStatValuesBorder" Opacity="0.8" Visibility="Collapsed" CornerRadius="1" BorderBrush="{DynamicResource BordersBrush}" BorderThickness="1"  Background="{DynamicResource MidBackground}" Margin="0" Width="Auto" Height="Auto" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Row="1">
+                                   <Border.Style>
+                                       <Style>
+                                            <Style.Triggers>
+                                                <EventTrigger RoutedEvent="Control.MouseEnter">
+                                                    <BeginStoryboard>
+                                                        <Storyboard >
+                                                            <DoubleAnimation Duration="0:0:0.2" To="1" Storyboard.TargetProperty="Opacity"/>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </EventTrigger>
+                                                <EventTrigger RoutedEvent="Control.MouseLeave">
+                                                    <BeginStoryboard>
+                                                        <Storyboard >
+                                                            <DoubleAnimation Duration="0:0:0.2" To="0.8" Storyboard.TargetProperty="Opacity"/>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </EventTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                   </Border.Style>
+                                    
+                                    
+                                    <Grid Margin="5">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Label x:Name="StatHouresLabel" Margin="2" ContentStringFormat="Введенно часов: {0} ч" Foreground="{DynamicResource MainTextBlackBrush}" Content="0" />
+                                            <Label x:Name="StatWorkScopeLabel" Visibility="Collapsed" Margin="2" ContentStringFormat="Объем: {0}" Foreground="{DynamicResource MainTextBlackBrush}" Content="0 шт." />
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>   
+                                
+                                <Border x:Name="MultWorkersGrid" Visibility="Collapsed" Background="White" Width="200" Height="200" Grid.Row="1" 
+                                        VerticalAlignment="Bottom" HorizontalAlignment="Left" CornerRadius="1" BorderThickness="1" 
+                                        BorderBrush="{DynamicResource BordersBrush}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Label x:Name="CountSelectedWorkers" Foreground="{DynamicResource MainTextBlackBrush}" Content="0" ContentStringFormat="Выбранные работники ( {0} )"></Label>
+                                        <ListBox x:Name="MultWorkersListBox" BorderThickness="0"  Background="White" Grid.Row="1">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <ContentPresenter Content="{Binding Converter= {StaticResource IdToNameConverter}, ConverterParameter= 'ShortName'}"/>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+
+                                        <StackPanel Grid.Row="2" Orientation="Horizontal" FlowDirection="RightToLeft">
+
+                                            <Button x:Name="RemoveAllFromWorkersListButton" ToolTip="Удалить всех из списка" Content="Сброс" 
+                                                    Width="100" Height="25"  Style="{DynamicResource RedBtn}" Margin="2" 
+                                                    Click="RemoveAllFromWorkersListButton_Click"/>
+                                            <Button x:Name="RemoveFromWorkersListButton" ToolTip="Удалить выбранного работника из списка"  
+                                                    Width="25" Content="-" Style="{DynamicResource BlueBtn}" Margin="2" Height="25" 
+                                                    Click="RemoveFromWorkersListButton_Click"></Button>
+
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+
+                                <Grid Background="{DynamicResource DarkBackground}" Grid.Row="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Button Content="Подсчитать" Style="{DynamicResource GreenBtn}" Height="30" Padding="0" HorizontalAlignment="Left" Margin="5,2,2,2" 
+                                            x:Name="CalculateOperationsStatisticsButton" VerticalAlignment="Center" Visibility="Visible" Width="130" 
+                                            Click="CalculateOperationsStatisticsButton_Click" />
+
+                                    <WrapPanel Orientation="Horizontal" Margin="3" VerticalAlignment="Center" Grid.Column="1">
+                                        <CheckBox Content="Разделить по датам" Height="Auto" Foreground="{DynamicResource WhiteBackground}" HorizontalAlignment="Left" x:Name="SplitByDatesCheckBox" VerticalAlignment="Center" Width="Auto" Checked="SplitByDatesCheckBox_CheckedChanged" Unchecked="SplitByDatesCheckBox_CheckedChanged" Margin="3,0"/>
+                                        <CheckBox Content="Подтверждения" Height="Auto" Foreground="{DynamicResource WhiteBackground}" HorizontalAlignment="Left" x:Name="ShowVerificationLevelsCheckBox" VerticalAlignment="Center" Width="Auto" Checked="ShowVerificationLevelsCheckBox_CheckedChanged" Unchecked="ShowVerificationLevelsCheckBox_CheckedChanged" Margin="3,0"/>
+                                    </WrapPanel>
+
+                                    <ComboBox Height="28" HorizontalAlignment="Right" Name="CommonTimeOpStatComboBox" VerticalAlignment="Center" 
+                                              Grid.Column="3" Margin="0,5,2,5" MaxDropDownHeight="400" BorderThickness="0" Width="225" MinHeight="25"/>
+                                    <customControls:SwitchComboBox Name="ExportButton" Width="120" Margin="3,3,40,3" Padding="0"
+                                                                   HorizontalAlignment="Right" Content="Экспорт в Excel" Visibility="Visible" Grid.Column="4">
+                                        <ComboBoxItem Content="Статистика" PreviewMouseDown="ExportButton_Click"/>
+                                        <ComboBoxItem Content="Сменный рапорт" PreviewMouseDown="OnShiftStatusticsReportClick"/>
+                                    </customControls:SwitchComboBox>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </TabItem>
+
+                <TabItem Header="Общая статистика по предприятию">
+                    <Border CornerRadius="1" BorderBrush="LightGray" BorderThickness="1" Margin="2">
+                        <Grid x:Name="CommonOperationStatGrid">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Background="{DynamicResource MidBackground}" Margin="2,0,2,0">
+                                <WrapPanel>
+                                  <ComboBox x:Name="OperationGroupCommStatComboBox" Margin="2" Width="140"
+                                          SelectedValuePath="OperationGroupID"
+                                          behaviors:WatermarkComboBoxBehavior.EnableWatermark="True"
+										  behaviors:WatermarkComboBoxBehavior.Label="Группа операций..."
+										  behaviors:WatermarkComboBoxBehavior.LabelStyle="{StaticResource WatermarkLabelStyle}"
+                                          SelectionChanged="FilterCommStatTimeTrackingComboBox_SelectionChanged">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding OperationGroupID, Converter={StaticResource IdToWorkOperationGroupConverter}, ConverterParameter=GroupID}"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+
+                                    </ComboBox>
+
+                                    <ComboBox x:Name="OperationTypeCommStatComboBox" Margin="2" Width="140"
+                                          SelectedValuePath="OperationGroupID"
+                                          behaviors:WatermarkComboBoxBehavior.EnableWatermark="True"
+										  behaviors:WatermarkComboBoxBehavior.Label="Тип операций..."
+										  behaviors:WatermarkComboBoxBehavior.LabelStyle="{StaticResource WatermarkLabelStyle}"
+                                          SelectionChanged="FilterCommStatTimeTrackingComboBox_SelectionChanged">
+                                        <ComboBoxItem Content="Основная"/>
+                                        <ComboBoxItem Content="Общая"/>
+                                    </ComboBox>
+                                    <Button x:Name="ResetCommStatFilterButton" Width="140" Content="Сброс" Style="{DynamicResource RedBtn}" Margin="2" Click="ResetCommStatFilterButton_Click"/>
+
+                                </WrapPanel>
+                            </Grid>
+
+                            <Grid x:Name="ProgressCommStatGrid" Grid.Row="1" Visibility="Hidden" Background="#99FFFFFF" ZIndex="1" Height="Auto" VerticalAlignment="Bottom" >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <ProgressBar Height="12" Margin="2,5,2,2" x:Name="CommStatProgressBar" Visibility="Visible" Width="250" HorizontalAlignment="Center" />
+                                <Label Content="Подсчет..." FontSize="12" Foreground="{DynamicResource MainTextBlackBrush}" HorizontalAlignment="Center" x:Name="ProgressCommStatLabel" Padding="0" VerticalAlignment="Bottom" VerticalContentAlignment="Center" Visibility="Visible" Margin="2,2,2,5" Grid.Row="1" />
+                            </Grid>
+
+                            <DataGrid  Style="{DynamicResource CommonDataGridStyle}" Grid.Row="1" CanUserSortColumns="True" IsReadOnly="True" Name="CommonStatisticsTimeTrackingDataGrid" Visibility="Visible" EnableColumnVirtualization="True" UseLayoutRounding="True" EnableRowVirtualization="False">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Header="Фабрика" Width="100">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Name="txtblck" Text="{Binding FactoryID,Converter={StaticResource IdToFactoryConverter}, IsAsync=True}"  TextTrimming="CharacterEllipsis"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTemplateColumn Header="Участок" Width="*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Name="txtblck" Text="{Binding WorkUnitID,Converter={StaticResource IdToWorkUnitConverter}, IsAsync=True}" TextTrimming="CharacterEllipsis"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTemplateColumn Header="Подучасток" Width="*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Name="txtblck" Text="{Binding WorkSectionID,Converter={StaticResource IdToWorkSectionConverter}, IsAsync=True}" TextTrimming="CharacterEllipsis"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTemplateColumn Header="Станок/приспособление" Width="*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Name="txtblck" Text="{Binding WorkSubsectionID,Converter={StaticResource IdToWorkSubSectionConverter}, IsAsync=True}" TextTrimming="CharacterEllipsis"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTemplateColumn Header="Операция" Width="*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Name="txtblck" Text="{Binding WorkOperationID,Converter={StaticResource IdToWorkOperationConverter}, IsAsync=True}" TextTrimming="CharacterEllipsis"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTemplateColumn Header="Группа" Width="*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Name="txtblck" Text="{Binding OperationGroupID,Converter={StaticResource IdToWorkOperationGroupConverter}, IsAsync=True, ConverterParameter=GroupID}" TextTrimming="CharacterEllipsis"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTemplateColumn Header="Тип" Width="*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Name="txtblck" Text="{Binding WorkOperationID,Converter={StaticResource IdToWorkOperationTypeConverter}, IsAsync=True}" TextTrimming="CharacterEllipsis"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTemplateColumn Header="Время" Width="70">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Name="txtblck" Text="{Binding Time}" TextTrimming="CharacterEllipsis"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTemplateColumn Header="Объем" Width="Auto">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Name="txtblck" Text="{Binding WorkScope}" TextTrimming="CharacterEllipsis"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTemplateColumn Header="КТУ" Width="Auto">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Name="txtblck" Text="{Binding VCLP}" TextTrimming="CharacterEllipsis"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTemplateColumn Header="Частично" Width="60" Visibility="Hidden">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Name="txtblck" Text="{Binding OneOfVTime}" TextTrimming="CharacterEllipsis"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTemplateColumn Header="Полностью подтвержденное время" Width="60" Visibility="Hidden">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Name="txtblck" Text="{Binding AllVTime}" TextTrimming="CharacterEllipsis"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTemplateColumn Header="1-ый ур." Width="60" Visibility="Hidden">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Name="txtblck" Text="{Binding FVTime}" TextTrimming="CharacterEllipsis" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTemplateColumn Header="2-ой ур." Width="60" Visibility="Hidden">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Name="txtblck" Text="{Binding SVTime}" TextTrimming="CharacterEllipsis"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTemplateColumn Header="3-ий ур." Width="60" Visibility="Hidden">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Name="txtblck" Text="{Binding TVTime}" TextTrimming="CharacterEllipsis"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                            <Border x:Name="FilterCommStatValuesBorder" Opacity="0.8" Visibility="Collapsed" CornerRadius="1" BorderBrush="{DynamicResource BordersBrush}" BorderThickness="1"  Background="{DynamicResource MidBackground}" Margin="0" Width="Auto" Height="Auto" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Row="1">
+                                <Border.Style>
+                                    <Style>
+                                        <Style.Triggers>
+                                            <EventTrigger RoutedEvent="Control.MouseEnter">
+                                                <BeginStoryboard>
+                                                    <Storyboard >
+                                                        <DoubleAnimation Duration="0:0:0.2" To="1" Storyboard.TargetProperty="Opacity"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger>
+                                            <EventTrigger RoutedEvent="Control.MouseLeave">
+                                                <BeginStoryboard>
+                                                    <Storyboard >
+                                                        <DoubleAnimation Duration="0:0:0.2" To="0.8" Storyboard.TargetProperty="Opacity"/>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+
+
+                                <Grid Margin="5">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label x:Name="CommStatHouresLabel" Margin="2" ContentStringFormat="Введенно часов: {0} ч" Foreground="{DynamicResource MainTextBlackBrush}" Content="0" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+
+                            <Grid Background="{DynamicResource DarkBackground}" Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition  Width="Auto"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <CheckBox Content="Отобразить подтверждения" Height="16" Foreground="White" HorizontalAlignment="Left" Name="CommonShowVerificationLevelsCheckBox" VerticalAlignment="Center" Margin="5,0,5,0" Checked="CommonShowVerificationLevelsCheckBox_Checked" Unchecked="CommonShowVerificationLevelsCheckBox_Checked" />
+
+                                <Label Content="" ContentStringFormat="Кол-во: {0}" HorizontalAlignment="Left" Grid.Column="1" Name="OperationsCountLabel" Padding="0" VerticalContentAlignment="Center" Foreground="{DynamicResource WhiteBackground}" VerticalAlignment="Center" Margin="7,2,2,2" />
+
+
+                                <ComboBox Grid.Column="2" Height="25" MinHeight="25" HorizontalAlignment="Right" Name="CommonTimeCommStatComboBox" VerticalAlignment="Center" Width="250" Margin="2" BorderThickness="0" />
+
+                                <Button Content="Экспорт" Style="{DynamicResource BlueBtn}" Height="25" Padding="0" Margin="2,5,45,5" HorizontalAlignment="Right" Name="ExportCommonStatisticsButton" VerticalAlignment="Center" Visibility="Visible" Width="75" Click="ExportCommonStatisticsButton_Click" Grid.Column="3"/>
+
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </TabItem>
+            </TabControl>
+        </Grid>
+
+
+        <Grid Name="ShadowGrid" Background="#55000000" Opacity="0"
+              MouseLeftButtonDown="OnShadowGridMouseLeftButtonDown">
+            <Grid.Visibility>
+                <Binding ElementName="AdditionalMenuToggleButton" Path="IsChecked">
+                    <Binding.Converter>
+                        <BooleanToVisibilityConverter/>
+                    </Binding.Converter>
+                </Binding>
+            </Grid.Visibility>
+        </Grid>
+        <ToggleButton Name="AdditionalMenuToggleButton" Height="45" Width="45"
+                      VerticalAlignment="Bottom" HorizontalAlignment="Right" Padding="0,0,2,5"
+                      VerticalContentAlignment="Bottom" HorizontalContentAlignment="Right"
+                      Style="{DynamicResource AdditionalMenuToggleButtonStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Rectangle Fill="White" Height="3" Width="5" Grid.Row="0" Grid.Column="0" Margin="2"/>
+                <Rectangle Fill="White" Height="3" Width="5" Grid.Row="0" Grid.Column="1" Margin="2"/>
+                <Rectangle Fill="White" Height="3" Width="5" Grid.Row="0" Grid.Column="2" Margin="2"/>
+
+                <Rectangle Fill="White" Height="3" Width="5" Grid.Row="1" Grid.Column="0" Margin="2"/>
+                <Rectangle Fill="White" Height="3" Width="5" Grid.Row="1" Grid.Column="1" Margin="2"/>
+                <Rectangle Fill="White" Height="3" Width="5" Grid.Row="1" Grid.Column="2" Margin="2"/>
+
+                <Rectangle Fill="White" Height="3" Width="5" Grid.Row="2" Grid.Column="0" Margin="2"/>
+                <Rectangle Fill="White" Height="3" Width="5" Grid.Row="2" Grid.Column="1" Margin="2"/>
+                <Rectangle Fill="White" Height="3" Width="5" Grid.Row="2" Grid.Column="2" Margin="2"/>
+
+            </Grid>
+            <ToggleButton.Triggers>
+                <EventTrigger RoutedEvent="ToggleButton.Checked">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="DropDown" Storyboard.TargetProperty="Opacity"
+                                             Duration="0:0:0.3" From="0" To="1" DecelerationRatio="0.7"/>
+                            <DoubleAnimation Storyboard.TargetName="ShadowGrid" Storyboard.TargetProperty="Opacity"
+                                             Duration="0:0:0.3" From="0" To="1" DecelerationRatio="0.8"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </ToggleButton.Triggers>
+        </ToggleButton>
+
+        <Grid x:Name="DropDown" SnapsToDevicePixels="True" VerticalAlignment="Bottom"
+              HorizontalAlignment="Right" Margin="0,0,0,45" Opacity="0">
+            <Grid.Visibility>
+                <Binding ElementName="AdditionalMenuToggleButton" Path="IsChecked">
+                    <Binding.Converter>
+                        <BooleanToVisibilityConverter/>
+                    </Binding.Converter>
+                </Binding>
+            </Grid.Visibility>
+            <Border Background="Gray" VerticalAlignment="Top" Margin="0,2,0,0"
+                        Width="{Binding ElementName=DropDownBorder, Path=ActualWidth}"
+                        Height="{Binding ElementName=DropDownBorder, Path=ActualHeight}">
+                <Border.Effect>
+                    <BlurEffect Radius="7"/>
+                </Border.Effect>
+            </Border>
+            <Border x:Name="DropDownBorder" BorderThickness="1" Margin="5,1,5,5"
+                        BorderBrush="DarkGray" Background="White" Padding="15">
+                <StackPanel Margin="0,5">
+                    <RadioButton Content="Контроль рабочего времени" Name="TimeControlRadioButton"
+                                 Style="{DynamicResource ResourceKey=AppBarRadioButtonStyle}" Checked="TimeControlRadioButton_Checked"/>
+                    <RadioButton Content="Статистика работника" Name="WorkerStatRadioButton"
+                                 Style="{DynamicResource ResourceKey=AppBarToggleButtonStyle}" Checked="WorkerStatRadioButton_Checked"/>
+                    <RadioButton Content="Общая статистика по операциям работника" Name="CommonOperationsStatRadioButton"
+                                 Style="{DynamicResource ResourceKey=AppBarToggleButtonStyle}" Checked="CommonOperationsStatRadioButton_Checked"/>
+
+                    <!--<Rectangle Fill="LightGray" Margin="0,5" Height="1"/>-->
+                    <!--<Button Content="Модули" Name="ModulesButton"
+                            Style="{StaticResource AppBarButtonStyle}" />
+                    <Button Name="AccessGroupsRedactorButton" Content="Группы доступа"
+                            Style="{StaticResource AppBarButtonStyle}" />
+                    <Button Content="Редактор действий" Name="ActionsRedactorButton"
+                            Style="{StaticResource AppBarButtonStyle}"/>-->
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

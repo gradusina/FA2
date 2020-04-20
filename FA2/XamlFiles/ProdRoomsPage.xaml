@@ -1,0 +1,1701 @@
+﻿<Page x:Class="FA2.XamlFiles.ProdRoomsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:userControls="clr-namespace:FAIIControlLibrary.UserControls;assembly=FAIIControlLibrary"
+      xmlns:customControls="clr-namespace:FAIIControlLibrary.CustomControls;assembly=FAIIControlLibrary"
+      xmlns:converters="clr-namespace:FA2.Converters"
+	  Title="ProdRoomsPage" MinWidth="860" MinHeight="450"
+      Name="prodPage" Background="White" Loaded="Page_Loaded">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Themes\Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            
+            <Color x:Key="BasicColor">#FF017BCD</Color>
+
+            <converters:ConfirmCountConverter x:Key="ConfirmCountConverter"/>
+            <converters:LockIDConverter x:Key="LockIDConverter" />
+            <converters:ActionGroupConverter x:Key="ActionGroupConverter"/>
+            <converters:JournalNoteColorConverter x:Key="JournalNoteColorConverter"/>
+            <converters:LocksStatusConverter x:Key="LocksStatusConverter"/>
+            <converters:BooleanToVisibilityConverter x:Key="VisibleOnTrue" True="Visible" False="Collapsed"/>
+            <converters:BooleanToVisibilityConverter x:Key="VisibleOnFalse" True="Collapsed" False="Visible"/>
+
+            <Style TargetType="{x:Type TabControl}">
+                <Setter Property="OverridesDefaultStyle" Value="True" />
+                <Setter Property="SnapsToDevicePixels" Value="True" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type TabControl}">
+                            <Grid KeyboardNavigation.TabNavigation="Local">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0"/>
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TabPanel x:Name="HeaderPanel" Grid.Column="0" Panel.ZIndex="1"
+                                          IsItemsHost="True" KeyboardNavigation.TabIndex="1">
+                                    <TabPanel.Background>
+                                        <SolidColorBrush Color="{DynamicResource ResourceKey=BasicColor}"/>
+                                    </TabPanel.Background>
+                                </TabPanel>
+                                <Border x:Name="Border" Grid.Column="1" KeyboardNavigation.TabNavigation="Local"
+                                        KeyboardNavigation.DirectionalNavigation="Contained" KeyboardNavigation.TabIndex="2"
+                                        Background="White">
+                                    <ContentPresenter x:Name="PART_SelectedContentHost" ContentSource="SelectedContent" />
+                                </Border>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <ControlTemplate x:Key="RedactorTabControlTemplate" TargetType="{x:Type TabControl}">
+                <Grid KeyboardNavigation.TabNavigation="Local">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TabPanel x:Name="HeaderPanel" Grid.Column="0" Panel.ZIndex="1"
+                              IsItemsHost="True" KeyboardNavigation.TabIndex="1">
+                        <TabPanel.Background>
+                            <SolidColorBrush Color="{DynamicResource ResourceKey=BasicColor}"/>
+                        </TabPanel.Background>
+                    </TabPanel>
+                    <Border x:Name="Border" Grid.Column="1" KeyboardNavigation.TabNavigation="Local"
+                            KeyboardNavigation.DirectionalNavigation="Contained" KeyboardNavigation.TabIndex="2"
+                            Background="White">
+                        <ContentPresenter x:Name="PART_SelectedContentHost" ContentSource="SelectedContent" />
+                    </Border>
+                </Grid>
+            </ControlTemplate>
+
+            <Style TargetType="{x:Type TabItem}">
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{DynamicResource ResourceKey=BasicColor}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="BorderBrush">
+                    <Setter.Value>
+                        <SolidColorBrush Color="{DynamicResource ResourceKey=BasicColor}"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Height" Value="50"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type TabItem}">
+                            <Grid x:Name="Root">
+                                <Border x:Name="Border" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}" 
+                                        Background="{TemplateBinding Background}">
+                                    <TextBlock Margin="5,0,0,0" Text="{TemplateBinding Header}" HorizontalAlignment="Left"
+                                               VerticalAlignment="Center" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
+                                </Border>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#FF0169BB"/>
+                                    <Setter Property="BorderBrush" Value="#FF0169BB"/>
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#FF1993E6"/>
+                                    <Setter Property="BorderBrush" Value="#FF1993E6"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="EditNote_ToggleButton" TargetType="{x:Type ToggleButton}">
+                <Setter Property="Background" Value="#FF017BCD"/>
+                <Setter Property="BorderBrush" Value="White"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="ToolTip" Value="Примечание"/>
+                <Setter Property="Focusable" Value="False"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                            <Border Name="border" Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                <Image Source="/Resources\EditNote.png" Margin="1"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="Black"/>
+                                    <Setter Property="BorderBrush" Value="White"/>
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Background" Value="#FF707070"/>
+                                    <Setter Property="BorderBrush" Value="White"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <!--Styles for DataGridCells-->
+
+            <Style x:Key="WeekendDay" TargetType="{x:Type DataGridCell}">
+                <Setter Property="Background" Value="#FFFAFAFA"/>
+                <Setter Property="BorderBrush" Value="#FFFAFAFA"/>
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" Value="#FFD5D5D5"/>
+                        <Setter Property="BorderBrush" Value="#FFD5D5D5"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="CellStyle" TargetType="{x:Type DataGridCell}">
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" Value="#FFE7E7E7"/>
+                        <Setter Property="BorderBrush" Value="#FFE7E7E7"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="ClosingWorkerNoteCellStyle" TargetType="{x:Type DataGridCell}"
+                   BasedOn="{StaticResource CommonDataGridCellStyle}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type DataGridCell}">
+                            <Grid Name="grid" Background="{TemplateBinding Background}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="20"/>
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter Name="presenter" Margin="2" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                <ToggleButton Name="toggleButton" Grid.Column="1" Margin="1,2" Style="{StaticResource EditNote_ToggleButton}"
+                                              Background="{Binding WorkerNotes, Converter={StaticResource JournalNoteColorConverter}}"/>
+                                <Popup Name="popup" AllowsTransparency="True" StaysOpen="False" Placement="Left" PlacementTarget="{Binding ElementName=toggleButton}"
+                                       IsOpen="{Binding Path=IsChecked, ElementName=toggleButton}" PopupAnimation="Fade" Height="75" Opened="ClosingWorkerNotePopup_Opened"
+                                       Width="250">
+                                    <Border BorderBrush="LightGray" BorderThickness="2">
+                                        <Grid Background="White">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <TextBox BorderBrush="LightGray" Margin="5" VerticalContentAlignment="Top" AcceptsReturn="True" IsReadOnly="True" TextWrapping="Wrap"
+                                                     VerticalScrollBarVisibility="Auto"/>
+                                            <Button Style="{StaticResource LinkButton}" Content="Изменить" Grid.Row="1" HorizontalAlignment="Right"
+                                                    Margin="0,2,60,2" Visibility="Hidden" Click="ClosingWorkerSaveNote_Click" Tag="{Binding ElementName=popup}"
+                                                    Focusable="False"/>
+                                            <Button Style="{StaticResource LinkButton}" Content="Отмена" Grid.Row="1" HorizontalAlignment="Right"
+                                                    Margin="5,2" Click="CancelNoteButton_Click" Tag="{Binding ElementName=popup}"/>
+                                        </Grid>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="toggleButton" Property="Control.Background" Value="Black"/>
+                                    <Setter Property="Background" Value="{DynamicResource MouseOverLightBackground}"/>
+                                </Trigger>
+                                <Trigger SourceName="toggleButton" Property="IsChecked" Value="True">
+                                    <Setter TargetName="toggleButton" Property="Control.Background" Value="Gray"/>
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource IsSelectedLightBackground}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="OpeningWorkerNoteCellStyle" TargetType="{x:Type DataGridCell}"
+                   BasedOn="{StaticResource CommonDataGridCellStyle}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type DataGridCell}">
+                            <Grid Name="grid" Background="{TemplateBinding Background}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="20"/>
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter Name="presenter" Margin="2" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                <ToggleButton Name="toggleButton" Grid.Column="1" Margin="1,2" Style="{StaticResource EditNote_ToggleButton}"
+                                              Background="{Binding WorkerNotes, Converter={StaticResource JournalNoteColorConverter}}"/>
+                                <Popup Name="popup" AllowsTransparency="True" StaysOpen="False" Placement="Left" PlacementTarget="{Binding ElementName=toggleButton}"
+                                       IsOpen="{Binding Path=IsChecked, ElementName=toggleButton}" PopupAnimation="Fade" Height="75" Opened="OpeningWorkerNotePopup_Opened"
+                                       Width="250">
+                                    <Border BorderBrush="LightGray" BorderThickness="2">
+                                        <Grid Background="White">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <TextBox BorderBrush="LightGray" Margin="5" VerticalContentAlignment="Top" AcceptsReturn="True" IsReadOnly="True" TextWrapping="Wrap"
+                                                     VerticalScrollBarVisibility="Auto"/>
+                                            <Button Style="{StaticResource LinkButton}" Content="Изменить" Grid.Row="1" HorizontalAlignment="Right"
+                                                    Margin="0,2,60,2" Visibility="Hidden" Click="OpeningWorkerSaveNote_Click" Tag="{Binding ElementName=popup}"/>
+                                            <Button Style="{StaticResource LinkButton}" Content="Отмена" Grid.Row="1" HorizontalAlignment="Right"
+                                                    Margin="5,2" Click="CancelNoteButton_Click" Tag="{Binding ElementName=popup}"/>
+                                        </Grid>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="toggleButton" Property="Control.Background" Value="Black"/>
+                                    <Setter Property="Background" Value="{DynamicResource MouseOverLightBackground}"/>
+                                </Trigger>
+                                <Trigger SourceName="toggleButton" Property="IsChecked" Value="True">
+                                    <Setter TargetName="toggleButton" Property="Control.Background" Value="Gray"/>
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource IsSelectedLightBackground}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="ClosingGuardCellStyle" TargetType="{x:Type DataGridCell}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type DataGridCell}">
+                            <Grid Name="grid" Background="{TemplateBinding Background}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="20"/>
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter Name="presenter" Margin="2" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                <ToggleButton Name="toggleButton" Grid.Column="1" Margin="1,2" Style="{StaticResource EditNote_ToggleButton}"
+                                          Background="{Binding GuardNotes, Converter={StaticResource JournalNoteColorConverter}}"/>
+                                <Popup Name="popup" AllowsTransparency="True" StaysOpen="False" Placement="Left" PlacementTarget="{Binding ElementName=toggleButton}"
+                                       IsOpen="{Binding Path=IsChecked, ElementName=toggleButton}" PopupAnimation="Fade" Height="75" Opened="ClosingGuardPopup_Opened"
+                                       Width="250">
+                                    <Border BorderBrush="LightGray" BorderThickness="2">
+                                        <Grid Background="White">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <TextBox BorderBrush="LightGray" Margin="5" VerticalContentAlignment="Top" AcceptsReturn="True" IsReadOnly="True" TextWrapping="Wrap"
+                                                     VerticalScrollBarVisibility="Auto"/>
+                                            <Button Style="{StaticResource LinkButton}" Content="Изменить" Grid.Row="1" HorizontalAlignment="Right"
+                                                    Margin="0,2,60,2" Visibility="Hidden" Click="ClosingGuardSaveNotes_Click" Tag="{Binding ElementName=popup}"/>
+                                            <Button Style="{StaticResource LinkButton}" Content="Отмена" Grid.Row="1" HorizontalAlignment="Right"
+                                                    Margin="5,2" Click="CancelNoteButton_Click" Tag="{Binding ElementName=popup}"/>
+                                        </Grid>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="toggleButton" Property="Control.Background" Value="Black"/>
+                                </Trigger>
+                                <Trigger SourceName="toggleButton" Property="IsChecked" Value="True">
+                                    <Setter TargetName="toggleButton" Property="Control.Background" Value="Gray"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="LightGray"/>
+                    <Setter Property="BorderBrush" Value="LightGray"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#FF017BCD"/>
+                    <Setter Property="BorderBrush" Value="#FF017BCD"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+            <Style x:Key="OpeningGuardCellStyle" TargetType="{x:Type DataGridCell}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type DataGridCell}">
+                            <Grid Name="grid" Background="{TemplateBinding Background}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="20"/>
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter Name="presenter" Margin="2" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                <ToggleButton Name="toggleButton" Grid.Column="1" Margin="1,2" Style="{StaticResource EditNote_ToggleButton}"
+                                              Background="{Binding GuardNotes, Converter={StaticResource JournalNoteColorConverter}}"/>
+                                <Popup Name="popup" AllowsTransparency="True" StaysOpen="False" Placement="Left" PlacementTarget="{Binding ElementName=toggleButton}"
+                                       IsOpen="{Binding Path=IsChecked, ElementName=toggleButton}" PopupAnimation="Fade" Height="75" Opened="OpeningGuardPopup_Opened"
+                                       Width="250">
+                                    <Border BorderBrush="LightGray" BorderThickness="2">
+                                        <Grid Background="White">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <TextBox BorderBrush="LightGray" Margin="5" VerticalContentAlignment="Top" AcceptsReturn="True" IsReadOnly="True" TextWrapping="Wrap"
+                                                     VerticalScrollBarVisibility="Auto"/>
+                                            <Button Style="{StaticResource LinkButton}" Content="Изменить" Grid.Row="1" HorizontalAlignment="Right"
+                                                    Margin="0,2,60,2" Visibility="Hidden" Click="OpeningGuardSaveNotes_Click" Tag="{Binding ElementName=popup}"/>
+                                            <Button Style="{StaticResource LinkButton}" Content="Отмена" Grid.Row="1" HorizontalAlignment="Right"
+                                                    Margin="5,2" Click="CancelNoteButton_Click" Tag="{Binding ElementName=popup}"/>
+                                        </Grid>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="toggleButton" Property="Control.Background" Value="Black"/>
+                                </Trigger>
+                                <Trigger SourceName="toggleButton" Property="IsChecked" Value="True">
+                                    <Setter TargetName="toggleButton" Property="Control.Background" Value="Gray"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="LightGray"/>
+                        <Setter Property="BorderBrush" Value="LightGray"/>
+                    </Trigger>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" Value="#FF017BCD"/>
+                        <Setter Property="BorderBrush" Value="#FF017BCD"/>
+                        <Setter Property="Foreground" Value="White"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="NameOpeningCellStyle" TargetType="{x:Type DataGridCell}">
+                <EventSetter Event="MouseDoubleClick" Handler="deletingOpeningCell_MouseDoubleClick"/>
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" Value="#FF017BCD"/>
+                        <Setter Property="BorderBrush" Value="#FF017BCD"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="NameWeekendResponsibleCellStyle" TargetType="{x:Type DataGridCell}">
+                <EventSetter Event="MouseDoubleClick" Handler="OnNameWeekendResponsibleCellMouseDoubleClick"/>
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" Value="#FF017BCD"/>
+                        <Setter Property="BorderBrush" Value="#FF017BCD"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="NameClosingCellStyle" TargetType="{x:Type DataGridCell}">
+                <EventSetter Event="MouseDoubleClick" Handler="deletingClosingCell_MouseDoubleClick"/>
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" Value="#FF017BCD"/>
+                        <Setter Property="BorderBrush" Value="#FF017BCD"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+
+
+            <!--Element Styles for GridColumns-->
+
+            <Style x:Key="NameColumnCell" TargetType="{x:Type TextBlock}">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                <Setter Property="ToolTip" Value="{Binding WorkerID, Converter={StaticResource IdToNameConverter}, ConverterParameter='FullName'}"/>
+            </Style>
+
+            <Style x:Key="OpeningDoorCell" TargetType="{x:Type TextBlock}">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <!--<Setter Property="HorizontalAlignment" Value="Left"/>-->
+                <Setter Property="Margin" Value="5,0"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                <Setter Property="ToolTip" Value="{Binding ClosingDate, StringFormat='Дата закрытия: {0:dd.MM.yyyy HH:mm}'}"/>
+            </Style>
+
+            <Style x:Key="TextColumnCell" TargetType="{x:Type TextBlock}">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <!--<Setter Property="HorizontalAlignment" Value="Left"/>-->
+                <Setter Property="Margin" Value="5,0"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                <Setter Property="ToolTip" Value="{Binding Text, RelativeSource={RelativeSource Mode=Self}}"/>
+            </Style>
+
+            <Style x:Key="EditingNameCell" TargetType="{x:Type TextBox}">
+                <Setter Property="IsReadOnly" Value="True"/>
+                <Setter Property="ToolTip" Value="{Binding WorkerID, Converter={StaticResource IdToNameConverter}, ConverterParameter='FullName'}"/>
+            </Style>
+
+            <Style x:Key="OpeningCheckBox" TargetType="{x:Type CheckBox}">
+                <Setter Property="IsHitTestVisible" Value="False"/>
+                <Setter Property="Focusable" Value="False"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type CheckBox}">
+                            <Grid Height="18">
+                                <Label Name="Label" FontSize="14" VerticalContentAlignment="Center"
+                                       HorizontalContentAlignment="Center" Padding="0"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="Label" Property="Content" Value="О"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="EditingOpeningCheckBox" TargetType="{x:Type CheckBox}">
+                <Setter Property="SnapsToDevicePixels" Value="true"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type CheckBox}">
+                            <Border>
+                                <Grid Background="White" Height="18">
+                                    <Label Name="Label" FontSize="14" VerticalContentAlignment="Center"
+                                           HorizontalContentAlignment="Center" Padding="0"/>
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="False">
+                                    <Setter TargetName="Label" Property="Content" Value="" />
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="Label" Property="Content" Value="О" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="ClosingCheckBox" TargetType="{x:Type CheckBox}">
+                <Setter Property="IsHitTestVisible" Value="False"/>
+                <Setter Property="Focusable" Value="False"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type CheckBox}">
+                            <Grid Height="18">
+                                <Label Name="Label" FontSize="14" VerticalContentAlignment="Center"
+                                       HorizontalContentAlignment="Center"
+                                       Padding="0"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="Label" Property="Content" Value="З"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="EditingClosingCheckBox" TargetType="{x:Type CheckBox}">
+                <Setter Property="SnapsToDevicePixels" Value="true"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type CheckBox}">
+                            <Border>
+                                <Grid Background="White" Height="18">
+                                    <Label Name="Label" FontSize="14" VerticalContentAlignment="Center"
+                                           HorizontalContentAlignment="Center" Padding="0"/>
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="False">
+                                    <Setter TargetName="Label" Property="Content" Value="" />
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="Label" Property="Content" Value="З" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="GuardCheckButton" TargetType="{x:Type CheckBox}">
+                <Setter Property="IsHitTestVisible" Value="False"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Focusable" Value="False"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type CheckBox}">
+                            <Grid Name="grid" Background="#FF0FA861">
+                                <TextBlock Name="textBlock" Text="Подтвердить" FontSize="14" Foreground="{TemplateBinding Foreground}" FontWeight="Normal"
+                                           TextTrimming="CharacterEllipsis" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="textBlock" Property="TextBlock.Text" Value="{Binding GuardID, Converter={StaticResource IdToNameConverter}, ConverterParameter='ShortName'}"/>
+                                    <Setter TargetName="grid" Property="Background" Value="{x:Null}"/>
+                                    <Setter Property="Foreground" Value="Black"/>
+                                    <Setter TargetName="textBlock" Property="HorizontalAlignment" Value="Left"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="EditingClosingGuardCheckButton" TargetType="{x:Type CheckBox}">
+                <Setter Property="SnapsToDevicePixels" Value="true"/>
+                <EventSetter Event="Checked" Handler="GuardClosingCheckButton_Checked"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type CheckBox}">
+                            <Grid Name="grid" Background="#FF0FA861">
+                                <TextBlock Name="textBlock" Text="Подтвердить" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"
+                                           Foreground="{TemplateBinding Foreground}" FontWeight="Normal" TextTrimming="CharacterEllipsis" Margin="5,0"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="textBlock" Property="TextBlock.Text" Value="{Binding GuardID, Converter={StaticResource IdToNameConverter}, ConverterParameter='ShortName'}"/>
+                                    <Setter TargetName="grid" Property="Background" Value="{x:Null}"/>
+                                    <Setter Property="Foreground" Value="Black"/>
+                                    <Setter TargetName="textBlock" Property="HorizontalAlignment" Value="Left"/>
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="EditingOpeningGuardCheckButton" TargetType="{x:Type CheckBox}">
+                <Setter Property="SnapsToDevicePixels" Value="true"/>
+                <EventSetter Event="Checked" Handler="GuardOpeningCheckButton_Checked"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type CheckBox}">
+                            <Grid Name="grid" Background="#FF0FA861">
+                                <TextBlock Name="textBlock" Text="Подтвердить" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"
+                                           Foreground="{TemplateBinding Foreground}" FontWeight="Normal" TextTrimming="CharacterEllipsis" Margin="5,0"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="textBlock" Property="TextBlock.Text" Value="{Binding GuardID, Converter={StaticResource IdToNameConverter}, ConverterParameter='ShortName'}"/>
+                                    <Setter TargetName="grid" Property="Background" Value="{x:Null}"/>
+                                    <Setter Property="Foreground" Value="Black"/>
+                                    <Setter TargetName="textBlock" Property="HorizontalAlignment" Value="Left"/>
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+        <!--Styles for Grids and Components-->
+
+            <Style x:Key="ColumnHeaderStyle" TargetType= "{x:Type DataGridColumnHeader}">
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="BorderBrush" Value="Gray"/>
+                <Setter Property="BorderThickness" Value="1, 1, 1, 2"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            </Style>
+
+            <Style x:Key="JournalColumnHeaderStyle" TargetType="{x:Type DataGridColumnHeader}">
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="BorderBrush" Value="Gray"/>
+                <Setter Property="FontWeight" Value="Normal"/>
+                <Setter Property="Foreground" Value="#001E4E"/>
+                <Setter Property="BorderThickness" Value="0, 2, 1, 2"/>
+                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="Padding" Value="5,0"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="Height" Value="30"/>
+            </Style>
+
+            <Style x:Key="CurrentDay" TargetType="{x:Type DataGridColumnHeader}">
+                <Setter Property="Background" Value="#FF017BCD"/>
+                <Setter Property="BorderBrush" Value="Gray"/>
+                <Setter Property="BorderThickness" Value="1, 1, 1, 2"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            </Style>
+
+            <Style x:Key="TableDataGridStyle" TargetType="{x:Type DataGrid}">
+                <Setter Property="BorderBrush" Value="{x:Null}"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="RowHeaderWidth" Value="0"/>
+                <Setter Property="ColumnWidth" Value="*"/>
+                <Setter Property="HorizontalGridLinesBrush" Value="Gray"/>
+                <Setter Property="VerticalGridLinesBrush" Value="Gray"/>
+                <Setter Property="HorizontalScrollBarVisibility" Value="Hidden"/>
+                <Setter Property="CanUserAddRows" Value="False"/>
+                <Setter Property="SelectionMode" Value="Single"/>
+                <Setter Property="CellStyle" Value="{StaticResource CellStyle}"/>
+                <Setter Property="ColumnHeaderStyle" Value="{DynamicResource ColumnHeaderStyle}"/>
+                <Setter Property="CanUserSortColumns" Value="False"/>
+            </Style>
+
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid Name="LayoutRoot">
+        
+        <TabControl Name="TabControl" TabStripPlacement="Left" Background="White">
+            <TabItem Header="Главная">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid Background="{DynamicResource MidBackground}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Список дверей предприятия и их актуальное состояние" FontSize="16" 
+                                   HorizontalAlignment="Left" Margin="5" VerticalAlignment="Center"
+                                   Foreground="{DynamicResource MainTextBlackBrush}"/>
+                        <TextBlock Text="Поиск двери по названию" Margin="5,0" VerticalAlignment="Center" Grid.Column="1"
+                                   Foreground="{DynamicResource AdditTextBlackBrush}"/>
+                        <customControls:WatermarkTextBox Name="LockSearchTextBox" Grid.Column="2" Margin="5" Height="30" Width="200"
+                                                         WatermarkText="Название двери" Background="White"
+                                                         Foreground="{DynamicResource MainTextBlackBrush}"
+                                                         TextChanged="OnLockSearchTextBoxTextChanged"/>
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Дверь/помещение" FontSize="16" Margin="5" HorizontalAlignment="Left"
+                                   Foreground="{DynamicResource AdditTextBlackBrush}"/>
+                        <TextBlock Text="Номер пломбы" Grid.Column="1" FontSize="16" Margin="5" HorizontalAlignment="Left" Width="160"
+                                   Foreground="{DynamicResource AdditTextBlackBrush}"/>
+                        <TextBlock Text="Действие" Grid.Column="2" FontSize="16" Margin="5" HorizontalAlignment="Left" Width="120"
+                                   Foreground="{DynamicResource AdditTextBlackBrush}"/>
+                        <TextBlock Text="Фото" Grid.Column="3" FontSize="16" Margin="5,5,25,5" HorizontalAlignment="Left"
+                                   Foreground="{DynamicResource AdditTextBlackBrush}"/>
+                    </Grid>
+                    <ItemsControl Name="ProdRoomsActualStatusItemsControl" Grid.Row="2" Margin="5" BorderThickness="0"
+                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                  ScrollViewer.CanContentScroll="False">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border x:Name="LockItemBorder" BorderThickness="1" Margin="2" CornerRadius="1" SnapsToDevicePixels="True"
+                                        BorderBrush="Gray">
+                                    <Grid>
+                                        <Grid DataContext="{Binding LockID, Converter={StaticResource LocksStatusConverter}, ConverterParameter='IsLockClosed'}">
+                                            <Grid.Background>
+                                                <Binding>
+                                                    <Binding.Converter>
+                                                        <converters:BooleanToBrushConverter True="WhiteSmoke" False="#444CAF50"/>
+                                                    </Binding.Converter>
+                                                </Binding>
+                                            </Grid.Background>
+                                        </Grid>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="40"/>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Label Margin="5" VerticalAlignment="Center"
+                                                   Foreground="{DynamicResource MainTextBlackBrush}"
+                                                   Content="{StaticResource LockIcon}"
+                                                   DataContext="{Binding LockID, Converter={StaticResource LocksStatusConverter}, ConverterParameter='IsLockClosed'}"
+                                                   Visibility="{Binding Converter={StaticResource VisibleOnTrueConverter}}"/>
+                                            <TextBlock Grid.Column="1" FontSize="18" Margin="5" VerticalAlignment="Center" FontWeight="Medium"
+                                                       Text="{Binding LockName}"/>
+                                            <Grid Grid.Column="2">
+                                                <Button x:Name="ConfirmLockSealNumberButton" Margin="5" HorizontalAlignment="Right" FontSize="16" FontWeight="Medium"
+                                                        Style="{StaticResource LinkButton}"
+                                                        Content="{Binding LockID, Converter={StaticResource LocksStatusConverter}, ConverterParameter='LastSealNumber'}"/>
+                                                <customControls:WatermarkTextBox x:Name="SealNumberTextBox" Width="150" Height="25" Margin="5"
+                                                                                 WatermarkText="Номер пломбы" Background="White"
+                                                                                 DataContext="{Binding LockID, Converter={StaticResource LocksStatusConverter}, ConverterParameter='IsLockClosed'}"
+                                                                                 Visibility="{Binding Converter={StaticResource VisibleOnFalseConverter}}"/>
+                                            </Grid>
+                                            <Grid Grid.Column="3">
+                                                <Button x:Name="OpenDoorButton" Content="Открыть" Width="150" Height="25" Margin="5"
+                                                        Style="{StaticResource GreenBtn}"
+                                                        DataContext="{Binding LockID, Converter={StaticResource LocksStatusConverter}, ConverterParameter='IsLockClosed'}"
+                                                        Visibility="{Binding Converter={StaticResource VisibleOnTrueConverter}}"
+                                                        Click="OnOpenDoorButtonClick"/>
+                                                <Button x:Name="CloseDoorButton" Content="Закрыть" Width="150" Height="25" Margin="5"
+                                                        Style="{StaticResource RedBtn}"
+                                                        DataContext="{Binding LockID, Converter={StaticResource LocksStatusConverter}, ConverterParameter='IsLockClosed'}"
+                                                        Visibility="{Binding Converter={StaticResource VisibleOnFalseConverter}}"
+                                                        Click="OnCloseDoorButtonClick"/>
+                                            </Grid>
+                                            <Grid Grid.Column="4">
+                                                <Border Margin="5,6,5,4" BorderBrush="Gray"
+                                                        Background="Gray" CornerRadius="2" VerticalAlignment="Top"
+                                                        Width="{Binding ElementName=ImageBorder, Path=ActualWidth}"
+                                                        Height="{Binding ElementName=ImageBorder, Path=ActualHeight}">
+                                                    <Border.Effect>
+                                                        <BlurEffect Radius="4"/>
+                                                    </Border.Effect>
+                                                </Border>
+                                                <Border x:Name="ImageBorder" Grid.Column="0" Height="50" Width="50" BorderBrush="Gray"
+                                                        VerticalAlignment="Top" Margin="5" BorderThickness="0" CornerRadius="2" Background="White">
+                                                    <Image x:Name="LockImage" Width="Auto" Height="Auto" Stretch="UniformToFill" Margin="1"
+                                                           VerticalAlignment="Center" HorizontalAlignment="Center"
+                                                           ToolTipService.ShowDuration="15000" ToolTipService.InitialShowDelay="500"
+                                                           Source="{Binding LockID, Converter={StaticResource LocksStatusConverter}, ConverterParameter='LockPhoto'}"
+                                                           ToolTipOpening="OnLockPhotoToolTipOpening">
+                                                        <Image.ToolTip>
+                                                            <ToolTip>
+                                                                <Border BorderThickness="1" CornerRadius="1" BorderBrush="Gray">
+                                                                    <Image x:Name="LockImageToolTip" Width="350"/>
+                                                                </Border>
+                                                            </ToolTip>
+                                                        </Image.ToolTip>
+                                                    </Image>
+                                                </Border>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <Grid Grid.Row="3"
+                          Background="{DynamicResource MidBackground}">
+                        <customControls:SwitchComboBox Name="OpenRaportMenuComboBox" Content="Заполнить рапорт"
+                                                       HorizontalAlignment="Left" Margin="5" Height="30" Width="200">
+                            <ComboBoxItem Name="CloseRaportComboBoxItem" Content="По закрытию"/>
+                            <ComboBoxItem Name="OpenRaportComboBoxItem" Content="По открытию"/>
+                        </customControls:SwitchComboBox>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Журнал ответственного">
+                <Grid Margin="2,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Border Margin="0,2,0,0" BorderThickness="1" CornerRadius="1" 
+                            Background="{DynamicResource MidBackground}"
+                            BorderBrush="{DynamicResource BordersBrush}">
+                        <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Margin="0,5">
+                            <Label Content="Год:" FontSize="14" Height="30" />
+                            <ComboBox Name="JournalYearComboBox" Margin="10,0" Width="120" Height="30" />
+                            <Label Content="Месяц:" Margin="10,0,0,0" FontSize="14" Height="30" />
+                            <ComboBox Name="JournalMonthComboBox" Margin="10,0" Width="120" Height="30" />
+                            <Button Style="{StaticResource BlueBtn}" Margin="10,0" Width="100" Height="30"
+                                    Content="Показать" Click="OnShowJournalButtonClick" />
+                        </StackPanel>
+                    </Border>
+                    
+                    <TextBlock Name="ResponsibleWorker" Text="Текущий: " HorizontalAlignment="Left" FontSize="14"
+                               Grid.Row="1" Foreground="#FF444444" VerticalAlignment="Center" Margin="0,5"/>
+                    <Button Name="ShowInstructionButton" Grid.Row="1" Content="Инструкция к закрытию/открытию помещений"
+                            HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0"
+                            Style="{DynamicResource LinkButton}"
+                            Click="OnShowInstructionButtonClick"/>
+                    <Rectangle Height="1" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Bottom" Fill="Gray" Width="400"/>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Закрытие помещений" FontSize="14" HorizontalAlignment="Left" FontWeight="Medium" Margin="2"
+                                       Foreground="#FF444444"/>
+                            <Border BorderBrush="Gray" BorderThickness="1" Grid.Row="1" Background="#FFFAFAFA" Margin="0,0,2,0"
+                                    CornerRadius="1">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                        <TextBlock Text="Поиск по номеру пломбы" Foreground="#FF444444" FontSize="14"
+                                                   VerticalAlignment="Center" Margin="5,0"/>
+                                        <TextBox Name="ClosingSealNumerSearchTextBox" Width="150" Margin="5" Height="30"
+                                                 VerticalContentAlignment="Center"
+                                                 TextChanged="ClosingSealNumerSearchTextBox_OnTextChanged"/>
+                                    </StackPanel>
+                                    <DataGrid Name="ClosingJournalDataGrid" Grid.Row="1" IsReadOnly="False"
+                                              CanUserAddRows="False" BorderThickness="0,0,0,1"
+                                              HorizontalScrollBarVisibility="Auto"
+                                              Style="{StaticResource CommonDataGridStyle}"
+                                              SelectionChanged="OnClosingJournalDataGridSelectionChanged">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn IsReadOnly="True" Width="Auto" Header="Дата"
+                                                                ElementStyle="{StaticResource TextColumnCell}" MinWidth="70"
+                                                                Binding="{Binding Date, Converter={StaticResource DateConverter}, ConverterParameter='dd-MM-yyyy'}"/>
+                                            <DataGridTextColumn IsReadOnly="True" Width="Auto" Header="Время"
+                                                                ElementStyle="{StaticResource TextColumnCell}" MinWidth="70"
+                                                                Binding="{Binding Date, Converter={StaticResource DateConverter}, ConverterParameter='HH:mm'}"/>
+                                            <DataGridTextColumn IsReadOnly="True" Width="Auto" MaxWidth="250" Header="Дверь" MinWidth="70"
+                                                                ElementStyle="{StaticResource TextColumnCell}"
+                                                                Binding="{Binding LockID, Converter={StaticResource LockIDConverter}}"/>
+                                            <DataGridTextColumn IsReadOnly="True" Width="*" MaxWidth="200" MinWidth="70"
+                                                                Header="Номер пломбы" ElementStyle="{StaticResource TextColumnCell}"
+                                                                Binding="{Binding SealNumber}"/>
+                                            <DataGridTextColumn IsReadOnly="True" Width="*" MinWidth="150" Header="Ответственный за закрытие" 
+                                                                ElementStyle="{StaticResource TextColumnCell}"
+                                                                Binding="{Binding WorkerID, Converter={StaticResource IdToNameConverter}, ConverterParameter='ShortName'}"
+                                                                CellStyle="{StaticResource ClosingWorkerNoteCellStyle}"/>
+                                            <DataGridTemplateColumn Width="150" MinWidth="150" Header="Подтверждение" IsReadOnly="True">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <Grid>
+                                                            <ToggleButton Name="ShowConfirmToggleButton" Height="20"
+                                                                          ContentStringFormat="Подтверждено: {0}"
+                                                                          Content="{Binding JournalID, Converter={StaticResource ConfirmCountConverter}}"
+                                                                          Padding="0" VerticalContentAlignment="Center"
+                                                                          HorizontalContentAlignment="Center" Margin="1"/>
+                                                            <Popup Name="ShowConfirmPopup" MinHeight="20"
+                                                                   AllowsTransparency="True" Placement="Top" 
+                                                                   PlacementTarget="{Binding ElementName=ShowConfirmToggleButton}"
+                                                                   PopupAnimation="Fade" StaysOpen="False"
+                                                                   IsOpen="{Binding Path=IsChecked, ElementName=ShowConfirmToggleButton}"
+                                                                   Opened="ShowConfirmPopup_Opened">
+                                                                <Border BorderBrush="LightGray" BorderThickness="2">
+                                                                    <Grid Background="#FFFAFAFA">
+                                                                        <Grid.RowDefinitions>
+                                                                            <RowDefinition/>
+                                                                            <RowDefinition Height="Auto"/>
+                                                                            <RowDefinition x:Name="ConfirmRow" Height="30"/>
+                                                                        </Grid.RowDefinitions>
+                                                                        <ItemsControl x:Name="ConfirmItemsControl" MaxHeight="140" 
+                                                                                      Margin="0,2" BorderThickness="0"
+                                                                                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                                                            <ItemsControl.ItemTemplate>
+                                                                                <DataTemplate>
+                                                                                    <Border x:Name="Border" Background="White" 
+                                                                                            SnapsToDevicePixels="true" Height="20"
+                                                                                            BorderBrush="LightGray" BorderThickness="0,0,0,1">
+                                                                                        <Grid Margin="5,0,0,0">
+                                                                                            <Grid.ColumnDefinitions>
+                                                                                                <ColumnDefinition Width="130"/>
+                                                                                                <ColumnDefinition Width="Auto"/>
+                                                                                                <ColumnDefinition Width="Auto"/>
+                                                                                            </Grid.ColumnDefinitions>
+                                                                                            <TextBlock Text="{Binding WorkerID, Converter={StaticResource IdToNameConverter}, ConverterParameter='ShortName'}"
+                                                                                                       Foreground="#FF444444" TextTrimming="CharacterEllipsis"/>
+                                                                                            <TextBlock Text="{Binding Date, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" Grid.Column="1"
+                                                                                                       Margin="0,0,15,0" Foreground="#FF444444" TextTrimming="CharacterEllipsis"/>
+                                                                                            <TextBlock Text="{Binding SealNumber, StringFormat='Номер пломбы: {0}'}" Grid.Column="2"
+                                                                                                       Foreground="#FF444444" TextTrimming="CharacterEllipsis" Margin="0,0,5,0"/>
+                                                                                        </Grid>
+                                                                                    </Border>
+                                                                                </DataTemplate>
+                                                                            </ItemsControl.ItemTemplate>
+                                                                        </ItemsControl>
+                                                                        <TextBlock Name="WarningTextBlock" Foreground="Gray" 
+                                                                                   Text="Для подтверждения необходимо сохранить текущую запись"
+                                                                                   HorizontalAlignment="Center" Grid.Row="1" 
+                                                                                   Margin="5,0" Padding="0,-2,0,0"/>
+                                                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="2" Margin="5,0">
+                                                                            <Label Content="Номер пломбы: " VerticalContentAlignment="Center"
+                                                                                   Padding="0" Foreground="#FF444444"/>
+                                                                            <TextBox Name="confirmTextBox" Margin="3,0" VerticalContentAlignment="Center"
+                                                                                     Width="100" Height="20" VerticalAlignment="Center"
+                                                                                     Foreground="#FF444444"/>
+                                                                        </StackPanel>
+                                                                        <Button Name="AddConfirmButton" Content="Подтвердить" 
+                                                                                Style="{DynamicResource LinkButton}" Grid.Row="2"
+                                                                                HorizontalAlignment="Right" Margin="10,0" 
+                                                                                Click="AddConfirmButton_Click" VerticalAlignment="Center"
+                                                                                Tag="{Binding Path=Text, ElementName=confirmTextBox}"/>
+                                                                    </Grid>
+                                                                </Border>
+                                                            </Popup>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                            <!--<DataGridCheckBoxColumn x:Name="closingGuardCheckColumn" Width="*" MinWidth="130" MaxWidth="170" Header="Охранник" Binding="{Binding GuardID, Mode=OneTime}"
+                                                                        ElementStyle="{StaticResource GuardCheckButton}" EditingElementStyle="{StaticResource EditingClosingGuardCheckButton}"
+                                                                        CellStyle="{StaticResource ClosingGuardCellStyle}"/>-->
+                                        </DataGrid.Columns>
+                                        <DataGrid.Resources>
+                                            <ContextMenu Name="RowMenu" x:Key="RowMenu">
+                                                <MenuItem Header="Удалить" Click="OnMenuItemClick"/>
+                                            </ContextMenu>
+                                        </DataGrid.Resources>
+                                        <DataGrid.RowStyle>
+                                            <Style TargetType="DataGridRow" BasedOn="{StaticResource CommonDataGridRowStyle}">
+                                                <EventSetter Event="ContextMenuOpening" Handler="OnRowMenuContextMenuOpening"/>
+                                                <Setter Property="ContextMenu" Value="{StaticResource RowMenu}"/>
+                                            </Style>
+                                        </DataGrid.RowStyle>
+                                    </DataGrid>
+                                    <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="3"
+                                               Grid.Row="1" Margin="0,0,0,0" SnapsToDevicePixels="True">
+                                        <Rectangle.Fill>
+                                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                                <GradientStop Color="#88000000" Offset="0"/>
+                                                <GradientStop Color="#00000000" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Rectangle.Fill>
+                                    </Rectangle>
+                                    <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="3"
+                                               Grid.Row="1" Margin="0,0,0,1" SnapsToDevicePixels="True">
+                                        <Rectangle.Fill>
+                                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                                <GradientStop Color="#88000000" Offset="1"/>
+                                                <GradientStop Color="#00000000" Offset="0"/>
+                                            </LinearGradientBrush>
+                                        </Rectangle.Fill>
+                                    </Rectangle>
+                                    <Grid Grid.Row="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Дверь: " FontSize="14" Foreground="#FF444444" VerticalAlignment="Center"
+                                                   Margin="5,0,0,0"/>
+                                        <ComboBox Name="ClosingDoorComboBox" Width="200" Height="30"
+                                                  Grid.Column="1" Margin="5" VerticalAlignment="Center"/>
+                                        <TextBlock Text="Номер пломбы: " FontSize="14" Foreground="#FF444444" VerticalAlignment="Center"
+                                                   Grid.Column="2" Margin="5,0,0,0"/>
+                                        <TextBox Name="ClosingStampNumber" Grid.Column="3" Height="30" Margin="5"
+                                                 VerticalContentAlignment="Center"/>
+                                    </Grid>
+                                    <Button Name="ClosingCheckButton" Content="Добавить и подтвердить" Height="35"
+                                            Margin="5" HorizontalAlignment="Right" Width="200" Grid.Row="3"
+                                            Style="{StaticResource GreenBtn}"
+                                            Click="OnClosingCheckButtonClick"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Открытие помещений" FontSize="14" HorizontalAlignment="Left" Foreground="#FF444444"
+                                       Margin="2" FontWeight="Medium"/>
+                            <Border BorderBrush="Gray" BorderThickness="1" Grid.Row="1" Background="#FFFAFAFA" Margin="2,0,0,0"
+                                    CornerRadius="1">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                        <TextBlock Text="Поиск по номеру пломбы" Foreground="#FF444444" FontSize="14"
+                                                   VerticalAlignment="Center" Margin="5,0"/>
+                                        <TextBox Name="OpeningSealNumerSearchTextBox" Width="150" Margin="5" Height="30"
+                                                 VerticalContentAlignment="Center"
+                                                 TextChanged="OpeningSealNumerSearchTextBox_OnTextChanged"/>
+                                    </StackPanel>
+                                    <DataGrid Name="OpeningJournalDataGrid" Grid.Row="1" 
+                                              CanUserAddRows="False" BorderThickness="0,0,0,1" IsReadOnly="False"
+                                              Style="{StaticResource CommonDataGridStyle}"
+                                              SelectionChanged="OnOpeningJournalDataGridSelectionChanged">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn IsReadOnly="True" Width="Auto" Header="Дата" 
+                                                                ElementStyle="{StaticResource TextColumnCell}"
+                                                                Binding="{Binding Date, Converter={StaticResource DateConverter}, ConverterParameter='dd-MM-yyyy'}"/>
+                                            <DataGridTextColumn IsReadOnly="True" Width="Auto" Header="Время" 
+                                                                ElementStyle="{StaticResource TextColumnCell}"
+                                                                Binding="{Binding Date, Converter={StaticResource DateConverter}, ConverterParameter='HH:mm'}"/>
+                                            <DataGridTextColumn IsReadOnly="True" Width="*" MaxWidth="250" Header="Дверь" 
+                                                                ElementStyle="{StaticResource OpeningDoorCell}"
+                                                                Binding="{Binding LockID, Converter={StaticResource LockIDConverter}}"/>
+                                            <DataGridTextColumn IsReadOnly="True" Width="*" MaxWidth="200" Header="Номер пломбы" 
+                                                                ElementStyle="{StaticResource TextColumnCell}"
+                                                                Binding="{Binding SealNumber}"/>
+                                            <DataGridTextColumn IsReadOnly="True" Width="*" MinWidth="150" Header="Ответственный за открытие" 
+                                                                ElementStyle="{StaticResource TextColumnCell}"
+                                                                Binding="{Binding WorkerID, Converter={StaticResource IdToNameConverter}, ConverterParameter='ShortName'}"
+                                                                CellStyle="{StaticResource OpeningWorkerNoteCellStyle}"/>
+                                            <!--<DataGridCheckBoxColumn x:Name="openingGuardCheckColumn" Width="*" MinWidth="130" MaxWidth="170" Header="Охранник" Binding="{Binding GuardID, Mode=OneTime}"
+                                                                    ElementStyle="{StaticResource GuardCheckButton}" EditingElementStyle="{StaticResource EditingOpeningGuardCheckButton}" 
+                                                                    CellStyle="{StaticResource OpeningGuardCellStyle}" />-->
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                    <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="3"
+                                               Grid.Row="1" Margin="0,0,0,0" SnapsToDevicePixels="True">
+                                        <Rectangle.Fill>
+                                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                                <GradientStop Color="#88000000" Offset="0"/>
+                                                <GradientStop Color="#00000000" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Rectangle.Fill>
+                                    </Rectangle>
+                                    <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="3"
+                                               Grid.Row="1" Margin="0,0,0,1" SnapsToDevicePixels="True">
+                                        <Rectangle.Fill>
+                                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                                <GradientStop Color="#88000000" Offset="1"/>
+                                                <GradientStop Color="#00000000" Offset="0"/>
+                                            </LinearGradientBrush>
+                                        </Rectangle.Fill>
+                                    </Rectangle>
+                                    <TextBlock Text="Номер пломбы: " Margin="5,0" FontSize="14" HorizontalAlignment="Left"
+                                               Foreground="#FF444444" VerticalAlignment="Center" Grid.Row="2"/>
+                                    <TextBox Name="OpeningStampNumber" Margin="115,5,5,5" Height="30"
+                                             Grid.Row="2" VerticalContentAlignment="Center"/>
+                                    <Button Style="{StaticResource GreenBtn}" Name="OpeningCheckButton" 
+                                            Content="Подтвердить открытие" HorizontalAlignment="Right"
+                                            Height="35" Width="200" Margin="5,5,45,5" Grid.Row="3"
+                                            Click="OnOpeningCheckButtonClick"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Табель ответственных лиц">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="840"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition/>
+                            <RowDefinition x:Name="SaveRow" Height="0"/>
+                            <RowDefinition Height="30" />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Margin="0,10,0,0">
+                            <Label Content="Год:" Margin="20,0,0,0" FontSize="14" Height="30" />
+                            <ComboBox Name="yearComboBox" Margin="10,0" Width="120" Height="30" />
+                            <Label Content="Месяц:" Margin="10,0,0,0" FontSize="14" Height="30" />
+                            <ComboBox Name="monthComboBox" Margin="10,0" Width="120" Height="30" />
+                        </StackPanel>
+                        <Button Grid.Row="0" Style="{StaticResource BlueBtn}" Content="Показать" Height="30"
+                                HorizontalAlignment="Right"  Width="100" Margin="0,10,20,0"
+                                Click="showGraphButton_Click" />
+                        <Grid Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="20,5,0,0">
+                                <TextBlock Text="График ответственных лиц за открытие" FontSize="16" Foreground="Black" FontWeight="Medium"/>
+                                <TextBlock Name="OpeningNameTextBlock" Margin="5,0,0,0" FontSize="16" Foreground="Black" FontWeight="Medium"/>
+                            </StackPanel>
+                            <Border Grid.Row="0" BorderBrush="Gray" BorderThickness="1" Margin="20,27,0,0" Width="800" HorizontalAlignment="Left">
+                                <Grid Background="#FFFAFAFA">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition x:Name="openingEditRow" Height="0" />
+                                    </Grid.RowDefinitions>
+                                    <DataGrid Name="openingDataGrid" IsReadOnly="True" AutoGenerateColumns="True"
+                                              CellStyle="{StaticResource CellStyle}"
+                                              Style="{StaticResource ResourceKey=TableDataGridStyle}"
+                                              AutoGeneratingColumn="OnOpeningDataGridAutoGeneratingColumn"
+                                              AutoGeneratedColumns="OnOpeningDataGridAutoGeneratedColumns">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="ФИО" Width="120" IsReadOnly="True"
+                                                                Binding="{Binding WorkerID, Converter={StaticResource IdToNameConverter}, ConverterParameter='ShortName'}"
+                                                                CellStyle="{StaticResource NameOpeningCellStyle}" 
+                                                                ElementStyle="{StaticResource ResourceKey=NameColumnCell}"
+                                                                EditingElementStyle="{StaticResource ResourceKey=EditingNameCell}"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                    <Grid Grid.Row="1" HorizontalAlignment="Left" >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Name="openingFactoryColumn" Width="Auto" />
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                            <Label Content="Группа:" Margin="5,0,0,0" FontSize="14" Height="30" />
+                                            <ComboBox Name="openingGroupComboBox" Width="150" Margin="5,0" Height="30" SelectionChanged="openingGroupComboBox_SelectionChanged" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Label Content="Фабрика:" Margin="5,0,0,0" FontSize="14" Height="30" />
+                                            <ComboBox Name="openingFactoryComboBox" Width="120" Margin="5,0" Height="30" SelectionChanged="openingFactoryComboBox_SelectionChanged" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                            <Label Content="ФИО:" Margin="5,0,0,0" FontSize="14" Height="30" />
+                                            <ComboBox Name="openingNameComboBox" Margin="5,0" Width="200" Height="30" />
+                                        </StackPanel>
+                                    </Grid>
+                                    <Button Style="{StaticResource BlueBtn}" Height="30" Width="100" Margin="0,0,5,0" Grid.Row="1"
+                                            Click="addOpeningWorkerButton_Click" Content="Добавить" Focusable="False"
+                                            HorizontalAlignment="Right"/>
+                                </Grid>
+                            </Border>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="20,5,0,0" Grid.Row="1">
+                                <TextBlock Text="График ответственных лиц за закрытие" FontSize="16" Foreground="Black" FontWeight="Medium"/>
+                                <TextBlock Name="ClosingNameTextBlock" Margin="5,0,0,0" FontSize="16" Foreground="Black" FontWeight="Medium"/>
+                            </StackPanel>
+                            <Border Grid.Row="1" HorizontalAlignment="Left" Margin="20,27,0,0" Width="800" BorderBrush="Gray" BorderThickness="1">
+                                <Grid Background="#FFFAFAFA">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition x:Name="ClosingEditRow" Height="0"/>
+                                    </Grid.RowDefinitions>
+                                    <DataGrid Name="closingDataGrid" IsReadOnly="True" AutoGenerateColumns="True"
+                                              CellStyle="{StaticResource CellStyle}"
+                                              Style="{StaticResource ResourceKey=TableDataGridStyle}"
+                                              AutoGeneratedColumns="OnClosingDataGridAutoGeneratedColumns"
+                                              AutoGeneratingColumn="OnClosingDataGridAutoGeneratingColumn">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="ФИО" Width="120" IsReadOnly="True"
+                                                                Binding="{Binding WorkerID, Converter={StaticResource IdToNameConverter}, ConverterParameter='ShortName'}"
+                                                                CellStyle="{StaticResource NameClosingCellStyle}" 
+                                                                ElementStyle="{StaticResource ResourceKey=NameColumnCell}"
+                                                                EditingElementStyle="{StaticResource ResourceKey=EditingNameCell}" />
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                    <Grid Grid.Row="1" HorizontalAlignment="Left" >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Name="closingFactoryColumn" Width="Auto"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                            <Label Content="Группа:" Margin="5,0,0,0" FontSize="14" Height="30" />
+                                            <ComboBox Name="closingGroupComboBox" Width="150" Margin="5,0" Height="30"
+                                                      SelectionChanged="closingGroupComboBox_SelectionChanged" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Label Content="Фабрика:" Margin="5,0,0,0" FontSize="14" Height="30" />
+                                            <ComboBox Name="closingFactoryComboBox" Width="120" Margin="5,0" Height="30"
+                                                      SelectionChanged="closingFactoryComboBox_SelectionChanged" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                            <Label Content="ФИО:" Margin="5,0,0,0" FontSize="14" Height="30" />
+                                            <ComboBox Name="closingNameComboBox" Margin="5,0" Width="200" Height="30" />
+                                        </StackPanel>
+                                    </Grid>
+                                    <Button Style="{StaticResource BlueBtn}" Height="30" Margin="0,0,5,0" Content="Добавить"
+                                            Click="addClosingWorkerButton_Click" Focusable="False" Grid.Row="1"
+                                            HorizontalAlignment="Right" Width="100" />
+                                </Grid>
+                            </Border>
+                        </Grid>
+
+                        <StackPanel Grid.Row="3" HorizontalAlignment="Right" Orientation="Horizontal">
+                            <TextBlock Text="Последнее редактирование:" VerticalAlignment="Center" Foreground="Black"/>
+                            <TextBlock Name="editingWorkerName" Text="--:--:--" VerticalAlignment="Center" Margin="5,0,20,0" Foreground="Black" />
+                        </StackPanel>
+                        <Button Name="SaveClosingOpeningTimeSheetButton"  Content="Сохранить всё" Grid.Row="2" 
+                                Height="30" Width="120" HorizontalAlignment="Left" Margin="20,0" 
+                                Style="{StaticResource BlueBtn}" 
+                                Click="saveButton_Click"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Табель ответственных лиц на выходные дни">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="840"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition />
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Margin="0,10,0,0">
+                            <Label Content="Год:" Margin="20,0,0,0" FontSize="14" Height="30" />
+                            <ComboBox Name="WeekendResponsiblesYearComboBox" Margin="10,0" Width="120" Height="30" />
+                            <Label Content="Месяц:" Margin="10,0,0,0" FontSize="14" Height="30" />
+                            <ComboBox Name="WeekendResponsiblesMonthComboBox" Margin="10,0" Width="120" Height="30" />
+                        </StackPanel>
+                        <Button Name="LoadWeekendResponsiblesButton" Content="Показать" Height="30" HorizontalAlignment="Right" Width="100" Margin="0,10,20,0"
+                                Style="{StaticResource BlueBtn}"
+                                Click="OnLoadWeekendResponsiblesButtonClick"/>
+                        
+                        <Grid Grid.Row="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="График ответственных лиц на выходные дни" FontSize="16" FontWeight="Medium"
+                                       VerticalAlignment="Top" HorizontalAlignment="Left" Margin="20,5,0,0"
+                                       Foreground="{DynamicResource MainTextBlackBrush}"/>
+                            <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="1" Margin="20,5,0,0" Width="800" HorizontalAlignment="Left">
+                                <Grid Background="#FFFAFAFA">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition x:Name="WeekendResponsiblesEditRow" Height="0"/>
+                                    </Grid.RowDefinitions>
+                                    <DataGrid Name="WeekendResponsiblesDataGrid" IsReadOnly="True" AutoGenerateColumns="True"
+                                              Style="{StaticResource TableDataGridStyle}"
+                                              AutoGeneratingColumn="OnWeekendResponsiblesDataGridAutoGeneratingColumn"
+                                              AutoGeneratedColumns="OnWeekendResponsiblesDataGridAutoGeneratedColumns"
+                                              SelectionChanged="OnWeekendResponsiblesDataGridSelectionChanged">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="ФИО" Width="120" IsReadOnly="True"
+                                                                Binding="{Binding WorkerID, Converter={StaticResource IdToNameConverter}, ConverterParameter='ShortName'}"
+                                                                CellStyle="{StaticResource NameWeekendResponsibleCellStyle}" 
+                                                                ElementStyle="{StaticResource NameColumnCell}"
+                                                                EditingElementStyle="{StaticResource EditingNameCell}"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                    <Grid Grid.Row="1" HorizontalAlignment="Left" >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Name="WeekendResponsiblesFactoryColumn" Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                            <Label Content="Группа:" Margin="5,0,0,0" FontSize="14" Height="30" />
+                                            <ComboBox Name="WeekendResponsiblesGroupComboBox" Width="150" Margin="5,0" Height="30" 
+                                                      SelectionChanged="OnWeekendResponsiblesGroupComboBoxSelectionChanged"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <Label Content="Фабрика:" Margin="5,0,0,0" FontSize="14" Height="30" />
+                                            <ComboBox Name="WeekendResponsiblesFactoryComboBox" Width="120" Margin="5,0" Height="30" 
+                                                      SelectionChanged="OnWeekendResponsiblesFactoryComboBoxSelectionChanged"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                            <Label Content="ФИО:" Margin="5,0,0,0" FontSize="14" Height="30" />
+                                            <ComboBox Name="WeekendResponsiblesNameComboBox" Margin="5,0" Width="200" Height="30"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Button Name="AddWeekendResponsibleButton" Height="30" Width="100" Margin="0,0,5,0" Grid.Row="1"
+                                            Content="Добавить" Focusable="False" HorizontalAlignment="Right"
+                                            Style="{StaticResource BlueBtn}"
+                                            Click="OnAddWeekendResponsibleButtonClick"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+
+                        <Button Name="SaveWeekendResponsiblesButton" Grid.Row="2" HorizontalAlignment="Left" Margin="20,5,5,0"
+                                Content="Сохранить график" Width="150"
+                                Style="{StaticResource BlueBtn}"
+                                Click="OnSaveWeekendResponsiblesButtonClick"/>
+                        <StackPanel Grid.Row="2" HorizontalAlignment="Right" Orientation="Horizontal"
+                                    DataContext="{Binding ElementName=WeekendResponsiblesDataGrid, Path=SelectedItem}">
+                            <TextBlock Text="Последнее редактирование:" VerticalAlignment="Center"
+                                       Foreground="{DynamicResource MainTextBlackBrush}"/>
+                            <TextBlock Name="WeekendResponsiblesEditingInfoTextBlock"  VerticalAlignment="Center" Margin="5,0,20,0"
+                                       Foreground="{DynamicResource MainTextBlackBrush}"/>
+                        </StackPanel>
+
+                        <Grid Grid.Row="3">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition />
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Учёт выхода ответственных в выходные и праздничные дни" FontSize="16" FontWeight="Medium"
+                                       VerticalAlignment="Top" HorizontalAlignment="Left" Margin="20,5,0,0"
+                                       Foreground="{DynamicResource MainTextBlackBrush}"/>
+                            <DataGrid Name="ResponsiblesArrivesDataGrid" Grid.Row="1" Margin="20,5,20,0"
+                                      IsReadOnly="True"
+                                      Style="{StaticResource CommonDataGridStyle}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="ФИО" Width="170"
+                                                        Binding="{Binding WorkerID, Converter={StaticResource IdToNameConverter}, ConverterParameter='ShortName'}"/>
+                                    <DataGridTextColumn Header="Дата" Width="100"
+                                                        Binding="{Binding Date, StringFormat='{}{0:dd.MM.yyyy}'}"/>
+                                    <DataGridTextColumn Header="Время" Width="70"
+                                                        Binding="{Binding Date, StringFormat='{}{0:HH:mm}'}"/>
+                                    <DataGridTextColumn Header="Примечание"
+                                                        Binding="{Binding AdditionalInfo}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <customControls:WatermarkTextBox Name="ResponsibleArriveAdditionalInfoTextBox" Margin="20,5,0,5" MinLines="3" MaxLines="3"
+                                                                 AcceptsReturn="False" TextWrapping="Wrap" VerticalContentAlignment="Top"
+                                                                 WatermarkText="Введите дополнительную информацию к отметке о выходе на работу, если это необходимо"
+                                                                 Foreground="{DynamicResource MainTextBlackBrush}"/>
+                                <Button Name="ResponsibleArriveButton" Grid.Column="1" Content="Отметить выход на работу" Margin="5,5,20,5" 
+                                        VerticalAlignment="Bottom" Width="250"
+                                        Style="{StaticResource GreenBtn}"
+                                        Click="OnResponsibleArriveButtonClick"/>
+                                <Button Name="DeleteResponsibleArriveButton" Grid.Column="1" Content="Удалить последнюю отметку" Margin="5,5,20,5" 
+                                        VerticalAlignment="Bottom" Width="250"
+                                        Style="{StaticResource RedBtn}"
+                                        Click="OnDeleteResponsibleArriveButtonClick"/>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Редактор дверей и действий">
+                <TabControl TabStripPlacement="Left"
+                            Template="{StaticResource RedactorTabControlTemplate}">
+                    <TabItem Header="Каталог и редактор дверей">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition MaxWidth="300"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Margin="10,10,10,60">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition />
+                                    <RowDefinition Height="35"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="Двери" FontSize="18" Foreground="#FF444444"/>
+                                <ListBox Name="LockRedactorListBox" Grid.Row="1" Margin="0,0,0,5"
+                                         SelectionChanged="LockRedactorListBox_SelectionChanged"/>
+                                <Grid Grid.Row="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="35"/>
+                                    </Grid.ColumnDefinitions>
+                                    <customControls:WatermarkTextBox Name="AddLockTextBox" Foreground="Black"
+                                                                     WatermarkText="Добавить..." FontSize="14" />
+                                    <Button Style="{StaticResource BlueBtn}" Content="OK"
+                                            MinWidth="0" Grid.Column="1" Padding="0"
+                                            Click="AddLockButton_Click" />
+                                </Grid>
+                            </Grid>
+                            <Grid Grid.Column="1" Margin="10,10,10,3">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Border BorderThickness="1" BorderBrush="DarkGray" CornerRadius="1" Margin="0,24,0,5"
+                                        Background="Transparent" HorizontalAlignment="Left" MinWidth="200" Height="200">
+                                    <Border.Triggers>
+                                        <EventTrigger RoutedEvent="Grid.MouseEnter">
+                                            <BeginStoryboard>
+                                                <Storyboard TargetName="ChangeDoorPhotoPanel" TargetProperty="Height">
+                                                    <DoubleAnimation Duration="0:0:0.2" To="50"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="Grid.MouseLeave">
+                                            <BeginStoryboard>
+                                                <Storyboard TargetName="ChangeDoorPhotoPanel" TargetProperty="Height">
+                                                    <DoubleAnimation Duration="0:0:0.2"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Border.Triggers>
+                                    <Grid>
+                                        <TextBlock Name="NullSourceText" Text="Изображение отсутствует" Foreground="Gray"
+                                                   VerticalAlignment="Center" HorizontalAlignment="Center"
+                                                   FontSize="14" TextWrapping="Wrap" Width="90"/>
+                                        <Image Name="DoorPhoto" Stretch="Uniform"/>
+                                        <Grid x:Name="ChangeDoorPhotoPanel" VerticalAlignment="Bottom"
+                                              Background="#AA222222" Height="0">
+                                            <StackPanel>
+                                                <Button Name="ChangeDoorPhotoButton" Content="Изменить фотографию"
+                                                        Style="{StaticResource LinkButtonWhite}"
+                                                        HorizontalAlignment="Center" Margin="0,5" 
+                                                        Click="ChangeDoorPhotoButton_OnClick"/>
+                                                <Button Name="DeleteDoorPhotoButton" Content="Удалить"
+                                                        Style="{StaticResource LinkButtonWhite}"
+                                                        HorizontalAlignment="Center" Margin="0,5"
+                                                        Click="DeleteDoorPhotoButton_OnClick"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                                <TextBlock Grid.Row="1" Text="Название: " Foreground="#FF444444" FontSize="18"
+                                           HorizontalAlignment="Left"/>
+                                <TextBox Name="LockNameTextBox" Height="35" Margin="0,2,2,0" FontSize="16" Grid.Row="2"/>
+                                <TextBlock Text="Примечание по закрытию:" Grid.Row="3" HorizontalAlignment="Left"
+                                           FontSize="18" Foreground="#FF444444" VerticalAlignment="Top"
+                                           Margin="0,10,0,0"/>
+                                <TextBox Name="LockNoteTextBox" Margin="0,40,0,0" Grid.Row="3" VerticalContentAlignment="Top"
+                                         TextWrapping="Wrap" FontSize="14" VerticalScrollBarVisibility="Auto" AcceptsReturn="True"/>
+                                <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,40,5">
+                                    <Button Style="{StaticResource RedBtn}" Name="DeleteLockButton" Content="Удалить"
+                                            HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                            Width="100" Height="30" Margin="0,0,5,0"
+                                            Click="DeleteLockButton_Click"/>
+                                    <Button Style="{StaticResource BlueBtn}" Name="SaveLockChangesButton"
+                                            Content="Сохранить" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                            Width="100" Height="30"
+                                            Click="SaveLockChangesButton_Click"/>
+                                </StackPanel>
+                                <TextBlock Name="LastLockChengesTextBlock" Grid.Row="5" Text="Последнее редактирование: "
+                                           HorizontalAlignment="Right" Foreground="Gray" Padding="0" Margin="0,0,40,0"/>
+                            </Grid>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Каталог и редактор действий">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition MinHeight="250"/>
+                                <RowDefinition MaxHeight="200"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="27"/>
+                            </Grid.RowDefinitions>
+                            <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="1" Margin="17,10,20,0">
+                                <Grid>
+                                    <ListBox Name="ActionListBox" Margin="10,15,10,45" BorderThickness="0"
+                                             SelectionChanged="ActionListBox_SelectionChanged"
+                                             ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Height="50">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="35"/>
+                                                        <ColumnDefinition />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="{Binding Path= ActionNumber}" FontSize="16" VerticalAlignment="Top"/>
+                                                    <TextBlock Text="{Binding Path= ActionText}" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Grid.Column="1"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                        <ItemsControl.GroupStyle>
+                                            <GroupStyle>
+                                                <GroupStyle.HeaderTemplate>
+                                                    <DataTemplate>
+                                                        <Grid>
+                                                            <TextBlock Foreground="Black" FontSize="20" Text="{Binding Path=Name, Converter={StaticResource ActionGroupConverter}}"
+                                                                       TextWrapping="Wrap" Margin="10,5,5,2" Height="30"/>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </GroupStyle.HeaderTemplate>
+                                            </GroupStyle>
+                                        </ItemsControl.GroupStyle>
+                                    </ListBox>
+                                    <Grid VerticalAlignment="Bottom" Margin="2,5,10,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="№ пункта:" VerticalContentAlignment="Center" FontSize="16" Margin="10,0,0,0" />
+                                        <TextBox Name="AddActionNumberTextBox" Width="35" FontSize="16" Margin="5,0" Grid.Column="1" HorizontalContentAlignment="Center" />
+                                        <Label Content="Примечание к: " VerticalContentAlignment="Center" FontSize="16" Grid.Column="2"/>
+                                        <ComboBox Name="AddActionStatusComboBox" Grid.Column="3" Width="100"/>
+                                        <userControls:PopUpTextBox Name="AddActionPopupTextBox" Margin="5,0,0,0" FontSize="14" Grid.Column="4" WaterMark="Добавить..."
+                                                                         Height="35" Foreground="#FF444444"/>
+                                        <Button Style="{StaticResource BlueBtn}" Name="AddActionButton" Content="OK" MinWidth="0" Width="35" Grid.Column="5" Click="AddActionButton_Click" />
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                            <Border Grid.Row="1" CornerRadius="1" Margin="17,10,20,5" BorderBrush="Gray" BorderThickness="1">
+                                <Grid>
+                                    <Grid.RowDefinitions>                                       
+                                        <RowDefinition/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Label Content="№ пункта: " Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Margin="10,0,0,0" />
+                                    <TextBox Name="ActionNumberTextBox" Grid.Row="1" HorizontalAlignment="Left" Margin="90,5" Width="30" Height="30" HorizontalContentAlignment="Center" FontSize="14" />
+                                    <Label Content="Примечание к: " Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="130,0,0,0" FontSize="14"/>
+                                    <ComboBox Name="ActionStatusComboBox" Grid.Row="1" HorizontalAlignment="Left" Margin="240,5" Width="100"/>
+                                    <TextBox Name="ActionTextBox" VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto"
+                                                 TextWrapping="Wrap" Margin="10,10,10,0" FontSize="14" AcceptsReturn="True"/>                                  
+                                </Grid>
+                            </Border>
+                            <Button Style="{StaticResource RedBtn}" Name="DeleteActionButton" Content="Удалить" 
+                                    Width="100" HorizontalAlignment="Right" Margin="0,3,170,3"
+                                    Height="30" Grid.Row="2" 
+                                    Click="DeleteActionButton_Click" />
+                            <Button Style="{StaticResource BlueBtn}" Name="SaveChangesActionButton" 
+                                    Content="Сохранить" Width="100" HorizontalAlignment="Right"
+                                    Height="30" Grid.Row="2" Margin="2,3,60,3" 
+                                    Click="SaveChangesActionButton_Click" />
+                            <TextBlock Name="LastActionChangesTextBlock" Text="Последнее редактирование: " HorizontalAlignment="Right"
+                                       Margin="10,1,60,5" Foreground="Black" Grid.Row="3" VerticalAlignment="Bottom" />
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+            </TabItem>
+        </TabControl>
+        
+        <Popup Name="ClosingNotePopup" Height="400" Width="500" Placement="Center" PlacementTarget="{Binding ElementName=prodPage}"
+                   PopupAnimation="Fade">
+            <Border BorderBrush="#FF017BCD" BorderThickness="1">
+                <Grid Background="White">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Примечание к закрытию" Foreground="Black" HorizontalAlignment="Left" Margin="15,5" FontSize="24"
+                                   FontWeight="Light"/>
+                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="15,5" Grid.Row="1">
+                        <TextBlock Name="closingDoorNoteTextBlock" Foreground="Black" TextWrapping="Wrap" FontSize="16"/>
+                    </ScrollViewer>
+                    <Button Style="{StaticResource BlueBtn}" Content="Подтвердить"
+                            Grid.Row="2" HorizontalAlignment="Right" Height="35"
+                            Width="150" Margin="0,2,170,10" Click="agreeClosingButton_Click" />
+                    <Button Style="{StaticResource RedBtn}" Content="Не подтверждать"
+                            Grid.Row="2" HorizontalAlignment="Right" Height="35"
+                            Width="150" Margin="0,2,10,10" Click="dontAgreeClosingButton_Click" />
+                </Grid>
+            </Border>
+        </Popup>
+        <Popup Name="ActionNotePopup" Height="550" Width="800" Placement="Center" 
+               PlacementTarget="{Binding ElementName=prodPage}" PopupAnimation="Fade">
+            <Border BorderBrush="#FF017BCD" BorderThickness="1">
+                <Grid Background="White">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Инструкция" Foreground="Black" HorizontalAlignment="Left"
+                               Margin="15,5" FontSize="24" FontWeight="Light" TextWrapping="Wrap"/>
+                    <ItemsControl Name="ActionNoteItemsControl" Margin="15,5" 
+                                  Grid.Row="1" BorderThickness="0"
+                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="35"/>
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding Path= ActionNumber}" FontSize="16" VerticalAlignment="Top"/>
+                                    <TextBlock Text="{Binding Path= ActionText}" TextTrimming="CharacterEllipsis"
+                                               TextWrapping="Wrap" Grid.Column="1"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.GroupStyle>
+                            <GroupStyle>
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <TextBlock Foreground="Black" FontSize="20" 
+                                                       Text="{Binding Path=Name, Converter={StaticResource ActionGroupConverter}}"
+                                                       TextWrapping="Wrap" Margin="10,10,5,2" Height="60"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </ItemsControl.GroupStyle>
+                    </ItemsControl>
+                    <Button Content="Закрыть" Grid.Row="2" Focusable="False"
+                            HorizontalAlignment="Right" Height="35"
+                            Width="150" Margin="0,2,10,10"
+                            Click="CancelActionNote_Click"/>
+                </Grid>
+            </Border>
+        </Popup>
+
+        <Grid Name="ShadowGrid" Background="#55000000" Opacity="0"
+              MouseLeftButtonDown="OnShadowGridMouseLeftButtonDown">
+            <Grid.Visibility>
+                <Binding ElementName="AdditionalMenuToggleButton" Path="IsChecked">
+                    <Binding.Converter>
+                        <BooleanToVisibilityConverter/>
+                    </Binding.Converter>
+                </Binding>
+            </Grid.Visibility>
+        </Grid>
+
+        <ToggleButton Name="AdditionalMenuToggleButton" Height="45" Width="45"
+                      VerticalAlignment="Bottom" HorizontalAlignment="Right" Padding="0,0,2,5"
+                      VerticalContentAlignment="Bottom" HorizontalContentAlignment="Right"
+                      Style="{DynamicResource AdditionalMenuToggleButtonStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Rectangle Fill="White" Height="3" Width="22" Grid.Row="0" Grid.Column="0" Margin="2"/>
+                <Rectangle Fill="White" Height="3" Width="22" Grid.Row="1" Grid.Column="0" Margin="2"/>
+                <Rectangle Fill="White" Height="3" Width="22" Grid.Row="2" Grid.Column="0" Margin="2"/>
+            </Grid>
+            <ToggleButton.Triggers>
+                <EventTrigger RoutedEvent="ToggleButton.Checked">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="DropDown" Storyboard.TargetProperty="Opacity"
+                                             Duration="0:0:0.3" From="0" To="1" DecelerationRatio="0.7"/>
+                            <DoubleAnimation Storyboard.TargetName="ShadowGrid" Storyboard.TargetProperty="Opacity"
+                                             Duration="0:0:0.3" From="0" To="1" DecelerationRatio="0.8"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </ToggleButton.Triggers>
+        </ToggleButton>
+
+        <Grid x:Name="DropDown" SnapsToDevicePixels="True" VerticalAlignment="Bottom"
+              HorizontalAlignment="Right" Margin="0,0,0,45" Opacity="0">
+            <Grid.Visibility>
+                <Binding ElementName="AdditionalMenuToggleButton" Path="IsChecked">
+                    <Binding.Converter>
+                        <BooleanToVisibilityConverter/>
+                    </Binding.Converter>
+                </Binding>
+            </Grid.Visibility>
+            <Border Background="Gray" VerticalAlignment="Top" Margin="0,2,0,0"
+                    Width="{Binding ElementName=DropDownBorder, Path=ActualWidth}"
+                    Height="{Binding ElementName=DropDownBorder, Path=ActualHeight}">
+                <Border.Effect>
+                    <BlurEffect Radius="7"/>
+                </Border.Effect>
+            </Border>
+            <Border x:Name="DropDownBorder" BorderThickness="1" Margin="5,1,5,5"
+                    BorderBrush="DarkGray" Background="White">
+                <Grid Margin="0,5">
+                    <StackPanel>
+                        <ToggleButton Content="Состояние дверей" Name="LocksActualStatusButton"
+                                      Style="{DynamicResource ResourceKey=AppBarToggleButtonStyle}"
+                                      Checked="OnLocksActualStatusButtonClick"/>
+                        <ToggleButton Content="Журнал" Name="CheckItemButton"
+                                      Style="{DynamicResource ResourceKey=AppBarToggleButtonStyle}"
+                                      Checked="CheckItemButton_Click"/>
+                        <ToggleButton Content="График" Name="TabItemButton" 
+                                      Style="{DynamicResource ResourceKey=AppBarToggleButtonStyle}"
+                                      Checked="TabItemButton_Click"/>
+                        <ToggleButton Name="WeekendResponsiblesToggleButton" Content="Дежурные на выходные дни"
+                                      Style="{DynamicResource AppBarToggleButtonStyle}"
+                                      Checked="OnWeekendResponsiblesToggleButtonClick"/>
+                        <ToggleButton Content="Каталог дверей" Name="RedactorItemButton" 
+                                      Style="{DynamicResource AppBarToggleButtonStyle}"
+                                      Checked="RedactorItemButton_Checked"/>
+                        <Rectangle Fill="LightGray" Margin="0,5" Height="1"/>
+                        <Button Name="exportToExcelButton" Content="Экспорт"
+                                Style="{DynamicResource AppBarButtonStyle}"
+                                Click="exportToExcelButton_Click"/>
+                        <Button Name="editingButton" Content="Редактировать"
+                                Style="{DynamicResource AppBarButtonStyle}" 
+                                Click="editingButton_Click"/>
+                        <Button Name="ExportWeekendResponsiblesToExcelButton" Content="Экспорт"
+                                Style="{DynamicResource AppBarButtonStyle}"
+                                Click="OnExportWeekendResponsiblesReportButtonClick"/>
+                        <Button Name="EditWeekendResponsiblesButton" Content="Редактировать"
+                                Style="{DynamicResource AppBarButtonStyle}" 
+                                Click="OnEditWeekendResponsiblesButtonClick"/>
+                        <Button Name="ExportJournalButton" Content="Экспорт"
+                                Style="{DynamicResource AppBarButtonStyle}"
+                                Click="ExportJournalButton_Click"/>
+                        <Button Name="ExportResponsibleRaportButton" Content="Экспортировать данные по рапортам"
+                                Style="{DynamicResource AppBarButtonStyle}"
+                                Click="OnExportResponsibleRaportButtonClick"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

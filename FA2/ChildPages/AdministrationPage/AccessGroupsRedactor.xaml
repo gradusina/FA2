@@ -1,0 +1,202 @@
+﻿<Page x:Class="FA2.ChildPages.AdministrationPage.AccessGroupsRedactor"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:customControls="clr-namespace:FAIIControlLibrary.CustomControls;assembly=FAIIControlLibrary"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+      xmlns:converters="clr-namespace:FA2.Converters"
+      mc:Ignorable="d"
+      Height="510" Width="850"
+      Background="White"
+	Title="AccessGroupsRedactor" Loaded="OnPageLoaded">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Themes\Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="AvailableToggleButtonStyle" TargetType="{x:Type ToggleButton}">
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="BorderBrush" Value="{x:Null}"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Foreground" Value="#42000000"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                            <Border Background="{TemplateBinding Background}">
+                                <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Foreground" Value="#DD000000"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <converters:BooleanToVisibilityConverter x:Key="VisibleOnFalseConverter" True="Collapsed" False="Visible"/>
+
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid Margin="10">
+        <Grid Name="OpacityGrid">
+            <Grid Name="AccessGroupViewGrid" Visibility="Visible">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <ListBox Name="AccessGroupViewListBox" FontSize="16" Margin="5" BorderBrush="LightGray"
+                         DisplayMemberPath="AccessGroupName" SelectedValuePath="AccessGroupID">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource CommonListBoxItemStyle}">
+                            <EventSetter Event="MouseDoubleClick" Handler="OnAccessGroupItemMouseDoubleClick"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Name="AddAccessGroupButton" Content="Добавить" Margin="5" Width="90"
+                            Style="{StaticResource BlueBtn}"
+                            Click="OnAddAccessGroupButtonClick"/>
+                    <Button Name="DeleteAccessGroupButton" Content="Удалить" Margin="5" Width="90"
+                            Style="{StaticResource RedBtn}"
+                            Click="OnDeleteAccessGroupButtonClick"/>
+                    <Button Name="EditAccessGroupButton" Content="Изменить" Margin="5" Width="90"
+                            Click="OnEditAccessGroupButtonClick"/>
+                    <Button Name="OkButton" Content="Закрыть" Margin="5" Width="90"
+                            Click="OnCancelButtonClick"/>
+                </StackPanel>
+            </Grid>
+            <Grid Name="AccessGroupRedactorGrid" Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Название группы:" FontSize="16" VerticalAlignment="Center" Margin="5" Foreground="#FF444444"/>
+                    <customControls:WatermarkTextBox Name="AccessGroupNameTextBox" Margin="5" Grid.Column="1" Height="30"
+                                                     Text="{Binding Path=AccessGroupName, Mode=OneWay}"
+                                                     WatermarkText="Введите название" IsEmphasisEnabled="True"
+                                                     EmphasisText="Необходимо ввести название"/>
+                </Grid>
+                <TextBlock Text="Доступные модули:" Grid.Row="1" FontSize="16" Margin="5" Foreground="#FF444444"/>
+                <ItemsControl Name="AccessGroupAvailablesItemsControl" Grid.Row="2" Margin="5,0">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Background="#FFF9F9F9" Margin="2" Width="397">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="150"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid Background="{Binding ModuleColor}">
+                                    <Image Height="45" Width="45" Margin="5"
+                                           Source="{Binding ModuleIcon}"/>
+                                </Grid>
+                                <TextBlock Grid.Column="1" FontSize="14" Margin="5,0"
+                                           HorizontalAlignment="Left" VerticalAlignment="Center"
+                                           TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
+                                           Foreground="{DynamicResource MainTextBlackBrush}"
+                                           Text="{Binding ModuleName}"/>
+                                <Grid x:Name="ShadowGrid" Grid.Column="0" Grid.ColumnSpan="3" Background="#82FFFFFF"
+                                      Visibility="{Binding ElementName=AccessButton, Path=IsChecked, Converter={StaticResource VisibleOnFalseConverter}}"/>
+                                <Grid Grid.Column="2">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <ToggleButton x:Name="AccessButton" HorizontalAlignment="Left"
+                                                  IsChecked="{Binding Access}"
+                                                  Style="{StaticResource AvailableToggleButtonStyle}">
+                                        <ToggleButton.Content>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid Width="20" Height="20" Margin="2"
+                                                      Visibility="{Binding ElementName=AccessButton, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                    <Ellipse Fill="#FF0FA861"/>
+                                                    <Polygon Width="15" Height="15" HorizontalAlignment="Center" Fill="White"
+                                                             VerticalAlignment="Center" Points="2,8 3.5,6.5 7,9.5 7,12.5"/>
+                                                    <Polygon Width="15" Height="15" HorizontalAlignment="Center" Fill="White"
+                                                             Points="7,12.5 7,9.5 11.5,4.5 13,6" VerticalAlignment="Center"/>
+                                                </Grid>
+                                                <TextBlock Text="Доступен" Grid.Column="1" Margin="3,0"
+                                                           VerticalAlignment="Center"
+                                                           Visibility="{Binding ElementName=AccessButton, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                                <TextBlock Text="Не доступен" Grid.Column="1" Margin="2,0"
+                                                           VerticalAlignment="Center"
+                                                           Visibility="{Binding ElementName=AccessButton, Path=IsChecked, Converter={StaticResource VisibleOnFalseConverter}}"/>
+                                            </Grid>
+                                        </ToggleButton.Content>
+                                    </ToggleButton>
+                                    <ToggleButton x:Name="FullAccessButton"  Grid.Row="1"
+                                                  HorizontalAlignment="Left" Margin="0,0,0,5"
+                                                  IsChecked="{Binding FullAccess}"
+                                                  Visibility="{Binding ElementName=AccessButton, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                  Style="{StaticResource AvailableToggleButtonStyle}">
+                                        <ToggleButton.Content>
+                                            <Grid>
+                                                <TextBlock Text="Полный доступ" Margin="3,0"
+                                                           VerticalAlignment="Center" Foreground="#FFFF5722"
+                                                           Visibility="{Binding ElementName=FullAccessButton, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                                <TextBlock Text="Ограниченный доступ" Margin="2,0" VerticalAlignment="Center"
+                                                           Visibility="{Binding ElementName=FullAccessButton, Path=IsChecked, Converter={StaticResource VisibleOnFalseConverter}}"/>
+                                            </Grid>
+                                        </ToggleButton.Content>
+                                    </ToggleButton>
+                                </Grid>
+                                <ToggleButton Grid.Column="0" VerticalAlignment="Stretch"
+                                              HorizontalAlignment="Stretch"
+                                              IsChecked="{Binding Access}"
+                                              Style="{StaticResource AvailableToggleButtonStyle}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel IsItemsHost="True">
+                                <i:Interaction.Behaviors>
+                                    <ei:FluidMoveBehavior AppliesTo="Children" Duration="00:00:00.20"/>
+                                </i:Interaction.Behaviors>
+                            </WrapPanel>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+                <Grid Grid.Row="3" HorizontalAlignment="Right">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Name="AddNewAccessGroupButton" Content="Добавить новую группу"
+                            Width="150" MinWidth="0" Margin="5" 
+                            Style="{StaticResource BlueBtn}"
+                            Click="OnAddNewAccessGroupButtonClick"/>
+                    <Button Name="SaveChangesButton" Content="Сохранить" Margin="5"
+                            Width="90" IsEnabled="True" Grid.Column="0" HorizontalAlignment="Right"
+                            Click="OnSaveChangesButtonClick" 
+                            Style="{StaticResource BlueBtn}"/>
+                    <Button Name="CancelButton" Content="Отмена" Margin="5" Width="90" Grid.Column="1"
+                            Click="OnCancelAddAccessGroupButtonClick"/>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

@@ -1,0 +1,89 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:FA2.Converters">
+
+    <converters:WorkerProdStatusConverter x:Key="WorkerProdStatusConveter"/>
+    <converters:ShiftDurationConverterClass x:Key="ShiftDurationConverterClass" />
+    <converters:VerificationButtonConverter x:Key="VerificationButtonConverter"/>
+    <converters:TimeTrackingVerificationConverter x:Key="TimeTrackingVerificationConverter"/>
+    <converters:MeasureUnitNameFromOperationIdConverter x:Key="MeasureUnitNameFromOperationIdConverter"/>
+    <converters:TimeTrackingNotesVisibilityConverter x:Key="TimeTrackingNotesVisibilityConverter"/>
+    <converters:OperationStructConverter x:Key="OperationStructConverter"/>
+    <converters:IdToWorkOperationConverter x:Key="IdToWorkOperationConverter" />
+    <converters:IdToLayerGroupNameConverter x:Key="IdToLayerGroupNameConverter"/>
+    <converters:WorkingDaysCountConverter x:Key="WorkingDaysCountConverter"/>
+    <converters:BrigadierAccentConverter x:Key="BrigadierAccentConverter"/>
+    <converters:IdToWorkerGroupConverter x:Key="IdToWorkerGroupConverter"/>
+    
+    <converters:IdToMyWorkersGroupNameConverter x:Key="IdToMyWorkersGroupNameConverter"/>
+    <converters:IdToResponsibleTypeConverter x:Key="IdToResponsibleTypeConverter"/>
+    <converters:IdToWorkOperationTypeConverter x:Key="IdToWorkOperationTypeConverter"/>
+    <converters:IdToWorkOperationGroupConverter x:Key="IdToWorkOperationGroupConverter"/>
+
+    <converters:WorkerProffessionIdtoInfoConverter x:Key="WorkerProffessionIdtoInfoConverter"/>
+
+    
+    <converters:IdToContactTypeImageConverter x:Key="IdToContactTypeImageConverter"/>
+    <converters:IdToContactTypeName x:Key="IdToContactTypeName"/>
+    <converters:BirthToAgeConverter x:Key="BirthToAgeConverter"/>
+    <converters:IdToStaffAdressTypeConverter x:Key="IdToStaffAdressTypeConverter"/>
+    <converters:IdToEducationInstitutionTypeConverter x:Key="IdToEducationInstitutionTypeConverter"/>
+    <converters:ProductStatusColorConverter x:Key="ProductStatusColorConverter"/>
+
+    <converters:OpacityConverter x:Key="OpacityConverter"/>
+    
+
+
+
+
+    <converters:NewsTextConverter x:Key="NewsTextConverter" />
+    <converters:IdToNewsStatusConverter x:Key="IdToNewsStatusConverter" />
+
+    <converters:IdToNameConverter x:Key="IdToNameConverter"/>
+    <ImageSourceConverter x:Key="ImageSourceConverter" />
+    <converters:NoRecordsConverter x:Key="NoRecordsConverter"/>
+    <converters:ModuleIconConverter x:Key="ModuleIconConverter"/>
+    <converters:DateConverter x:Key="DateConverter" />
+    <converters:IdToColorConverter x:Key="IdToColorConverter"/>
+    <converters:IdToTooltipConverter x:Key="IdToTooltipConverter" />
+    <converters:IdToContentConverter x:Key="IdToContentConverter" />
+
+    <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    <converters:IdToAccessGroupNameConverter x:Key="IdToAccessGroupNameConverter"/>
+
+    <converters:IdToModuleNameConverter x:Key="IdToModuleNameConverter"/>
+    <converters:IdToProfessionConverter x:Key="IdToProfessionConverter"/>
+    <converters:IdToFactoryConverter x:Key="IdToFactoryConverter" />
+    <converters:IdToActionNameConverter x:Key="IdToActionNameConverter"/>
+    <converters:IdToMachineNameConverter x:Key="IdToMachineNameConverter"/>
+    <converters:ItemsSourceStaffSummProfessionsConverter x:Key="ItemsSourceStaffSummProfessionsConverter"/>
+    <converters:IdToWorkSubSectionConverter x:Key="IdToWorkSubSectionConverter" />
+    <converters:IdToWorkUnitConverter x:Key="IdToWorkUnitConverter" />
+    <converters:IdToWorkSectionConverter x:Key="IdToWorkSectionConverter" />
+    <converters:IdToRequestTypeConverter x:Key="IdToRequestTypeConverter"/>
+    <converters:TimeIntervalCountConverter x:Key="TimeIntervalCountConverter"/>
+    <converters:ServiceHistoryConverter x:Key="ServiceHistoryConverter"/>
+    <converters:UntilTimeCountConverter x:Key="UntilTimeCountConverter"/>
+    <converters:ServiceResponsibilitiesIsOverdueConverer x:Key="ServiceResponsibilitiesIsOverdueConverer"/>
+    <converters:ServiceEquipmentConverter x:Key="ServiceEquipmentConverter"/>
+    <converters:TimeSpanStringConverter x:Key="TimeSpanStringConverter"/>
+    <converters:TaskConverter x:Key="TaskConverter"/>
+    <converters:FileIconConverter x:Key="FileIconConverter"/>
+    <converters:FilePathToNameConverter x:Key="FilePathToNameConverter"/>
+    <converters:IdToStaffPhotoConverter x:Key="IdToStaffPhotoConverter"/>
+    <converters:StimulationsConverter x:Key="StimulationsConverter"/>
+    <converters:TechnologyProblemConveter x:Key="TechnologyProblemConveter"/>
+    <converters:WorkerRequestConverter x:Key="WorkerRequestConverter"/>
+    <converters:WorkerRequestDurationConverter x:Key="WorkerRequestDurationConverter"/>
+    
+    
+    <converters:WeekendDaysConverter x:Key="WeekendDaysConverter"/>
+    <converters:DailyRateWorkingHoursConverter x:Key="DailyRateWorkingHoursConverter"/>
+    <converters:AbsenceTypeConverter x:Key="AbsenceTypeConverter"/>
+    <converters:ForegroundBlackWhiteConverter x:Key="ForegroundBlackWhiteConverter"/>
+    <converters:DeviationPlannedScheduleColorConverter x:Key="DeviationPlannedScheduleColorConverter"/>
+    <converters:WorkerProfessionInfoConverter x:Key="WorkerProfessionInfoConverter"/>
+    <converters:AdmissionsConverter x:Key="AdmissionsConverter"/>
+    <converters:AdmissionsMultiConverter x:Key="AdmissionsMultiConverter"/>
+
+</ResourceDictionary>

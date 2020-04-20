@@ -1,0 +1,44 @@
+﻿<Page x:Class="FA2.ChildPages.PlannedWorksPage.ChooseEmptyWorkReasonPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="clr-namespace:FA2.ChildPages.PlannedWorksPage"
+      Title="ChooseEmptyWorkReasonPage" Width="350" Height="350" Background="White">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Themes\Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid>
+        <Grid Name="MainGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Укажите причину, по каторой Вы желаете приступить к выполнению данных работ" 
+                       Margin="10,10,10,0" TextWrapping="Wrap"
+                       Foreground="{DynamicResource AdditTextBlackBrush}"/>
+            <ListBox Name="EmptyWorkReasonsListBox" Grid.Row="1" Margin="10,5"
+                     DisplayMemberPath="EmptyWorkReasonName"
+                     SelectedValuePath="EmptyWorkReasonID"/>
+            <Grid Grid.Row="2"
+                  Background="{DynamicResource MidBackground}">
+                <Grid HorizontalAlignment="Right">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Name="ChooseEmptyWorkReasonButton" Content="Выбрать" 
+                            Width="100" Margin="5,10"
+                            Style="{StaticResource BlueBtn}"
+                            Click="OnChooseEmptyWorkReasonButtonClick"/>
+                    <Button Name="ClosePageButton" Content="Отмена" Width="100" Margin="0,10,10,10" Grid.Column="1"
+                            Click="OnClosePageButtonClick"/>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

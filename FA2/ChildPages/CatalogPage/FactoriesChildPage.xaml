@@ -1,0 +1,63 @@
+﻿<Page x:Class="FA2.ChildPages.CatalogPage.FactoriesChildPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        Height="350"  Width="450"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="400"
+	Title="AdditionalOperationsChildPage" Loaded="Page_Loaded">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Themes\Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="30"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ListBox x:Name="FactoriesListBox" SelectedValuePath="FactoryID" Background="White" SelectionChanged="FactoriesListBox_SelectionChanged">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid VerticalAlignment="Stretch" Margin="0,3,0,3">
+                        <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="5,3,0,3" Text="{Binding FactoryName}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem" BasedOn="{StaticResource CommonListBoxItemStyle}">
+                    <EventSetter Event="PreviewMouseDoubleClick" Handler="FactoriesListBox_PreviewMouseDoubleClick"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
+
+        <Border  Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Background="{DynamicResource MidBackground}" BorderThickness="0,1,0,0" BorderBrush="#FF546E7A">
+            <Grid x:Name="EditGrid" VerticalAlignment="Bottom" Height="40">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="34"/>
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="NameTextBox" Height="30" Width="Auto" Margin="4,0,0,0" Text="{Binding FactoryName, Mode=TwoWay}" VerticalContentAlignment="Center" FontSize="14" KeyDown="AdditOperationsNameTextBox_KeyDown"/>
+                <Button x:Name="OkButton" Content="Сохранить" Style="{StaticResource BlueBtn}" Margin="2.5,2" Height="30" Width="65" Padding="2" HorizontalAlignment="Center" Grid.Column="1" Click="OkButton_Click"/>
+                <Button x:Name="CancelButton" Content="✕" Style="{StaticResource RedBtn}" Margin="0,2,4.5,2" Height="30" Width="30" Padding="2" HorizontalAlignment="Right" Grid.Column="2" Click="CancelButton_Click" ToolTip="Отмена"/>
+
+            </Grid>
+        </Border>
+        <StackPanel x:Name="ButtonsStackPanel"  Grid.Column="1" Background="{DynamicResource MidBackground}">
+            <Button x:Name="AddNewButton" Content="+" Style="{StaticResource GreenBtn}" Margin="2,4,2,2" Height="20" Width="20" Padding="2" HorizontalAlignment="Center" ToolTip="Добавить" Click="AddNewButton_Click"/>
+            <Button x:Name="DeleteButton" Content="-" Style="{StaticResource RedBtn}" Margin="2.5,2" Height="20" Width="20" Padding="2" HorizontalAlignment="Center" ToolTip="Удалить" Click="DeleteButton_Click"/>
+        </StackPanel>
+
+    </Grid>
+</Page>

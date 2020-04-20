@@ -1,0 +1,204 @@
+﻿<Page x:Class="FA2.ChildPages.StaffPage.EditStaffContact"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      d:DesignHeight="520" d:DesignWidth="550"
+      Height="450" Width="450"
+      Background="White"
+	Title="EditStaffContact">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Themes\Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <!--AdressesRow-->
+            <RowDefinition Height="170"/>
+            
+            <!--ContactsRow-->
+            <RowDefinition/>
+            
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <Grid Name="AdressesGrid" Grid.Row="0" Margin="0,0,0,5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Адреса" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                       FontSize="16" Margin="10,10,10,5"
+                       Foreground="{DynamicResource AdditTextBlackBrush}"/>
+            <Grid Name="AdressesOpacityGrid" Grid.Row="1">
+                <Grid Name="AdressesViewGrid" Visibility="Visible">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ListBox Name="AdressesListBox" Foreground="#FF444444" Margin="10,0"
+                             MouseDoubleClick="AdressesListBox_MouseDoubleClick">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="150"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding StaffAdressTypeID, Converter={StaticResource IdToStaffAdressTypeConverter}}"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding StaffAdress}" Margin="10,0,0,0"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Button Name="AddAdressButton" Content="Добавить новый адрес" Style="{StaticResource LinkButton}"
+                            Click="AddAdressButton_Click" HorizontalAlignment="Left" Grid.Row="1" Margin="10,5"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1">
+                        <Button Name="EditAdresButton" Content="Изменить" Margin="5" Style="{StaticResource LinkButton}"
+                                Click="EditAdresButton_Click"/>
+                        <Button Name="DeleteAdressButton" Content="Удалить" Margin="5,5,10,5" Width="45"
+                                Style="{StaticResource LinkButton}" Click="DeleteAdressButton_Click"/>
+                    </StackPanel>
+                </Grid>
+                <Grid Name="AdressesRedactorGrid" Visibility="Hidden">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <ComboBox Name="AdressesTypeComboBox" Width="170" Margin="10,0,0,0"
+                                  SelectedValue="{Binding StaffAdressTypeID, Mode=OneWay}"/>
+                        <TextBox Name="AdressTextBox" Grid.Column="1" Margin="10,0" 
+                                 Text="{Binding StaffAdress, Mode=OneWay}"/>
+                    </Grid>
+                    <Grid Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Name="OkAdressButton" Content="Добавить" Style="{StaticResource LinkButton}"
+                                Click="OkAdressButton_Click" Margin="5"/>
+                        <Button Name="SaveAdressesButton" Content="Изменить" Style="{StaticResource LinkButton}"
+                                Click="SaveAdressesButton_Click" Margin="5"/>
+                        <Button Name="CancelAdressButton" Content="Отмена" Style="{StaticResource LinkButton}"
+                                Click="CancelAdressButton_Click" Grid.Column="1" Margin="5,5,10,5" Width="45"/>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+        
+        <Rectangle Grid.Row="0" VerticalAlignment="Bottom" Fill="LightGray" Height="1"
+                   SnapsToDevicePixels="True"/>
+        
+        <Grid Name="ContactsGrid" Grid.Row="1" Margin="0,5,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Контакты" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                       FontSize="16" Margin="10,0,10,5"
+                       Foreground="{DynamicResource AdditTextBlackBrush}"/>
+            <Grid Name="ContacntsOpacityGrid" Grid.Row="1">
+                <Grid Name="ContactsViewGrid" Visibility="Visible">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <ListBox Name="ContactsListBox" Margin="10,0"
+                             MouseDoubleClick="ContactsListBox_MouseDoubleClick">
+                        <ListBox.Resources>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="SnapsToDevicePixels" Value="true" />
+                                <Setter Property="OverridesDefaultStyle" Value="true" />
+                                <Setter Property="Height" Value="30"/>
+                                <Setter Property="Background" Value="White"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <Border x:Name="Border" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                                                <ContentPresenter Margin="3,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter Property="Background" Value="#FF017BCD"/>
+                                                    <Setter Property="Foreground" Value="White"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.Resources>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image HorizontalAlignment="Center" Stretch="Uniform" Width="30"
+                                   Source="{Binding ContactTypeID, Converter={StaticResource IdToContactTypeImageConverter}}" />
+                                    <TextBlock Margin="5,0" Grid.Column="1" FontSize="14" Text="{Binding ContactInfo}" VerticalAlignment="Center"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Button Name="AddContactButton" Content="Добавить новый контакт" Style="{StaticResource LinkButton}"
+                            Click="AddContactButton_Click" Grid.Row="1" HorizontalAlignment="Left" Margin="10,5"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1">
+                        <Button Name="EditContactButton" Content="Изменить" Margin="5"
+                                Style="{StaticResource LinkButton}" Click="EditContactButton_Click"/>
+                        <Button Name="DeleteContactButton" Content="Удалить" Margin="5,5,10,5"
+                                Style="{StaticResource LinkButton}" Click="DeleteContactButton_Click"/>
+                    </StackPanel>
+                </Grid>
+                <Grid Name="ContactsRedactorGrid" Visibility="Hidden">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <ComboBox Name="ContactsTypeComboBox" Width="170" Margin="10,0,0,0"
+                                  SelectedValue="{Binding ContactTypeID, Mode=OneWay}"/>
+                        <TextBox Name="ContactTextBox" Grid.Column="1" Margin="10,0" 
+                                 Text="{Binding ContactInfo, Mode=OneWay}"/>
+                    </Grid>
+                    <Grid Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Name="OkContactButton" Content="Добавить" Margin="5" 
+                                Style="{StaticResource LinkButton}"
+                                Click="OkContactButton_Click"/>
+                        <Button Name="SaveContactsButton" Content="Изменить" Margin="5"
+                                Style="{StaticResource LinkButton}" 
+                                Click="SaveContactsButton_Click"/>
+                        <Button Name="CancelContactButton" Content="Отмена" Margin="5,5,10,5" Grid.Column="1"
+                                Style="{StaticResource LinkButton}"
+                                Click="CancelContactButton_Click"/>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+        
+        <Grid Grid.Row="2"
+              Background="{DynamicResource MidBackground}">
+            <Button Name="CancelButton" Content="Выйти из редактирования" HorizontalAlignment="Right"
+                    Margin="5" Width="200" Click="CancelButton_Click"/>
+        </Grid>
+    </Grid>
+</Page>

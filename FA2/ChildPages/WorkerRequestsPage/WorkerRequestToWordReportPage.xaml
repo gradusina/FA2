@@ -1,0 +1,174 @@
+﻿<Page x:Class="FA2.ChildPages.WorkerRequestsPage.WorkerRequestToWordReportPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="clr-namespace:FA2.ChildPages.WorkerRequestsPage"
+      Title="WorkerRequestToWordReportPage" Width="400" Height="350">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Themes\Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <TextBlock TextWrapping="Wrap" Margin="10,10,0,5" VerticalAlignment="Center" Width="230"
+                       Foreground="{DynamicResource AdditTextBlackBrush}">
+                <Bold>1.</Bold> Укажите фабрику, на имя дирректора которой, Вы оформляете заявление
+            </TextBlock>
+            <ComboBox Name="FactoryComboBox" Grid.Column="1" Margin="0,10,10,5" 
+                      DisplayMemberPath="FactoryName" SelectedValuePath="FactoryID"
+                      SelectionChanged="OnFactoryComboBoxSelectionChanged"/>
+
+        </Grid>
+        <Rectangle Grid.Row="1" Fill="LightGray" Height="1" VerticalAlignment="Top" SnapsToDevicePixels="True"/>
+        <TextBlock Grid.Row="1" Margin="10,5"
+                   Foreground="{DynamicResource AdditTextBlackBrush}">
+            <TextBlock.Text>
+                <Binding Path="[WorkerID]"
+                         Converter="{StaticResource IdToNameConverter}"
+                         ConverterParameter="ShortName"
+                         StringFormat="2.1 Должность лица оформившего заявку ({0})"
+                         FallbackValue="2.1 Должность лица оформившего заявку"/>
+            </TextBlock.Text>
+        </TextBlock>
+        <ListBox Name="WorkerProfessionsListBox" Grid.Row="2"
+                 BorderThickness="0" Margin="10,5"
+                 SelectedValuePath="ProfessionID">
+            <ListBox.Template>
+                <ControlTemplate TargetType="{x:Type ListBox}">
+                    <Grid>
+                        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                                      CanContentScroll="False">
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+                        <TextBlock Text="Работник не устроен на данной фабрике"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center"
+                                   Foreground="{DynamicResource AdditTextBlackBrush}">
+                            <TextBlock.Visibility>
+                                <Binding RelativeSource="{RelativeSource TemplatedParent}"
+                                         Path="Items.IsEmpty">
+                                    <Binding.Converter>
+                                        <BooleanToVisibilityConverter/>
+                                    </Binding.Converter>
+                                </Binding>
+                            </TextBlock.Visibility>
+                        </TextBlock>
+                    </Grid>
+                </ControlTemplate>
+            </ListBox.Template>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <TextBlock FontSize="12" Margin="5,2,0,0" TextAlignment="Left"
+                                   Foreground="{DynamicResource MainTextBlackBrush}">
+                            <TextBlock.Text>
+                                <Binding Path="ProfessionID" Converter="{StaticResource IdToProfessionConverter}" />
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <TextBlock Grid.Row="1" FontSize="10" Margin="5,2,0,0" TextAlignment="Left"
+                                   Foreground="{DynamicResource AdditTextBlackBrush}">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="(Ставка: {0} Фабрика: {1})">
+                                    <Binding Path="Rate"/>
+                                    <Binding Path="FactoryID" Converter="{StaticResource IdToFactoryConverter}"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Rectangle Grid.Row="3" Fill="LightGray" Height="1" VerticalAlignment="Top" SnapsToDevicePixels="True"/>
+        <TextBlock Grid.Row="3" Margin="10,5"
+                   Foreground="{DynamicResource AdditTextBlackBrush}">
+            <TextBlock.Text>
+                <Binding Path="[MainWorkerID]"
+                         Converter="{StaticResource IdToNameConverter}"
+                         ConverterParameter="ShortName"
+                         StringFormat="2.2 Должность лица согласовавшего заявку ({0})"
+                         FallbackValue="2.2 Должность лица согласовавшего заявку"/>
+            </TextBlock.Text>
+        </TextBlock>
+        <ListBox Name="MainWorkerProfessionsListBox" Grid.Row="4"
+                 BorderThickness="0" Margin="10,5"
+                 SelectedValuePath="ProfessionID">
+            <ListBox.Template>
+                <ControlTemplate TargetType="{x:Type ListBox}">
+                    <Grid>
+                        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                                      CanContentScroll="False">
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+                        <TextBlock Text="Работник не устроен на данной фабрике"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center"
+                                   Foreground="{DynamicResource AdditTextBlackBrush}">
+                            <TextBlock.Visibility>
+                                <Binding RelativeSource="{RelativeSource TemplatedParent}"
+                                         Path="Items.IsEmpty">
+                                    <Binding.Converter>
+                                        <BooleanToVisibilityConverter/>
+                                    </Binding.Converter>
+                                </Binding>
+                            </TextBlock.Visibility>
+                        </TextBlock>
+                    </Grid>
+                </ControlTemplate>
+            </ListBox.Template>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <TextBlock FontSize="12" Margin="5,2,0,0" TextAlignment="Left"
+                                   Foreground="{DynamicResource MainTextBlackBrush}">
+                            <TextBlock.Text>
+                                <Binding Path="ProfessionID" Converter="{StaticResource IdToProfessionConverter}" />
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <TextBlock Grid.Row="1" FontSize="10" Margin="5,2,0,0" TextAlignment="Left"
+                                   Foreground="{DynamicResource AdditTextBlackBrush}">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="(Ставка: {0} Фабрика: {1})">
+                                    <Binding Path="Rate"/>
+                                    <Binding Path="FactoryID" Converter="{StaticResource IdToFactoryConverter}"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Grid Grid.Row="5"
+              Background="{DynamicResource MidBackground}">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Name="ExportReport" Content="Сформировать" 
+                        Width="100" Margin="0,10,5,10"
+                        Style="{StaticResource BlueBtn}"
+                        Click="OnExportReportButtonClick"/>
+                <Button Name="ClosePageButton" Content="Отмена" 
+                        Width="100" Margin="0,10,10,10"
+                        Click="OnClosePageButtonClick"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>

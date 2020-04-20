@@ -1,0 +1,109 @@
+﻿<Page x:Class="FA2.ChildPages.ProdRoomsPage.RaportPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="clr-namespace:FA2.ChildPages.ProdRoomsPage"
+      xmlns:converters="clr-namespace:FA2.Converters"
+      xmlns:customControls="clr-namespace:FAIIControlLibrary.CustomControls;assembly=FAIIControlLibrary"
+      Title="RaportPage" Background="White" Width="750" Height="450">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Themes\Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:ActionGroupConverter x:Key="ActionGroupConverter"/>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ItemsControl Name="ActionsItemsControl" BorderThickness="0" Margin="10,0"
+                      ScrollViewer.CanContentScroll="False">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.Background>
+                            <Binding Path="IsDoneAction">
+                                <Binding.Converter>
+                                    <converters:BooleanToBrushConverter True="#444CAF50" False="Transparent"/>
+                                </Binding.Converter>
+                            </Binding>
+                        </Grid.Background>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Margin="5" VerticalAlignment="Top" FontSize="18" FontWeight="Medium"
+                                   Text="{Binding ActionNumber}"/>
+                        <CheckBox Grid.Column="2" Margin="0,8,5,5" Cursor="Hand" FontSize="12"
+                                  IsChecked="{Binding IsDoneAction, Mode=OneWayToSource}">
+                            <CheckBox.Template>
+                                <ControlTemplate TargetType="{x:Type CheckBox}">
+                                    <Grid Background="Transparent">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border x:Name="Border" Width="20" Height="20"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                Background="{TemplateBinding Background}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                VerticalAlignment="Top">
+                                            <Grid>
+                                                <Path Visibility="Collapsed" Width="15" Height="15"
+                                                      x:Name="CheckMark" SnapsToDevicePixels="False" StrokeThickness="3"
+                                                      Data="M 1 5.5 L 7 12 L 13 2" Stroke="#FF017BCD"/>
+                                                <Path Visibility="Collapsed" Width="10" Height="10"
+                                                      x:Name="InderminateMark" SnapsToDevicePixels="False" StrokeThickness="2"
+                                                      Data="M 0 7 L 7 0" Stroke="#FF017BCD"/>
+                                            </Grid>
+                                        </Border>
+                                        <ContentPresenter Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" Grid.Column="1"
+                                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                                    </Grid>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" TargetName="Border" Value="#FFDDDDDD"/>
+                                        </Trigger>
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter Property="BorderBrush" Value="#FF444444"/>
+                                        </Trigger>
+                                        <Trigger Property="IsChecked" Value="True">
+                                            <Setter Property="Visibility" TargetName="CheckMark" Value="Visible"/>
+                                        </Trigger>
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="BorderBrush" Value="LightGray"/>
+                                            <Setter Property="Foreground" Value="Gray"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </CheckBox.Template>
+                            <TextBlock TextWrapping="Wrap"
+                                       Foreground="{DynamicResource MainTextBlackBrush}"
+                                       Text="{Binding ActionText}"/>
+                        </CheckBox>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <customControls:WatermarkTextBox Name="AdditionalInfoTextBox" Grid.Row="1" Margin="5" VerticalContentAlignment="Top"
+                                         MinLines="4" MaxLines="4" AcceptsReturn="True" TextWrapping="Wrap"
+                                         WatermarkText="Укажите дополнительную информацию к рапорту, если таковая существует"/>
+        <Grid Grid.Row="2"
+              Background="{DynamicResource MidBackground}">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Name="SaveRaportButton" Content="Сохранить рапорт" Width="150" Margin="5,5,0,5"
+                        Style="{StaticResource BlueBtn}"
+                        Click="OnSaveRaportButtonClick"/>
+                <Button Name="CancelButton" Content="Отмена" Width="100" Margin="5"
+                        Click="OnCancelButtonClick"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>

@@ -1,0 +1,462 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Shared.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+
+
+    <Style x:Key="BackButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Foreground" Value="{DynamicResource ToolButtonBrush}"/>
+        <Setter Property="MinWidth" Value="0"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Width" Value="32"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Cursor="Hand"  Margin="5" Background="Transparent">
+                        <Viewbox Stretch="Uniform">
+                            <Canvas Width="512" Height="512">
+                                <Canvas.Resources/>
+
+                                <Path Fill="{TemplateBinding Foreground}">
+                                    <Path.Data>
+                                        <PathGeometry Figures="m 186.1887 405.34706 c -7.37572 -2.25172 -13.96615 -8.39597 -79.63392 -74.24263 -65.45339 -65.6317 -69.2264 -69.6083
+                                                      -70.87133 -74.69561 -2.35549 -7.28488 -1.69404 -18.89641 1.43135 -25.12663 3.26845 -6.5154 136.62288 -140.092572 143.5739
+                                                      -143.813712 4.41503 -2.36353 6.11143 -2.67668 14.5 -2.67668 8.41376 0 10.09313 0.31219 14.68743 2.73033 6.40147 3.36933
+                                                      11.69293 8.69525 15.16131 15.260062 2.31928 4.38983 2.64165 6.15933 2.64165 14.5 0 8.38738 -0.31339 10.08559 -2.67581
+                                                      14.5 -1.88128 3.51535 -13.8328 16.13487 -40.25033 42.5 l -37.57453 37.5 156.75514 0.5 c 156.75514 0.5 156.75514 0.5 161.4515
+                                                      2.67004 6.00646 2.7754 12.67104 9.44756 15.81198 15.82996 2.09061 4.24813 2.46062 6.42854 2.46062 14.5 0 8.07146 -0.37001
+                                                      10.25187 -2.46062 14.5 -3.13514 6.37062 -9.18587 12.42835 -15.53442 15.5524 -4.97392 2.4476 -4.97392 2.4476 -161.72906 2.9476
+                                                      l -156.75514 0.5 37.57453 37.5 c 27.23877 27.18475 38.28816 38.87537 40.16886 42.5 3.74855 7.22449 4.2566 17.85397 1.2427
+                                                      26 -3.03257 8.19651 -12.19476 17.33117 -19.84064 19.78103 -5.48284 1.75678 -15.65155 2.15264 -20.13517 0.78384 z"
+                                                      FillRule="NonZero"/>
+                                    </Path.Data>
+                                </Path>
+                            </Canvas>
+                        </Viewbox>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource ToolButtonMouseOverBrush}"/>
+                        </Trigger>
+
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource ToolButtonMousePressedBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ForwardButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Foreground" Value="{DynamicResource ToolButtonBrush}"/>
+        <Setter Property="MinWidth" Value="0"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Width" Value="32"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Cursor="Hand"  Margin="5" Background="Transparent">
+                        <Viewbox Stretch="Uniform">
+                            
+                            <Canvas Width="512" Height="512">
+                                <Canvas.RenderTransform>
+                                    <RotateTransform CenterX="256" CenterY="256" Angle="180" />
+                                </Canvas.RenderTransform>
+                                <Canvas.Resources/>
+
+                                <Path Fill="{TemplateBinding Foreground}">
+                                    <Path.Data>
+                                        <PathGeometry Figures="m 186.1887 405.34706 c -7.37572 -2.25172 -13.96615 -8.39597 -79.63392 -74.24263 -65.45339 -65.6317 -69.2264 -69.6083
+                                                      -70.87133 -74.69561 -2.35549 -7.28488 -1.69404 -18.89641 1.43135 -25.12663 3.26845 -6.5154 136.62288 -140.092572 143.5739
+                                                      -143.813712 4.41503 -2.36353 6.11143 -2.67668 14.5 -2.67668 8.41376 0 10.09313 0.31219 14.68743 2.73033 6.40147 3.36933
+                                                      11.69293 8.69525 15.16131 15.260062 2.31928 4.38983 2.64165 6.15933 2.64165 14.5 0 8.38738 -0.31339 10.08559 -2.67581
+                                                      14.5 -1.88128 3.51535 -13.8328 16.13487 -40.25033 42.5 l -37.57453 37.5 156.75514 0.5 c 156.75514 0.5 156.75514 0.5 161.4515
+                                                      2.67004 6.00646 2.7754 12.67104 9.44756 15.81198 15.82996 2.09061 4.24813 2.46062 6.42854 2.46062 14.5 0 8.07146 -0.37001
+                                                      10.25187 -2.46062 14.5 -3.13514 6.37062 -9.18587 12.42835 -15.53442 15.5524 -4.97392 2.4476 -4.97392 2.4476 -161.72906 2.9476
+                                                      l -156.75514 0.5 37.57453 37.5 c 27.23877 27.18475 38.28816 38.87537 40.16886 42.5 3.74855 7.22449 4.2566 17.85397 1.2427
+                                                      26 -3.03257 8.19651 -12.19476 17.33117 -19.84064 19.78103 -5.48284 1.75678 -15.65155 2.15264 -20.13517 0.78384 z"
+                                                      FillRule="NonZero"/>
+                                    </Path.Data>
+                                </Path>
+                            </Canvas>
+                        </Viewbox>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource ToolButtonMouseOverBrush}"/>
+                        </Trigger>
+
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource ToolButtonMousePressedBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="HomeButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Foreground" Value="{DynamicResource ToolButtonBrush}"/>
+        <Setter Property="MinWidth" Value="0"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Width" Value="32"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Cursor="Hand"  Margin="5" Background="Transparent">
+                        <Viewbox Stretch="Uniform">
+                            <Canvas Width="32" Height="32">
+                                <Canvas.Resources/>
+
+                                <Path Fill="{TemplateBinding Foreground}">
+                                    <Path.Data>
+                                        <PathGeometry Figures="M 30.938 16 18 1.188 C 17.453 0.594 16.938 0 16 0 15.062 0 14.547 0.594 14 1.188 L 8 8.058 C 4.0215266 12.597113
+                                                      9.7100861 6.1102307 4 12.637 L 1.063 16 C 0.406 16.734 0 17.188 0 18 c 0 1.016 0.797 2 2 2 l 2 0 0 10 c 0 1.1 0.9 2 2 2 l
+                                                      20 0 c 1.1 0 2 -0.9 2 -2 l 0 -10 2 0 c 1.203 0 2 -0.984 2 -2 0 -0.812 -0.406 -1.266 -1.062 -2 z M 24 16 l 0 12 -4 0 0 -8
+                                                      -8 0 0 8 L 8 28 8 16 6.373 16 16 4.979 25.627 16 z"
+                                                      FillRule="NonZero"/>
+                                    </Path.Data>
+                                </Path>
+                            </Canvas>
+                        </Viewbox>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource ToolButtonMouseOverBrush}"/>
+                        </Trigger>
+
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource ToolButtonMousePressedBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ChangeUserButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Foreground" Value="{DynamicResource ToolButtonBrush}"/>
+        <Setter Property="MinWidth" Value="0"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Width" Value="32"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Cursor="Hand"  Margin="5" Background="Transparent">
+                        <Viewbox Stretch="Uniform">
+                            <Canvas Width="18" Height="18">
+                                <Canvas.Resources/>
+
+                                <Path Fill="{TemplateBinding Foreground}">
+                                    <Path.Data>
+                                        <PathGeometry Figures="M7.1 12.6 L8.5 14 L13.5 9 L8.5 4 L7.1 5.4 L9.7 8 L0 8 L0 10 L9.7 10 L7.1 12.6 L7.1 12.6 Z M16 0 L2 0 C0.9 0 0
+                                                      0.9 0 2 L0 6 L2 6 L2 2 L16 2 L16 16 L2 16 L2 12 L0 12 L0 16 C0 17.1 0.9 18 2 18 L16 18 C17.1 18 18 17.1 18 16 L18 2 C18
+                                                      0.9 17.1 0 16 0 L16 0 Z"
+                                                      FillRule="NonZero"/>
+                                    </Path.Data>
+                                </Path>
+                            </Canvas>
+                        </Viewbox>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource ToolButtonMouseOverBrush}"/>
+                        </Trigger>
+
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource ToolButtonMousePressedBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ChangePasswordButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Foreground" Value="{DynamicResource ToolButtonBrush}"/>
+        <Setter Property="MinWidth" Value="0"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Width" Value="32"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Cursor="Hand"  Margin="5" Background="Transparent">
+                        <Viewbox Stretch="Uniform">
+                            <Canvas Width="32" Height="32">
+                                <Canvas.Resources/>
+
+                                <Path Fill="{TemplateBinding Foreground}">
+                                    <Path.Data>
+                                        <PathGeometry Figures="m 23.003 0 c -5.523 0 -10 4.478 -10 10 0 1.285 0.269 2.501 0.713 3.629 C 9.6663333 17.678333 5.6166667 21.727667 1.567 25.777 1.216 26.129 0.999 26.463 0.999 27 c 0 1 0 2 0 3 0 1.07 0.929 2 2 2 1 0 2 0 3 0 1.3739617 -1.243626 2.5344815 -2.47849 4.295843 -4 0.341343 -0.294861 1.797798 -0.384696 2.127886 -0.694915 0.340466 -0.319977 0.244065 -1.611482 0.576271 -1.940047 0.453748 -0.448776 0.549191 -0.438497 1.007666 -0.881433 C 14.284408 24.215277 15.166523 24.264423 15.44244 24 15.680835 23.771534 15.763832 22.785476 15.999 22.560847 17.409432 21.213602 18.295784 20.386498 19.372 19.285 20.501 19.73 21.716 20 23.003 20 c 5.521 0 10 -4.478 10 -10 0 -5.522 -4.479 -10 -10 -10 z m 0.372881 17 c -1.48 0 -3.187881 -0.298 -4.376881 -1 -1.75829 1.75829 -3.108397 3.042807 -4.746537 4.617502 -0.27693 0.266203 -0.408339 1.264662 -0.681871 1.526316 -0.27585 0.263871 -1.041353 0.162431 -1.313758 0.421883 -0.453104 0.431557 -0.596367 0.585956 -1.039982 1.006046 -0.310536 0.294068 -0.381465 1.376696 -0.687371 1.665541 C 10.207032 25.541753 8.9718953 25.700963 8.6545699 26 7.4218599 27.161659 6.600615 27.90617 5.4444845 29 4.9626563 29 4.4808282 29 3.999 29 c 0 -0.666667 0 -1.333333 0 -2 13 -13 8.691148 -8.642732 13 -13 -0.702 -1.189 -1 -2.017635 -1 -3.497635 0 -4.4180008 2.830844 -7.1584957 7.242697 -6.9453331 2.268965 0.1096271 3.384317 0.832273 4.418314 1.827573 1.000735 0.9632821 1.954096 2.1652672 2.095563 4.3027887 C 29.920504 12.179426 29.392006 13.722207 27.999 15 c -1.071193 0.982597 -2.702604 2 -4.623119 2 z" FillRule="NonZero"/>
+                                    </Path.Data>
+                                </Path>
+                                <Path Fill="{TemplateBinding Foreground}">
+                                    <Path.Data>
+                                        <PathGeometry Figures="M 28 9.229 C 26.879 7.667 25.514 6.304 23.945 5.175 23.69 4.99 23.36 4.944 23.063 5.048 21.674 5.537 20.723 6.487 20.237 7.876 20.2 7.98 20.182 8.088 20.182 8.195 c 0 0.199 0.062 0.396 0.182 0.563 1.125 1.564 2.488 2.928 4.053 4.053 0.256 0.184 0.584 0.231 0.881 0.128 1.391 -0.486 2.342 -1.438 2.83 -2.828 0.037 -0.104 0.055 -0.212 0.055 -0.319 C 28.182 9.593 28.119 9.396 28 9.229 z m -3 2.063748 c -1.478 -1.063 -2.190432 -1.6047371 -3.245432 -3.0477371 0.387 -1.103 0.509555 -1.1168391 1.580555 -1.5108391 1.479 1.065 2.114614 1.4991333 3.166614 2.9611333 C 26.110737 10.790305 26.065 10.904748 25 11.292748 z" FillRule="NonZero"/>
+                                    </Path.Data>
+                                </Path>
+                            </Canvas>
+                        </Viewbox>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource ToolButtonMouseOverBrush}"/>
+                        </Trigger>
+
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource ToolButtonMousePressedBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ToolsButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Foreground" Value="{DynamicResource ToolButtonBrush}"/>
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="MinWidth" Value="0"/>
+        <Setter Property="Height" Value="25"/>
+        <Setter Property="Width" Value="25"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Background="#01FFFFFF" Cursor="Hand"  Margin="2">
+                        <Border BorderBrush="{TemplateBinding Foreground}" Width="20" CornerRadius="1" BorderThickness="2" Margin="0" Padding="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="{TemplateBinding Content}" FontWeight="Medium" Foreground="{TemplateBinding Foreground}" FontSize="16" Padding="0" Margin="0,0,0,2"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource ToolButtonMouseOverBrush}"/>
+                        </Trigger>
+
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource ToolButtonMousePressedBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="Fa2ButtonStyle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Foreground" Value="{DynamicResource ToolButtonBrush}"/>
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="MinWidth" Value="0"/>
+        <Setter Property="Height" Value="25"/>
+        <Setter Property="Width" Value="25"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Grid Background="#01FFFFFF" Cursor="Hand"  Margin="2">
+                        <Label Content="{DynamicResource Logo}" Foreground="{TemplateBinding Foreground}" FontSize="16" Padding="0" Margin="0,0,0,2"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource ToolButtonMouseOverBrush}"/>
+                        </Trigger>
+
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource ToolButtonMousePressedBrush}"/>
+                        </Trigger>
+                        
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource ToolButtonMousePressedBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!--DropDown_Button-->
+    <Style x:Key="DropDownButton" TargetType="ToggleButton">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource ToolButtonBrush}"/>
+        <Setter Property="Padding" Value="3"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Grid>
+                        <Border x:Name="Background" CornerRadius="0" Background="Transparent" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+                            <Grid  Margin="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock x:Name="NameLabel" Margin="0,0,4,2" Foreground="{TemplateBinding Foreground}" FontSize="14" Text="{Binding Content, ElementName= UserNameLabel}" TextTrimming="CharacterEllipsis" FlowDirection="LeftToRight" Grid.Column="0" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
+                                <Image Stretch="Uniform" Grid.Column="1" Margin="0" Source="{Binding Source, ElementName= UserPhotoImage}" />
+                            </Grid>
+                        </Border>
+
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="NameLabel" Property="Foreground" Value="{DynamicResource ToolButtonMouseOverBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter TargetName="NameLabel" Property="Foreground" Value="{DynamicResource ToolButtonMouseOverBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
+    <!--GroupsIcons-->
+    <Viewbox x:Key="FavoritesGroupIcon" Stretch="Uniform">
+        <Canvas Width="32" Height="32">
+            <Canvas.RenderTransform>
+                <TranslateTransform X="0" Y="0"/>
+            </Canvas.RenderTransform>
+            <Canvas.Resources/>
+            <Path Name="Star" Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type Label}}, Path=Foreground}">
+                <Path.Data>
+                    <PathGeometry Figures="M31.881 12.557c-0.277-0.799-0.988-1.384-1.844-1.511l-8.326-1.238l-3.619-7.514  
+                                  C17.711 1.505 16.896 1 16 1c-0.896 0-1.711 0.505-2.092 1.294l-3.619 7.514l-8.327 1.238c-0.855 
+                                  0.127-1.566 0.712-1.842 1.511  c-0.275 0.801-0.067 1.683 0.537 2.285l6.102 6.092l-1.415 
+                                  8.451C5.2 30.236 5.569 31.09 6.292 31.588  C6.689 31.861 7.156 32 7.623 32c0.384 0 0.769-0.094 
+                                  1.118-0.281L16 27.811l7.26 3.908C23.609 31.906 23.994 32 24.377 32  c0.467 0 0.934-0.139 
+                                  1.332-0.412c0.723-0.498 1.09-1.352 0.947-2.203l-1.416-8.451l6.104-6.092  C31.947 14.239 32.154 
+                                  13.357 31.881 12.557z M23.588 19.363c-0.512 0.51-0.744 1.229-0.627 1.934l1.416 8.451l-7.26-3.906  
+                                  c-0.348-0.188-0.732-0.281-1.118-0.281c-0.384 0-0.769 0.094-1.117 0.281l-7.26 3.906l1.416-8.451  
+                                  c0.118-0.705-0.114-1.424-0.626-1.934l-6.102-6.092l8.326-1.24c0.761-0.113 1.416-0.589 
+                                  1.743-1.268L16 3.251l3.62 7.513  c0.328 0.679 0.982 1.154 1.742 1.268l8.328 1.24L23.588 19.363z" 
+                                  FillRule="NonZero"/>
+                </Path.Data>
+            </Path>
+        </Canvas>
+    </Viewbox>
+
+    <Viewbox x:Key="MainGroupIcon" Stretch="Uniform">
+        <Canvas Width="24" Height="24">
+            <Canvas.RenderTransform>
+                <TranslateTransform X="0" Y="0"/>
+            </Canvas.RenderTransform>
+            <Canvas.Resources/>
+            <Path Name="path3" Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type Label}}, Path=Foreground}">
+                <Path.Data>
+                    <PathGeometry Figures="M 21.635 6.366 C 21.168 5.594 20.592 4.838 19.887 4.137 19.174 3.429 18.405 2.849 17.618 2.383 L 19 1 c 0 0 2 0 3 1 1 1 1 3 1 3 z M 10 18 6 18 6 14 6.48 13.52 c 0.813 0.385 1.621 0.926 2.348 1.652 0.728 0.729 1.268 1.535 1.652 2.348 z M 20.48 7.52 11.634 16.365 C 11.167 15.594 10.591 14.836 9.886 14.136 9.174 13.427 8.404 12.848 7.617 12.382 L 16.48 3.52 c 0.813 0.383 1.621 0.924 2.348 1.651 0.729 0.728 1.269 1.536 1.652 2.349 z M 2.6525424 2.6144068 l 0.025424 18.7711862 18.7330509 0 -0.02542 -9.771186 L 23 9.962 23 21 c 0 1.105 -0.896 2 -2 2 L 3 23 C 1.896 23 1 22.105 1 21 L 1 3 C 1 1.896 1.896 1 3 1 L 14.01 1 12 2.6016949 z" FillRule="NonZero"/>
+
+                </Path.Data>
+            </Path>
+        </Canvas>
+    </Viewbox>
+
+    <Viewbox  x:Key="TimeGroupIcon" Stretch="Uniform">
+        <Canvas Width="141.732" Height="141.732">
+            <Canvas.RenderTransform>
+                <TranslateTransform X="0" Y="0"/>
+            </Canvas.RenderTransform>
+            <Canvas.Resources/>
+            <Canvas Name="Livello_5">
+                <Path Name="path4" Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type Label}}, Path=Foreground}">
+                    <Path.Data>
+                        <PathGeometry Figures="M113.326 70.191c0-2.97-2.377-5.376-5.307-5.376H75.543V32.387v-0.001c0-2.98-2.418-5.397-5.396-5.397   
+                                      c-2.98 0-5.398 2.417-5.398 5.397V70.17c0 2.981 2.418 5.398 5.398 5.398h37.875C110.949 
+                                      75.568 113.326 73.161 113.326 70.191    M129.533 70.157c0 32.798-26.584 59.386-59.375 
+                                      59.386c-32.793 0-59.375-26.588-59.375-59.386s26.582-59.386 59.375-59.386   
+                                      C102.949 10.771 129.533 37.359 129.533 70.157 M140.314 70.157C140.314 31.41 108.904 0 
+                                      70.158 0C31.41 0 0 31.41 0 70.157   s31.41 70.157 70.158 70.157C108.904 140.314 140.314 
+                                      108.904 140.314 70.157" 
+                                      FillRule="NonZero"/>
+                    </Path.Data>
+                </Path>
+            </Canvas>
+            <Canvas Name="Livello_1_1_"/>
+        </Canvas>
+    </Viewbox>
+
+    <Viewbox  x:Key="ToolsGroupIcon" Stretch="Uniform">
+        <Canvas  Width="32" Height="32">
+            <Canvas.RenderTransform>
+                <TranslateTransform X="0" Y="0"/>
+            </Canvas.RenderTransform>
+            <Canvas.Resources/>
+            <Canvas>
+                <Path Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type Label}}, Path=Foreground}">
+                    <Path.Data>
+                        <PathGeometry Figures="M8 6.021V3c0-1.654-1.346-3-3-3S2 1.346 2 3v3.021   C0.792 6.936 0 8.369 0 10s0.792 
+                                      3.064 2 3.977V29c0 1.654 1.346 3 3 3s3-1.346 3-3V13.977c1.208-0.912 2-2.346 2-3.977   
+                                      S9.208 6.936 8 6.021z M4 3c0-0.553 0.447-1 1-1s1 0.447 1 1v2.1C5.677 5.035 5.343 5 5 
+                                      5S4.323 5.035 4 5.1V3z M6 29   c0 0.553-0.447 1-1 1s-1-0.447-1-1V14.898C4.323 14.965 
+                                      4.657 15 5 15s0.677-0.035 1-0.102V29z M7.865 10.84   c-0.016 0.053-0.03 0.105-0.049 
+                                      0.158c-0.095 0.264-0.217 0.514-0.378 0.736c-0.004 0.006-0.01 0.01-0.014 0.016   
+                                      c-0.174 0.238-0.381 0.449-0.616 0.627c-0.004 0.004-0.007 0.006-0.01 0.008c-0.241 
+                                      0.182-0.51 0.328-0.799 0.43   
+                                      C5.686 12.928 5.353 13 5 13s-0.686-0.072-1-0.186c-0.289-0.102-0.558-0.248-0.799-0.43c-0.003-0.002-0.006-0.004-0.01-0.008   
+                                      c-0.235-0.178-0.442-0.389-0.616-0.627c-0.004-0.006-0.01-0.01-0.014-0.016c-0.161-0.223-0.283-0.473-0.378-0.736   
+                                      c-0.019-0.053-0.033-0.105-0.049-0.158C2.055 10.572 2 10.293 2 10c0-0.295 0.055-0.574 
+                                      0.135-0.842   c0.016-0.053 0.03-0.105 0.049-0.156C2.278 8.738 2.4 8.488 2.562 
+                                      8.264c0.004-0.006 0.01-0.01 0.014-0.016   c0.174-0.236 0.381-0.449 0.616-0.627c0.004-0.002 
+                                      0.007-0.006 0.01-0.008C3.442 7.434 3.711 7.287 4 7.184   C4.314 7.072 4.647 7 5 7s0.686 
+                                      0.072 1 0.184c0.289 0.104 0.558 0.25 0.799 0.43c0.003 0.002 0.006 0.006 0.01 0.008   
+                                      c0.235 0.178 0.442 0.391 0.616 0.627c0.004 0.006 0.01 0.01 0.014 0.016C7.6 8.488 
+                                      7.722 8.738 7.816 9.002   C7.835 9.053 7.85 9.105 7.865 9.158C7.945 9.426 8 9.705 8 
+                                      10C8 10.293 7.945 10.572 7.865 10.84z" 
+                                      FillRule="evenodd"/>
+                    </Path.Data>
+                </Path>
+                <Path Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type Label}}, Path=Foreground}">
+                    <Path.Data>
+                        <PathGeometry Figures="M30 6.021V3c0-1.654-1.346-3-3-3s-3 1.346-3 3v3.021   
+                                      C22.791 6.936 22 8.369 22 10s0.791 3.064 2 3.977V29c0 1.654 1.346 3 3 3s3-1.346 
+                                      3-3V13.977c1.207-0.912 2-2.346 2-3.977   S31.207 6.936 30 6.021z M26 3c0-0.553 
+                                      0.447-1 1-1s1 0.447 1 1v2.1C27.676 5.035 27.342 5 27 5c-0.344 0-0.678 0.035-1 0.1V3z    
+                                      M28 29c0 0.553-0.447 1-1 1s-1-0.447-1-1V14.898C26.322 14.965 26.656 15 27 15c0.342 0 
+                                      0.676-0.035 1-0.102V29z M29.865 10.84   c-0.016 0.053-0.031 0.105-0.049 0.158c-0.096 
+                                      0.264-0.217 0.514-0.379 0.736c-0.004 0.006-0.01 0.01-0.014 0.016   c-0.174 0.238-0.381 
+                                      0.449-0.615 0.627c-0.004 0.004-0.008 0.006-0.01 0.008c-0.242 0.182-0.51 0.328-0.799 0.43   
+                                      C27.686 12.928 27.352 13 27 13c-0.354 0-0.686-0.072-1-0.186c-0.289-0.102-0.559-0.248-0.799-0.43   
+                                      c-0.004-0.002-0.006-0.004-0.01-0.008c-0.236-0.178-0.443-0.389-0.617-0.627c-0.004-0.006-0.01-0.01-0.014-0.016   
+                                      c-0.16-0.223-0.283-0.473-0.377-0.736c-0.02-0.053-0.033-0.105-0.049-0.158C24.055 10.572 24 
+                                      10.293 24 10   c0-0.295 0.055-0.574 0.135-0.842c0.016-0.053 0.029-0.105 0.049-0.156c0.094-0.264 
+                                      0.217-0.514 0.377-0.738   c0.004-0.006 0.01-0.01 0.014-0.016c0.174-0.236 0.381-0.449 0.617-0.627c0.004-0.002 0.006-0.006 0.01-0.008   
+                                      c0.24-0.18 0.51-0.326 0.799-0.43C26.314 7.072 26.646 7 27 7c0.352 0 0.686 0.072 1 
+                                      0.184c0.289 0.104 0.557 0.25 0.799 0.43   c0.002 0.002 0.006 0.006 0.01 0.008c0.234 
+                                      0.178 0.441 0.391 0.615 0.627c0.004 0.006 0.01 0.01 0.014 0.016   
+                                      c0.162 0.225 0.283 0.475 0.379 0.738c0.018 0.051 0.033 0.104 0.049 0.156C29.945 9.426 30 
+                                      9.705 30 10   C30 10.293 29.945 10.572 29.865 10.84z" 
+                                      FillRule="evenodd"/>
+                    </Path.Data>
+                </Path>
+                <Path Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type Label}}, Path=Foreground}">
+                    <Path.Data>
+                        <PathGeometry Figures="M19 18.021V3c0-1.654-1.346-3-3-3s-3 1.346-3 3v15.021   
+                                      c-1.208 0.914-2 2.348-2 3.979s0.792 3.064 2 3.977V29c0 1.654 1.346 3 3 3s3-1.346 
+                                      3-3v-3.023c1.207-0.912 2-2.346 2-3.977   S20.207 18.936 19 18.021z M15 3c0-0.553 
+                                      0.447-1 1-1c0.553 0 1 0.447 1 1v14.1c-0.324-0.064-0.658-0.1-1-0.1   
+                                      c-0.343 0-0.677 0.035-1 0.1V3z M17 29c0 0.553-0.447 1-1 1c-0.553 0-1-0.447-1-1v-2.102C15.323 26.965 
+                                      15.657 27 16 27   c0.342 0 0.676-0.035 1-0.102V29z M18.865 22.84c-0.016 0.053-0.031 
+                                      0.105-0.049 0.158c-0.096 0.264-0.217 0.514-0.379 0.736   c-0.004 0.006-0.01 0.01-0.014 
+                                      0.016c-0.174 0.238-0.381 0.449-0.615 0.627c-0.004 0.004-0.008 0.006-0.01 0.008   
+                                      c-0.242 0.182-0.51 0.328-0.799 0.43C16.686 24.928 16.352 25 16 25c-0.353 
+                                      0-0.686-0.072-1-0.186   c-0.289-0.102-0.558-0.248-0.799-0.43c-0.003-0.002-0.006-0.004-0.01-0.008c-0.235-0.178-0.442-0.389-0.616-0.627   
+                                      c-0.004-0.006-0.01-0.01-0.014-0.016c-0.161-0.223-0.283-0.473-0.378-0.736c-0.019-0.053-0.033-0.105-0.049-0.158   
+                                      C13.055 22.572 13 22.293 13 22c0-0.295 0.055-0.574 0.135-0.842c0.016-0.053 0.03-0.105 
+                                      0.049-0.156   c0.095-0.264 0.217-0.514 0.378-0.738c0.004-0.006 0.01-0.01 0.014-0.016c0.174-0.236 
+                                      0.381-0.449 0.616-0.627   c0.004-0.002 0.007-0.006 0.01-0.008c0.241-0.18 0.51-0.326 
+                                      0.799-0.43C15.314 19.072 15.647 19 16 19c0.352 0 0.686 0.072 1 0.184   
+                                      c0.289 0.104 0.557 0.25 0.799 0.43c0.002 0.002 0.006 0.006 0.01 0.008c0.234 0.178 0.441 
+                                      0.391 0.615 0.627   c0.004 0.006 0.01 0.01 0.014 0.016c0.162 0.225 0.283 0.475 0.379 
+                                      0.738c0.018 0.051 0.033 0.104 0.049 0.156   C18.945 21.426 19 21.705 19 22C19 22.293 
+                                      18.945 22.572 18.865 22.84z" 
+                                      FillRule="evenodd"/>
+                    </Path.Data>
+                </Path>
+            </Canvas>
+        </Canvas>
+    </Viewbox>
+
+
+</ResourceDictionary>

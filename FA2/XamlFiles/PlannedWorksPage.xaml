@@ -1,0 +1,501 @@
+﻿<Page x:Class="FA2.XamlFiles.PlannedWorksPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="clr-namespace:FA2.XamlFiles"
+      xmlns:customControls="clr-namespace:FAIIControlLibrary.CustomControls;assembly=FAIIControlLibrary"
+      xmlns:converters="clr-namespace:FA2.Converters"
+      Title="PlannedWorksPage" MinHeight="450" MinWidth="900" Background="White"
+      Loaded="OnPageLoaded">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Themes\Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:PlannedWorksConverter x:Key="PlannedWorksConverter"/>
+            <converters:BooleanToVisibilityConverter x:Key="VisibleOnTrueConverter" True="Visible" False="Collapsed"/>
+            <converters:BooleanToVisibilityConverter x:Key="VisibleOnFalseConverter" True="Collapsed" False="Visible"/>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid Name="LayoutRoot">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid Background="{DynamicResource MidBackground}">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <TextBlock Text="Дата с" VerticalAlignment="Center" Margin="5,0"
+                               Foreground="{DynamicResource AdditTextBlackBrush}"/>
+                    <DatePicker Name="DateFromPicker" Margin="5" Width="130" Height="30"
+                                Style="{DynamicResource CommonDatePickerStyle}"/>
+                    <TextBlock Text="дата по" VerticalAlignment="Center" Margin="5,0"
+                               Foreground="{DynamicResource AdditTextBlackBrush}"/>
+                    <DatePicker Name="DateToPicker" Margin="5" Width="130" Height="30"
+                                Style="{DynamicResource CommonDatePickerStyle}"/>
+                    <Button Name="FillPlannedWorksButton" Content="Показать" Width="150" Margin="5"
+                            Click="OnFillPlannedWorksButtonClick"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Name="AddNewPlannedWorksButton" Width="200" Margin="5"
+                            Style="{StaticResource BlueBtn}"
+                            Click="OnAddNewPlannedWorksButtonClick">
+                        <StackPanel Orientation="Horizontal">
+                            <Grid>
+                                <Rectangle Height="13" Width="3" Fill="White"/>
+                                <Rectangle Height="3" Width="13" Fill="White"/>
+                            </Grid>
+                            <TextBlock Text="Добавить новые работы" Margin="10,3,4,3" VerticalAlignment="Bottom"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Row="1"
+                  Background="{DynamicResource LightBackground}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="400"/>
+                </Grid.ColumnDefinitions>
+                <Rectangle Height="1" Fill="LightGray" Grid.ColumnSpan="2" VerticalAlignment="Top" SnapsToDevicePixels="True"/>
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <CheckBox Name="ShowJustStartedPlannedWorksCheckBox" Margin="5"
+                              Content="Фильтровать по начатым плановым работам" HorizontalAlignment="Left"
+                              Foreground="{DynamicResource AdditTextBlackBrush}"
+                              Checked="OnShowJustStartedPlannedWorksCheckBoxChecked"
+                              Unchecked="OnFilterStatesChanged"/>
+                    <CheckBox Name="ShowWaitingForConfirmationPlannedWorksCheckBox" Margin="5" Grid.Row="1"
+                              Content="Фильтровать по ожидающим подтверждения плановым работам" HorizontalAlignment="Left"
+                              Foreground="{DynamicResource AdditTextBlackBrush}"
+                              Checked="OnShowWaitingForConfirmationPlannedWorksCheckBoxChecked"
+                              Unchecked="OnFilterStatesChanged"/>
+                    <CheckBox Name="ShowRejectedPlannedWorksCheckBox" Margin="5" Grid.Row="2"
+                              Content="Отображать отклонённые плановые работы" HorizontalAlignment="Left"
+                              Foreground="{DynamicResource AdditTextBlackBrush}"
+                              Checked="OnShowRejectedPlannedWorksCheckBoxChecked"
+                              Unchecked="OnFilterStatesChanged"/>
+                    <DataGrid Name="PlannedWorksDataGrid" Grid.Row="3" Margin="5,0"
+                              BorderThickness="1" IsReadOnly="True"
+                              HorizontalScrollBarVisibility="Disabled"
+                              Style="{StaticResource CommonDataGridStyle}"
+                              SelectionChanged="OnPlannedWorksDataGridSelectionChanged">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Название работы" Width="*"
+                                                    SortMemberPath="PlannedWorksName">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
+                                                   Text="{Binding PlannedWorksName}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Характер работ" Width="Auto"
+                                                Binding="{Binding PlannedWorksTypeID, Converter={StaticResource PlannedWorksConverter}, ConverterParameter='PlannedWorksTypeName'}"/>
+                            <DataGridTemplateColumn Header="Статус" Width="Auto"
+                                                    SortMemberPath="IsActive">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Vertical">
+                                            <Grid>
+                                                <TextBlock Text="Активна"
+                                                           Foreground="{DynamicResource GreenForeground}"
+                                                           Visibility="{Binding IsActive, Converter={StaticResource VisibleOnTrueConverter}}"/>
+                                                <TextBlock Text="Неактивна"
+                                                           Foreground="{DynamicResource AdditTextBlackBrush}"
+                                                           Visibility="{Binding IsActive, Converter={StaticResource VisibleOnFalseConverter}}"/>
+                                            </Grid>
+                                            <Grid Margin="0,0,2,0" 
+                                                  DataContext="{Binding GlobalID, Converter={StaticResource PlannedWorksConverter}, ConverterParameter='IsPlannedWorksInProcess'}">
+                                                <TextBlock Text="(Выполняется)"
+                                                           Foreground="{DynamicResource BlueForeground}"
+                                                           Visibility="{Binding Converter={StaticResource VisibleOnTrueConverter}}"/>
+                                                <TextBlock Text="(Не выполняется)"
+                                                           Foreground="{DynamicResource AdditTextBlackBrush}"
+                                                           Visibility="{Binding Converter={StaticResource VisibleOnFalseConverter}}"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Подтверждение" Width="Auto"
+                                                    SortMemberPath="ConfirmationStatusID">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding ConfirmationStatusID, Converter={StaticResource PlannedWorksConverter}, ConverterParameter='ConfirmationStatus'}"
+                                                   Foreground="{Binding ConfirmationStatusID, Converter={StaticResource PlannedWorksConverter}, ConverterParameter='ConfirmationStatusBrush'}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Составитель" Width="Auto">
+                                <DataGridTextColumn.Binding>
+                                    <Binding Path="CreatedWorkerID"
+                                             Converter="{StaticResource IdToNameConverter}"
+                                             ConverterParameter="ShortName"/>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Дата создания" Width="110">
+                                <DataGridTextColumn.Binding>
+                                    <Binding Path="CreationDate" 
+                                             StringFormat="{}{0:dd.MM.yyyy HH:mm}"/>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                        <DataGrid.ColumnHeaderStyle>
+                            <Style TargetType="{x:Type DataGridColumnHeader}"
+                                   BasedOn="{StaticResource CommonDataGridColumnHeaderStyle}">
+                                <Setter Property="Padding" Value="5,0"/>
+                            </Style>
+                        </DataGrid.ColumnHeaderStyle>
+                        <DataGrid.Resources>
+                            <ContextMenu Name="RowMenu" x:Key="RowMenu">
+                                <MenuItem Header="Удалить" Click="OnDeletePlannedWorksRowMenuItemClick">
+                                    <MenuItem.Icon>
+                                        <Image Source="/Resources\Files\Delete.png"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Изменить" Click="OnChangePlannedWorksRowMenuItemClick"/>
+                                <MenuItem Name="ReloadPlannedWorksMenuItem" Header="Возобновить" Click="OnReloadPlannedWorksMenuItemClick">
+                                    <MenuItem.Icon>
+                                        <Image Source="/Resources\RefreshBlack.png"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </DataGrid.Resources>
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow" BasedOn="{StaticResource CommonDataGridRowStyle}">
+                                <EventSetter Event="ContextMenuOpening" Handler="OnPlannedWorksRowContextMenuOpening"/>
+                                <EventSetter Event="MouseDoubleClick" Handler="OnPlannedWorksRowMouseDoubleClick"/>
+                                <Setter Property="ContextMenu" Value="{StaticResource RowMenu}"/>
+                            </Style>
+                        </DataGrid.RowStyle>
+                    </DataGrid>
+                    <Grid Grid.Row="4"
+                          DataContext="{Binding ElementName=PlannedWorksDataGrid, Path=SelectedItem}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <TextBlock Grid.Row="0" Margin="10,5" FontSize="14" FontWeight="Medium" 
+                                       Foreground="{DynamicResource MainTextBlackBrush}"
+                                       Text="{Binding PlannedWorksName, FallbackValue='Ничего чего не выбранно'}"/>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Grid>
+                                    <TextBlock Text="Активна"
+                                               Foreground="{DynamicResource GreenForeground}"
+                                               Visibility="{Binding IsActive, Converter={StaticResource VisibleOnTrueConverter}, FallbackValue=Collapsed}"/>
+                                    <TextBlock Text="Не активна"
+                                               Foreground="{DynamicResource AdditTextBlackBrush}"
+                                               Visibility="{Binding IsActive, Converter={StaticResource VisibleOnFalseConverter}, FallbackValue=Collapsed}"/>
+                                </Grid>
+                                <Grid Margin="2,0,0,0" 
+                                      DataContext="{Binding GlobalID, Converter={StaticResource PlannedWorksConverter}, ConverterParameter='IsPlannedWorksInProcess'}">
+                                    <TextBlock Text="(Выполняется)"
+                                               Foreground="{DynamicResource BlueForeground}"
+                                               Visibility="{Binding Converter={StaticResource VisibleOnTrueConverter}}"/>
+                                    <TextBlock Text="(Не выполняется)"
+                                               Foreground="{DynamicResource AdditTextBlackBrush}"
+                                               Visibility="{Binding Converter={StaticResource VisibleOnFalseConverter}}"/>
+                                </Grid>
+                            </StackPanel>
+                        </StackPanel>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Margin="5,0,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="Составитель" Margin="5,0"
+                                           Foreground="{DynamicResource AdditTextBlackBrush}"/>
+                                <TextBlock Margin="5,2" Grid.Row="1" FontWeight="Medium"
+                                           Foreground="{DynamicResource MainTextBlackBrush}">
+                                    <TextBlock.Text>
+                                        <Binding Path="CreatedWorkerID"
+                                                 Converter="{StaticResource IdToNameConverter}"
+                                                 ConverterParameter="FullName"
+                                                 FallbackValue="---"/>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <TextBlock Text="Дата составления" Margin="5,0" Grid.Row="2"
+                                           Foreground="{DynamicResource AdditTextBlackBrush}"/>
+                                <TextBlock Margin="5,2" Grid.Row="3" FontWeight="Medium"
+                                           Foreground="{DynamicResource MainTextBlackBrush}">
+                                    <TextBlock.Text>
+                                        <Binding Path="CreationDate"
+                                                 StringFormat="{}{0:dd.MM.yyyy HH:mm}"
+                                                 FallbackValue="---"/>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </Grid>
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="Характер работ" Margin="5,0"
+                                           Foreground="{DynamicResource AdditTextBlackBrush}"/>
+                                <TextBlock Margin="5,2" Grid.Row="1" FontWeight="Medium"
+                                           Foreground="{DynamicResource MainTextBlackBrush}">
+                                    <TextBlock.Text>
+                                        <Binding Path="PlannedWorksTypeID"
+                                                 Converter="{StaticResource PlannedWorksConverter}" 
+                                                 ConverterParameter="PlannedWorksTypeName"
+                                                 FallbackValue="---"/>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <TextBlock Text="Примечание" Grid.Row="2" Margin="5,0"
+                                           Foreground="{DynamicResource AdditTextBlackBrush}"/>
+                                <TextBlock Grid.Row="3" TextWrapping="Wrap" Margin="5,2" FontWeight="Medium"
+                                           Foreground="{DynamicResource MainTextBlackBrush}">
+                                    <TextBlock.Text>
+                                        <Binding Path="Description"
+                                                 FallbackValue="Отсутствует"/>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </Grid>
+                            <Grid Grid.Column="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="Подтверждение работ" Margin="5,0"
+                                           Foreground="{DynamicResource AdditTextBlackBrush}"/>
+                                <TextBlock Margin="5,2" Grid.Row="1" FontWeight="Medium"
+                                           Foreground="{DynamicResource MainTextBlackBrush}">
+                                    <TextBlock.Text>
+                                        <Binding Path="ConfirmWorkerID"
+                                                 Converter="{StaticResource IdToNameConverter}"
+                                                 ConverterParameter="FullName"
+                                                 FallbackValue="---"/>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <TextBlock Text="Дата подтверждения" Margin="5,0" Grid.Row="2"
+                                           Foreground="{DynamicResource AdditTextBlackBrush}"/>
+                                <TextBlock Margin="5,2" Grid.Row="3" FontWeight="Medium"
+                                           Foreground="{DynamicResource MainTextBlackBrush}">
+                                    <TextBlock.Text>
+                                        <Binding Path="ConfirmationDate"
+                                                 StringFormat="{}{0:dd.MM.yyyy HH:mm}"
+                                                 FallbackValue="---"/>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Rectangle Grid.RowSpan="2" Width="1" HorizontalAlignment="Left" Fill="LightGray" SnapsToDevicePixels="True"/>
+                    <TextBlock Text="Выполнение работы за выбранный период" Margin="5,5,5,0"
+                               Foreground="{DynamicResource AdditTextBlackBrush}"/>
+                    <ItemsControl Name="StartedPlannedWorksItemsControl" Grid.Row="1" Margin="5" Background="White">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid VerticalAlignment="Top">
+                                            <Border Margin="5,6,5,4" BorderBrush="Gray"
+                                                    Background="Gray" CornerRadius="2"
+                                                    Width="{Binding ElementName=ImageBorder, Path=ActualWidth}"
+                                                    Height="{Binding ElementName=ImageBorder, Path=ActualHeight}">
+                                                <Border.Effect>
+                                                    <BlurEffect Radius="4"/>
+                                                </Border.Effect>
+                                            </Border>
+                                            <Border Name="ImageBorder" Height="70" Width="55" 
+                                                    BorderThickness="0" BorderBrush="Gray" 
+                                                    Background="White" SnapsToDevicePixels="True" 
+                                                    Margin="5" CornerRadius="2">
+                                                <Image Width="Auto" Height="Auto" Stretch="UniformToFill" Margin="1"
+                                                       VerticalAlignment="Center" HorizontalAlignment="Center"
+                                                       DataContext="{Binding MainWorkerID, Converter={StaticResource IdToStaffPhotoConverter}}" 
+                                                       Source="{Binding AsyncValue, NotifyOnSourceUpdated=True}"/>
+                                            </Border>
+                                        </Grid>
+                                        <StackPanel Grid.Column="1">
+                                            <Grid>
+                                                <TextBlock FontSize="16" Margin="5,2" HorizontalAlignment="Left"
+                                                           Foreground="{DynamicResource GreenForeground}"
+                                                           Text="{Binding MainWorkerID, Converter={StaticResource IdToNameConverter}, ConverterParameter='ShortName'}"/>
+                                                <TextBlock FontSize="12" HorizontalAlignment="Right" Margin="5,2"
+                                                           Text="{Binding TaskStatusID, Converter={StaticResource TaskConverter}, ConverterParameter='TaskStatusName'}"
+                                                           Foreground="{Binding TaskStatusID, Converter={StaticResource TaskConverter}, ConverterParameter='TaskStatusColor'}"/>
+                                            </Grid>
+                                            <TextBlock Margin="5,2" FontSize="14" HorizontalAlignment="Left"
+                                                       DataContext="{Binding TaskID, Converter={StaticResource PlannedWorksConverter}, ConverterParameter='EmptyWorkReasonId'}">
+                                                <TextBlock.Text>
+                                                    <Binding Converter="{StaticResource PlannedWorksConverter}"
+                                                             ConverterParameter="EmptyWorkReasonName"
+                                                             StringFormat="причина: {0}"
+                                                             FallbackValue="причина: не указана"
+                                                             TargetNullValue="причина: не указана"/>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                            <TextBlock Margin="5,2" FontSize="14" HorizontalAlignment="Left"
+                                                       Text="{Binding CreationDate, StringFormat='начало выполнения: {0:dd.MM.yyyy}', FallbackValue='начало выполнения: ---'}"/>
+                                            <TextBlock Margin="5,2" FontSize="14" HorizontalAlignment="Left"
+                                                       Text="{Binding CompletionDate, StringFormat='завершена: {0:dd.MM.yyyy}', FallbackValue='завершена: ---'}"/>
+                                            <TextBlock Margin="5,2" FontSize="14" HorizontalAlignment="Left"
+                                                       Text="{Binding DeadLine, StringFormat='крайний срок: {0:dd.MM.yyyy}',
+                                                       FallbackValue='крайний срок: ---', TargetNullValue='крайний срок не задан'}">
+                                                <TextBlock.Foreground>
+                                                    <Binding Path="IsDeadLine" FallbackValue="#DD000000">
+                                                        <Binding.Converter>
+                                                            <converters:BooleanToBrushConverter True="#FFD84A35" False="#DD000000"/>
+                                                        </Binding.Converter>
+                                                    </Binding>
+                                                </TextBlock.Foreground>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Rectangle Grid.Row="2" Height="1" Fill="LightGray" SnapsToDevicePixels="True" VerticalAlignment="Bottom"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </Grid>
+            <Grid Grid.Row="2" Height="40"
+                  Background="{DynamicResource MidBackground}">
+                <Rectangle Height="1" Fill="LightGray" VerticalAlignment="Top" SnapsToDevicePixels="True"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Button Name="DeletePlannedWorksButton"
+                            HorizontalAlignment="Left" Margin="5" Width="200" Visibility="Collapsed"
+                            Style="{StaticResource RedBtn}"
+                            Click="OnDeletePlannedWorksButtonClick">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Resources\DeleteWhite.png"/>
+                            <TextBlock Text="Удалить выбранную работу" VerticalAlignment="Center" Margin="2,0"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Name="ConfirmPlannedWorksButton" Content="Подтвердить" 
+                            Margin="0,5,5,5" Width="100" Visibility="Collapsed"
+                            Style="{StaticResource GreenBtn}"
+                            Click="OnConfirmPlannedWorksButtonClick"/>
+                    <Button Name="RejectPlannedWorksButton" Content="Отклонить" 
+                            Margin="0,5,5,5" Width="100" Visibility="Collapsed"
+                            Style="{StaticResource RedBtn}"
+                            Click="OnRejectPlannedWorksButtonClick"/>
+                    <Button Name="ActivatePlannedWorksButton"
+                            Margin="0,5,5,5" Width="150" Visibility="Collapsed"
+                            Style="{StaticResource GreenBtn}"
+                            Click="OnActivatePlannedWorksButtonClick">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Resources\RefreshWhite.png"/>
+                            <TextBlock Text="Возобновить" VerticalAlignment="Center" Margin="5,0"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <Button Name="StartPlannedWorksButton"
+                        HorizontalAlignment="Right" Margin="5,5,50,5" Width="230"
+                        Style="{StaticResource BlueBtn}"
+                        Click="OnStartPlannedWorksButtonClick">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Resources\StartWhite.png" Height="20" Width="20"/>
+                        <TextBlock Text="Приступить к выполнению работ" VerticalAlignment="Center" Margin="5,0"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Grid>
+
+        <Grid Name="ShadowGrid" Background="#55000000" Opacity="0"
+              MouseLeftButtonDown="OnShadowGridMouseLeftButtonDown">
+            <Grid.Visibility>
+                <Binding ElementName="AdditionalMenuToggleButton" Path="IsChecked">
+                    <Binding.Converter>
+                        <BooleanToVisibilityConverter/>
+                    </Binding.Converter>
+                </Binding>
+            </Grid.Visibility>
+        </Grid>
+
+        <ToggleButton Name="AdditionalMenuToggleButton" Height="45" Width="45"
+                      VerticalAlignment="Bottom" HorizontalAlignment="Right" Padding="0,0,2,5"
+                      VerticalContentAlignment="Bottom" HorizontalContentAlignment="Right"
+                      Style="{DynamicResource AdditionalMenuToggleButtonStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Rectangle Fill="White" Height="3" Width="22" Grid.Row="0" Grid.Column="0" Margin="2"/>
+                <Rectangle Fill="White" Height="3" Width="22" Grid.Row="1" Grid.Column="0" Margin="2"/>
+                <Rectangle Fill="White" Height="3" Width="22" Grid.Row="2" Grid.Column="0" Margin="2"/>
+            </Grid>
+            <ToggleButton.Triggers>
+                <EventTrigger RoutedEvent="ToggleButton.Checked">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="DropDown" Storyboard.TargetProperty="Opacity"
+                                             Duration="0:0:0.3" From="0" To="1" DecelerationRatio="0.7"/>
+                            <DoubleAnimation Storyboard.TargetName="ShadowGrid" Storyboard.TargetProperty="Opacity"
+                                             Duration="0:0:0.3" From="0" To="1" DecelerationRatio="0.8"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </ToggleButton.Triggers>
+        </ToggleButton>
+
+        <Grid x:Name="DropDown" SnapsToDevicePixels="True" VerticalAlignment="Bottom"
+              HorizontalAlignment="Right" Margin="0,0,0,45" Opacity="0">
+            <Grid.Visibility>
+                <Binding ElementName="AdditionalMenuToggleButton" Path="IsChecked">
+                    <Binding.Converter>
+                        <BooleanToVisibilityConverter/>
+                    </Binding.Converter>
+                </Binding>
+            </Grid.Visibility>
+            <Border Background="Gray" VerticalAlignment="Top" Margin="0,2,0,0"
+                    Width="{Binding ElementName=DropDownBorder, Path=ActualWidth}"
+                    Height="{Binding ElementName=DropDownBorder, Path=ActualHeight}">
+                <Border.Effect>
+                    <BlurEffect Radius="7"/>
+                </Border.Effect>
+            </Border>
+            <Border x:Name="DropDownBorder" BorderThickness="1" Margin="5,1,5,5"
+                    BorderBrush="DarkGray" Background="White">
+                <Grid Margin="0,5">
+                    <StackPanel>
+                        <Button Name="ExporToExcelButton" Content="Экспорт"
+                                Style="{DynamicResource AppBarButtonStyle}"
+                                Click="OnExporToExcelButtonClick"/>
+                        <Button Name="EmptyWorkReasonsButton" Content="Список причин выполнения работ"
+                                Style="{DynamicResource AppBarButtonStyle}" 
+                                Click="OnEmptyWorkReasonsButtonClick"/>
+                        <Button Name="PlannedWorksTypesButton" Content="Типы работ"
+                                Style="{DynamicResource AppBarButtonStyle}"
+                                Click="OnPlannedWorksTypesButtonClick"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>
+

@@ -1,0 +1,758 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{30B41E02-8D95-42B8-8EB4-7DA83E673CF8}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FA2</RootNamespace>
+    <AssemblyName>FA2</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>fa2.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FAIIControlLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Binaries\FAIIControlLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.8.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="ZoomableCanvas, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Binaries\ZoomableCanvas.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Behaviors\AdornerExtensions.cs" />
+    <Compile Include="Behaviors\SelectionCellsBehavior.cs" />
+    <Compile Include="Behaviors\TextBlockAdorner.cs" />
+    <Compile Include="Behaviors\WatermarkComboBoxBehavior.cs" />
+    <Compile Include="ChildPages\AdministrationPage\AccessGroupsRedactor.xaml.cs">
+      <DependentUpon>AccessGroupsRedactor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\AdministrationPage\ActionsRedactor.xaml.cs">
+      <DependentUpon>ActionsRedactor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\AdministrationPage\ModulesRedactor.xaml.cs">
+      <DependentUpon>ModulesRedactor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\AdmissionPage\AdmissionsPage.xaml.cs">
+      <DependentUpon>AdmissionsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\AdmissionPage\WorkerAdmissionsPage.xaml.cs">
+      <DependentUpon>WorkerAdmissionsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\CatalogPage\AdditionalOperationsChildPage.xaml.cs">
+      <DependentUpon>AdditionalOperationsChildPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\CatalogPage\FactoriesChildPage.xaml.cs">
+      <DependentUpon>FactoriesChildPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\CatalogPage\OperationGroupsPage.xaml.cs">
+      <DependentUpon>OperationGroupsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\CatalogPage\WorkerGroupsChildPage.xaml.cs">
+      <DependentUpon>WorkerGroupsChildPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\NewsFeedPage\EditNewsAndCommentPage.xaml.cs">
+      <DependentUpon>EditNewsAndCommentPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\PlannedWorksPage\AddPlannedWorksPage.xaml.cs">
+      <DependentUpon>AddPlannedWorksPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\PlannedWorksPage\ChooseEmptyWorkReasonPage.xaml.cs">
+      <DependentUpon>ChooseEmptyWorkReasonPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\PlannedWorksPage\EmptyWorkReasonsPage.xaml.cs">
+      <DependentUpon>EmptyWorkReasonsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\PlannedWorksPage\PlannedWorksTypesPage.xaml.cs">
+      <DependentUpon>PlannedWorksTypesPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\ProdRoomsPage\RaportPage.xaml.cs">
+      <DependentUpon>RaportPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\ServiceEquipmentPage\AddResponsibilitiesWorkers.xaml.cs">
+      <DependentUpon>AddResponsibilitiesWorkers.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\ServiceEquipmentPage\AddServiceAction.xaml.cs">
+      <DependentUpon>AddServiceAction.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\ServiceEquipmentPage\AddServiceEquipment.xaml.cs">
+      <DependentUpon>AddServiceEquipment.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\ServiceEquipmentPage\ServiceEquipmentInfo.xaml.cs">
+      <DependentUpon>ServiceEquipmentInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\StaffPage\AddNewWorker.xaml.cs">
+      <DependentUpon>AddNewWorker.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\StaffPage\EditStaffContact.xaml.cs">
+      <DependentUpon>EditStaffContact.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\StaffPage\EditStaffEducation.xaml.cs">
+      <DependentUpon>EditStaffEducation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\StaffPage\EditWorkerProdStatuses.xaml.cs">
+      <DependentUpon>EditWorkerProdStatuses.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\StaffPage\EditWorkerProfessions.xaml.cs">
+      <DependentUpon>EditWorkerProfessions.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\StaffPage\ProductionStatusesCatalog.xaml.cs">
+      <DependentUpon>ProductionStatusesCatalog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\StaffPage\ProfessionsCatalog.xaml.cs">
+      <DependentUpon>ProfessionsCatalog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\StaffPage\WorkerPersonalInfoPage.xaml.cs">
+      <DependentUpon>WorkerPersonalInfoPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\StaffPage\WorkersStatusesCatalog.xaml.cs">
+      <DependentUpon>WorkersStatusesCatalog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\StimulationPage\StimulationCatalog.xaml.cs">
+      <DependentUpon>StimulationCatalog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\StimulationPage\WorkerStimulation.xaml.cs">
+      <DependentUpon>WorkerStimulation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\TaskPage\AddNewTask.xaml.cs">
+      <DependentUpon>AddNewTask.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\TaskPage\FillTaskTimeTracking.xaml.cs">
+      <DependentUpon>FillTaskTimeTracking.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\TaskPage\TaskTimeTrackingInfo.xaml.cs">
+      <DependentUpon>TaskTimeTrackingInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\TechnologyProblemPage\TechnologyProblemInfo.xaml.cs">
+      <DependentUpon>TechnologyProblemInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\WorkerRequestsPage\AddNewWorkerRequestPage.xaml.cs">
+      <DependentUpon>AddNewWorkerRequestPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\WorkerRequestsPage\SetWorkerRequestConfirmationInfoPage.xaml.cs">
+      <DependentUpon>SetWorkerRequestConfirmationInfoPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChildPages\WorkerRequestsPage\WorkerRequestToWordReportPage.xaml.cs">
+      <DependentUpon>WorkerRequestToWordReportPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\ActionCommand.cs" />
+    <Compile Include="Classes\AdministrationClass.cs" />
+    <Compile Include="Classes\AdmissionsClass.cs" />
+    <Compile Include="Classes\BaseClass.cs" />
+    <Compile Include="Classes\CatalogClass.cs" />
+    <Compile Include="Classes\ConnectionClass.cs" />
+    <Compile Include="Classes\DispatcherHelper.cs" />
+    <Compile Include="Classes\ExportToExcel.cs" />
+    <Compile Include="Classes\ExportToWord.cs" />
+    <Compile Include="Classes\MyWorkersClass.cs" />
+    <Compile Include="Classes\NewsFeedClass.cs" />
+    <Compile Include="Classes\NewsHelper.cs" />
+    <Compile Include="Classes\PlannedScheduleClass.cs" />
+    <Compile Include="Classes\PlannedWorksClass.cs" />
+    <Compile Include="Classes\ProdRoomsClass.cs" />
+    <Compile Include="Classes\ProductionCalendarClass.cs" />
+    <Compile Include="Classes\ServiceEquipmentClass.cs" />
+    <Compile Include="Classes\StaffClass.cs" />
+    <Compile Include="Classes\StimulationClass.cs" />
+    <Compile Include="Classes\TaskClass.cs" />
+    <Compile Include="Classes\TechnologyProblemClass.cs" />
+    <Compile Include="Classes\TimeControlClass.cs" />
+    <Compile Include="Classes\TimeSheetClass.cs" />
+    <Compile Include="Classes\TimeTrackingClass.cs" />
+    <Compile Include="Classes\VisualTargetPresentationSource.cs" />
+    <Compile Include="Classes\VisualWrapper.cs" />
+    <Compile Include="Classes\WaitWindow.cs" />
+    <Compile Include="Classes\WeekNumberClass.cs" />
+    <Compile Include="Classes\WorkerRequestsClass.cs" />
+    <Compile Include="Classes\WorkshopMapClass.cs" />
+    <Compile Include="Controls\DropDownButton.cs" />
+    <Compile Include="Converters\AbsenceTypeConverter.cs" />
+    <Compile Include="Converters\ActionGroupConverter.cs" />
+    <Compile Include="Converters\ActionsConverter.cs" />
+    <Compile Include="Converters\AdministrationConverter.cs" />
+    <Compile Include="Converters\AdmissionsConverter.cs" />
+    <Compile Include="Converters\AdmissionsMultiConverter.cs" />
+    <Compile Include="Converters\BirthToAgeConverter.cs" />
+    <Compile Include="Converters\BooleanConverter.cs" />
+    <Compile Include="Converters\BooleanToBrushConverter.cs" />
+    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\BrigadierAccentConverter.cs" />
+    <Compile Include="Converters\CombineConverter.cs" />
+    <Compile Include="Converters\CommentsConverter.cs" />
+    <Compile Include="Converters\CompanyStructureItemConverter.cs" />
+    <Compile Include="Converters\CompletionPercentConverter.cs" />
+    <Compile Include="Converters\ConfirmCountConverter.cs" />
+    <Compile Include="Converters\DailyRateWorkingHoursConverter.cs" />
+    <Compile Include="Converters\DateConverter .cs" />
+    <Compile Include="Converters\DayNameConverter.cs" />
+    <Compile Include="Converters\DeviationPlannedScheduleColorConverter.cs" />
+    <Compile Include="Converters\FileIconConverter.cs" />
+    <Compile Include="Converters\FilePathToNameConverter.cs" />
+    <Compile Include="Converters\FileSizeConverter.cs" />
+    <Compile Include="Converters\FirstLetterConverterClass.cs" />
+    <Compile Include="Converters\ForegroundBlackWhiteConverter.cs" />
+    <Compile Include="Converters\GroupByDateConverter.cs" />
+    <Compile Include="Converters\GroupHederConverter.cs" />
+    <Compile Include="Converters\IdToAccessGroupNameConverter.cs" />
+    <Compile Include="Converters\IdToActionNameConverter.cs" />
+    <Compile Include="Converters\IdToColorConverterClass.cs" />
+    <Compile Include="Converters\IdToContactTypeImageConverter.cs" />
+    <Compile Include="Converters\IdToContactTypeName.cs" />
+    <Compile Include="Converters\IdToContentConverter.cs" />
+    <Compile Include="Converters\IdToDamageTypesConverter.cs" />
+    <Compile Include="Converters\IdToEducationInstitutionTypeConverter.cs" />
+    <Compile Include="Converters\IdToFactoryConverter.cs" />
+    <Compile Include="Converters\IdToLayerGroupNameConverter.cs" />
+    <Compile Include="Converters\IdToMachineNameConverter.cs" />
+    <Compile Include="Converters\IdToMeasureUnitNameConverter.cs" />
+    <Compile Include="Converters\IdToModuleNameConverter.cs" />
+    <Compile Include="Converters\IdToMyWorkersGroupNameConverter.cs" />
+    <Compile Include="Converters\IdToNameConverter.cs" />
+    <Compile Include="Converters\IdToNewsStatusConverter.cs" />
+    <Compile Include="Converters\IdToPersonnelTypeConverter.cs" />
+    <Compile Include="Converters\IdToProfessionConverter.cs" />
+    <Compile Include="Converters\IdToRequestTypeConverter.cs" />
+    <Compile Include="Converters\IdToResponsibleTypeConverter.cs" />
+    <Compile Include="Converters\IdToStaffAdressTypeConverter.cs" />
+    <Compile Include="Converters\IdToStaffPhotoConverter.cs" />
+    <Compile Include="Converters\IdToTooltipConverter.cs" />
+    <Compile Include="Converters\IdToWorkerGroupConverter.cs" />
+    <Compile Include="Converters\IdToWorkOperationConverterClass.cs" />
+    <Compile Include="Converters\IdToWorkOperationGroupConverter.cs" />
+    <Compile Include="Converters\IdToWorkOperationTypeConverter.cs" />
+    <Compile Include="Converters\IdToWorkSectionConverterClass.cs" />
+    <Compile Include="Converters\IdToWorkSubSectionConverterClass.cs" />
+    <Compile Include="Converters\IdToWorkUnitConverter.cs" />
+    <Compile Include="Converters\ImagePathConverter.cs" />
+    <Compile Include="Converters\ImageSourceConverter.cs" />
+    <Compile Include="Converters\ItemsSourceStaffSummProfessionsConverter.cs" />
+    <Compile Include="Converters\JournalNoteColorConverter.cs" />
+    <Compile Include="Converters\LockIDConverter.cs" />
+    <Compile Include="Converters\LocksStatusConverter.cs" />
+    <Compile Include="Converters\MeasureUnitNameFromOperationIdConverter.cs" />
+    <Compile Include="Converters\ModuleIconConverter.cs" />
+    <Compile Include="Converters\NewsTextConverter.cs" />
+    <Compile Include="Converters\NoRecordsConverter.cs" />
+    <Compile Include="Converters\OpacityConverter.cs" />
+    <Compile Include="Converters\OpenDoorConverter.cs" />
+    <Compile Include="Converters\OperationStructConverter.cs" />
+    <Compile Include="Converters\OperationTypeConverter.cs" />
+    <Compile Include="Converters\PercentWidthConverter.cs" />
+    <Compile Include="Converters\PlannedWorksConverter.cs" />
+    <Compile Include="Converters\ProductStatusColorConverter.cs" />
+    <Compile Include="Converters\ServiceEquipmentConverter.cs" />
+    <Compile Include="Converters\ServiceHistoryConverter.cs" />
+    <Compile Include="Converters\ServiceResponsibilitiesIsOverdueConverer.cs" />
+    <Compile Include="Converters\ShiftDurationConverterClass.cs" />
+    <Compile Include="Converters\StimulationsConverter.cs" />
+    <Compile Include="Converters\TaskConverter.cs" />
+    <Compile Include="Converters\TechnologyProblemConveter.cs" />
+    <Compile Include="Converters\TimeIntervalCountConverter.cs" />
+    <Compile Include="Converters\TimeSpanConverter.cs" />
+    <Compile Include="Converters\TimeSpanStringConverter.cs" />
+    <Compile Include="Converters\TimeTrackingNotesVisibilityConverter.cs" />
+    <Compile Include="Converters\TimeTrackingVerificationConverter.cs" />
+    <Compile Include="Converters\UntilTimeCountConverter.cs" />
+    <Compile Include="Converters\VerificationButtonConverter.cs" />
+    <Compile Include="Converters\WeekendDaysConverter.cs" />
+    <Compile Include="Converters\WorkerProdStatusConverter.cs" />
+    <Compile Include="Converters\WorkerProfessionInfoConverter.cs" />
+    <Compile Include="Converters\WorkerProffessionIdtoInfoConverter.cs" />
+    <Compile Include="Converters\WorkerRequestConverter.cs" />
+    <Compile Include="Converters\WorkerRequestDurationConverter.cs" />
+    <Compile Include="Converters\WorkingDaysCountConverter.cs" />
+    <Compile Include="Ftp\FileExplorer.xaml.cs">
+      <DependentUpon>FileExplorer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Ftp\FtpClient.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Ftp\FtpFileDirectoryInfo.cs" />
+    <Compile Include="Notifications\GrowlNotifiactions.xaml.cs">
+      <DependentUpon>GrowlNotifiactions.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Notifications\Notification.cs" />
+    <Compile Include="Notifications\NotificationManager.cs" />
+    <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ToolsPages\ChangePasswordPage.xaml.cs">
+      <DependentUpon>ChangePasswordPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ToolsPages\MyWorkersPage.xaml.cs">
+      <DependentUpon>MyWorkersPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ToolsPages\ProductionCalendarPage.xaml.cs">
+      <DependentUpon>ProductionCalendarPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\TasksViewModel.cs" />
+    <Compile Include="XamlFiles\AdministrationPage.xaml.cs">
+      <DependentUpon>AdministrationPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="XamlFiles\CatalogPage.xaml.cs">
+      <DependentUpon>CatalogPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="XamlFiles\NewsFeed.xaml.cs">
+      <DependentUpon>NewsFeed.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="XamlFiles\PlannedWorksPage.xaml.cs">
+      <DependentUpon>PlannedWorksPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="XamlFiles\ProdRoomsPage.xaml.cs">
+      <DependentUpon>ProdRoomsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="XamlFiles\ServiceEquipmentPage.xaml.cs">
+      <DependentUpon>ServiceEquipmentPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="XamlFiles\SplashWindow.xaml.cs">
+      <DependentUpon>SplashWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="XamlFiles\StaffPage.xaml.cs">
+      <DependentUpon>StaffPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="XamlFiles\StimulationPage.xaml.cs">
+      <DependentUpon>StimulationPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="XamlFiles\TaskPage.xaml.cs">
+      <DependentUpon>TaskPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="XamlFiles\TechnologyProblemPage.xaml.cs">
+      <DependentUpon>TechnologyProblemPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="XamlFiles\TimeControlPage.xaml.cs">
+      <DependentUpon>TimeControlPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="XamlFiles\TimesheetPage.xaml.cs">
+      <DependentUpon>TimesheetPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="XamlFiles\TimeTrackingPage.xaml.cs">
+      <DependentUpon>TimeTrackingPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="XamlFiles\WorkerRequestsPage.xaml.cs">
+      <DependentUpon>WorkerRequestsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="XamlFiles\WorkshopMapPage.xaml.cs">
+      <DependentUpon>WorkshopMapPage.xaml</DependentUpon>
+    </Compile>
+    <Page Include="ChildPages\AdministrationPage\AccessGroupsRedactor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildPages\AdministrationPage\ActionsRedactor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildPages\AdministrationPage\ModulesRedactor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildPages\AdmissionPage\AdmissionsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChildPages\AdmissionPage\WorkerAdmissionsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChildPages\CatalogPage\AdditionalOperationsChildPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChildPages\CatalogPage\FactoriesChildPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChildPages\CatalogPage\OperationGroupsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChildPages\CatalogPage\WorkerGroupsChildPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChildPages\NewsFeedPage\EditNewsAndCommentPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChildPages\PlannedWorksPage\AddPlannedWorksPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChildPages\PlannedWorksPage\ChooseEmptyWorkReasonPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChildPages\PlannedWorksPage\EmptyWorkReasonsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChildPages\PlannedWorksPage\PlannedWorksTypesPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChildPages\ProdRoomsPage\RaportPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChildPages\ServiceEquipmentPage\AddResponsibilitiesWorkers.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildPages\ServiceEquipmentPage\AddServiceAction.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildPages\ServiceEquipmentPage\AddServiceEquipment.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildPages\ServiceEquipmentPage\ServiceEquipmentInfo.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildPages\StaffPage\AddNewWorker.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildPages\StaffPage\EditStaffContact.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildPages\StaffPage\EditStaffEducation.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildPages\StaffPage\EditWorkerProdStatuses.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildPages\StaffPage\EditWorkerProfessions.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildPages\StaffPage\ProductionStatusesCatalog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildPages\StaffPage\ProfessionsCatalog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildPages\StaffPage\WorkerPersonalInfoPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChildPages\StaffPage\WorkersStatusesCatalog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildPages\StimulationPage\StimulationCatalog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildPages\StimulationPage\WorkerStimulation.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildPages\TaskPage\AddNewTask.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildPages\TaskPage\FillTaskTimeTracking.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildPages\TaskPage\TaskTimeTrackingInfo.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildPages\TechnologyProblemPage\TechnologyProblemInfo.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChildPages\WorkerRequestsPage\AddNewWorkerRequestPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChildPages\WorkerRequestsPage\SetWorkerRequestConfirmationInfoPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChildPages\WorkerRequestsPage\WorkerRequestToWordReportPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Ftp\FileExplorer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Notifications\GrowlNotifiactions.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Converters.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Icons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Shared.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\ToolsButtonsStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ToolsPages\ChangePasswordPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ToolsPages\MyWorkersPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ToolsPages\ProductionCalendarPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="XamlFiles\AdministrationPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="XamlFiles\CatalogPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="XamlFiles\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\Splasher.cs" />
+    <Compile Include="XamlFiles\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="XamlFiles\NewsFeed.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="XamlFiles\PlannedWorksPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="XamlFiles\ProdRoomsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="XamlFiles\ServiceEquipmentPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="XamlFiles\SplashWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="XamlFiles\StaffPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="XamlFiles\StimulationPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="XamlFiles\TaskPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="XamlFiles\TechnologyProblemPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="XamlFiles\TimeControlPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="XamlFiles\TimesheetPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="XamlFiles\TimeTrackingPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="XamlFiles\WorkerRequestsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="XamlFiles\WorkshopMapPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="ver" />
+    <None Include="XamlFiles\app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="main_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Binaries\FAIIControlLibrary.dll" />
+    <Content Include="Binaries\ZoomableCanvas.dll" />
+    <Resource Include="Resources\RefreshBlack.png" />
+    <Resource Include="Resources\StartWhite.png" />
+    <Resource Include="Resources\DeleteWhite.png" />
+    <Resource Include="Resources\RefreshWhite.png" />
+    <Resource Include="Resources\Alert.png" />
+    <Resource Include="Resources\Question.png" />
+    <Resource Include="Resources\alertTriangleRed.png" />
+    <Resource Include="Resources\okGreen.png" />
+    <Resource Include="Resources\mini_add.png" />
+    <Resource Include="Resources\Allert72.png" />
+    <Resource Include="Resources\Check36.png" />
+    <Resource Include="Resources\clockico.png" />
+    <Resource Include="Resources\dollarico.png" />
+    <Resource Include="Resources\Flag36.png" />
+    <Resource Include="Resources\user.png" />
+    <Resource Include="Resources\Visible48.png" />
+    <Resource Include="Resources\Files\Delete.png" />
+    <Resource Include="Resources\Files\Download.png" />
+    <Resource Include="Resources\Files\FolderUp.png" />
+    <Resource Include="Resources\Files\ListView.png" />
+    <Resource Include="Resources\Files\NewFile.png" />
+    <Resource Include="Resources\Files\NewFolder.png" />
+    <Resource Include="Resources\Files\TilesView.png" />
+    <Resource Include="Resources\EditNote.png" />
+    <Resource Include="Resources\clock.png" />
+    <Resource Include="Resources\Pencil.png" />
+    <Resource Include="Resources\SearchIcon.png" />
+    <Resource Include="Resources\notification.wav" />
+    <None Include="Resources\fa2.ico" />
+    <Resource Include="fa2.ico" />
+    <Resource Include="Resources\nophoto.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>7</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Word">
+      <Guid>{00020905-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>8</VersionMajor>
+      <VersionMinor>6</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

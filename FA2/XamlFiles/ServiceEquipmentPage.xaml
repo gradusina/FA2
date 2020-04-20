@@ -1,0 +1,1115 @@
+﻿<Page x:Class="FA2.XamlFiles.ServiceEquipmentPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:userControls="clr-namespace:FAIIControlLibrary.UserControls;assembly=FAIIControlLibrary"
+      xmlns:customControls="clr-namespace:FAIIControlLibrary.CustomControls;assembly=FAIIControlLibrary"
+      xmlns:converters="clr-namespace:FA2.Converters"
+      xmlns:behaviors="clr-namespace:FA2.Behaviors"
+      Title="ServiceEquipmentPage" Loaded="Page_Loaded" MinHeight="450" MinWidth="900"
+      Name="ServEquipPage" Background="White">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Themes\Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:CompletionPercentConverter x:Key="CompletionPercentConverter" />
+            <converters:PercentWidthConverter x:Key="PercentWidthConverter" />
+            <converters:BooleanToBrushConverter x:Key="ClosedItemForegroundConverter" True="Gray" False="#FF444444"/>
+            <converters:BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" True="Visible" False="Hidden"/>
+            <converters:BooleanToVisibilityConverter x:Key="HideOnTrueConverter" True="Hidden" False="Visible"/>
+            
+            <converters:BooleanToBrushConverter x:Key="ClosedRequestsHeadForegroundConverter" True="#89000000" False="#FF3366CC"/>
+            <converters:BooleanToBrushConverter x:Key="ClosedRequestsAdditionalForegroundConverter" True="#89000000" False="#DD000000"/>
+
+            <Style x:Key="ActionIconButtonStyle" TargetType="{x:Type Button}">
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="BorderBrush" Value="{x:Null}"/>
+                <Setter Property="Background" Value="{x:Null}"/>
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="Opacity" Value="0.5"/>
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Grid>
+                                <ContentPresenter/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Opacity" Value="0.8"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter Property="Cursor" Value="Arrow"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+        </ResourceDictionary>
+    </Page.Resources>
+    
+    <Grid Name="LayoutGrid">
+        <Grid Name="MainGrid">
+            <TabControl Name="Selector">
+                <TabControl.Template>
+                    <ControlTemplate TargetType="{x:Type TabControl}">
+                        <Grid KeyboardNavigation.TabNavigation="Local">
+                            <Border x:Name="Border" Grid.Column="1" KeyboardNavigation.TabNavigation="Local"
+                                    KeyboardNavigation.DirectionalNavigation="Contained" KeyboardNavigation.TabIndex="2"
+                                    Background="White">
+                                <ContentPresenter x:Name="PART_SelectedContentHost" ContentSource="SelectedContent" />
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </TabControl.Template>
+                <TabItem x:Name="ServiceHistory">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="250"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="320"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Background="WhiteSmoke">
+                            <Grid Margin="5,14,5,2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="Дата выполнения с" Foreground="#FF444444" FontSize="14"/>
+                                <DatePicker Name="ServiceHistoryDateFrom" Grid.Row="1" Height="30"
+                                            Style="{StaticResource CommonDatePickerStyle}"/>
+                                <TextBlock Text="Дата по" Grid.Row="2" Foreground="#FF444444" FontSize="14"/>
+                                <DatePicker Name="ServiceHistoryDateTo" Grid.Row="3" Height="30"
+                                            Style="{StaticResource CommonDatePickerStyle}"/>
+                                <Button Name="FillServiceHistory" Content="Применить" Grid.Row="4" Height="30"
+                                        Style="{StaticResource BlueBtn}" Margin="0,5"
+                                        Click="FillServiceHistory_Click"/>
+                                <CheckBox Name="FilteringEnabled" Grid.Row="5" Content="Включить фильтры"
+                                          Margin="0,10,0,0" Foreground="#FF444444" FontSize="14"
+                                          Checked="FilteringEnabled_Checked"
+                                          Unchecked="FilteringEnabled_Unchecked"/>
+                                <Grid Grid.Row="6" Margin="0,10,0,0"
+                                      IsEnabled="{Binding ElementName=FilteringEnabled, Path=IsChecked}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <RadioButton Name="MachineFiltering" Content="По станку" Margin="0,2"
+                                                 GroupName="ServiceHistoryFiltering" Foreground="#FF444444"
+                                                 Checked="MachineFiltering_Checked" FontSize="14"/>
+                                    <ComboBox Name="ServiceHistoryMachineFactoryList" Grid.Row="1" Height="30" Margin="20,2"
+                                              SelectedValuePath="FactoryID"
+                                              DisplayMemberPath="FactoryName"
+                                              SelectionChanged="ServiceHistoryMachineFactoryList_SelectionChanged"/>
+                                    <ComboBox Name="ServiceHistoryMachineList" Grid.Row="2" Height="30" Margin="20,2"
+                                              SelectedValuePath="MachineID"
+                                              DisplayMemberPath="MachineName"
+                                              SelectionChanged="ServiceHistoryMachineList_SelectionChanged"/>
+                                </Grid>
+                                <Grid Grid.Row="7" Margin="0,5" VerticalAlignment="Top"
+                                      IsEnabled="{Binding ElementName=FilteringEnabled, Path=IsChecked}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <RadioButton Name="WorkerFiltering" Content="По работнику" Margin="0,2"
+                                                 GroupName="ServiceHistoryFiltering" Foreground="#FF444444"
+                                                 Checked="WorkerFiltering_Checked" FontSize="14"/>
+                                    <ComboBox Name="ServiceHistoryWorkerFactoryList" Grid.Row="1" Height="30" Margin="20,2"
+                                              SelectedValuePath="FactoryID"
+                                              DisplayMemberPath="FactoryName"
+                                              SelectionChanged="ServiceHistoryWorkerFactoryList_SelectionChanged"/>
+                                    <ComboBox Name="ServiceHistoryWorkersList" Grid.Row="2" Height="30" Margin="20,2"
+                                              SelectedValuePath="WorkerID"
+                                              DisplayMemberPath="Name"
+                                              SelectionChanged="ServiceHistoryWorkersList_SelectionChanged"/>
+                                </Grid>
+                            </Grid>
+                            <Rectangle Width="1" Fill="Gray" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <Grid Margin="2" Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Список операций" Foreground="#FF444444" FontSize="16" 
+                                       Margin="5" FontWeight="Medium"/>
+                            <ListBox Name="ServiceHistoryList" Grid.Row="1" Margin="0,0,0,2"
+                                     SelectedValuePath="ServiceHistoryID" Padding="0,2"
+                                     SelectionChanged="ServiceHistoryList_SelectionChanged"
+                                     ItemContainerStyle="{StaticResource LightListBoxItemStyle}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <Rectangle Grid.Column="0" Margin="5" Width="5" Fill="#FF3BB73B"
+                                                       Visibility="{Binding IsClosing, Converter={StaticResource VisibleIfTrueConverter}}"/>
+                                            <Rectangle Grid.Column="0" Margin="5" Width="5" Fill="#B9E82121"
+                                                       Visibility="{Binding IsOverdue, Converter={StaticResource VisibleIfTrueConverter}}"/>
+                                            <Grid Grid.Column="1">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
+                                                <WrapPanel Orientation="Horizontal">
+                                                    <TextBlock FontSize="16" Foreground="#FF3366CC" Margin="0,0,2,0"
+                                                               Text="{Binding ServiceJournalID, Converter={StaticResource ServiceHistoryConverter}, ConverterParameter='ActionName'}"/>
+                                                    <TextBlock Text="(Просрочена)" FontSize="16" Foreground="#FF3366CC" Margin="0,0,2,0">
+                                                        <TextBlock.Visibility>
+                                                            <Binding Path="IsOverdue">
+                                                                <Binding.Converter>
+                                                                    <BooleanToVisibilityConverter/>
+                                                                </Binding.Converter>
+                                                            </Binding>
+                                                        </TextBlock.Visibility>
+                                                    </TextBlock>
+                                                    <TextBlock Text="(Выполнена)" FontSize="16" Foreground="#FF3366CC" Margin="0,0,2,0">
+                                                        <TextBlock.Visibility>
+                                                            <Binding Path="IsClosing">
+                                                                <Binding.Converter>
+                                                                    <BooleanToVisibilityConverter/>
+                                                                </Binding.Converter>
+                                                            </Binding>
+                                                        </TextBlock.Visibility>
+                                                    </TextBlock>
+                                                </WrapPanel>
+                                                <TextBlock Grid.Row="1" Foreground="Gray"
+                                                           Text="{Binding ServiceJournalID, Converter={StaticResource ServiceHistoryConverter}, ConverterParameter='FactoryName'}"/>
+                                                <TextBlock Grid.Row="2" Foreground="Gray"
+                                                           Text="{Binding ServiceJournalID, Converter={StaticResource ServiceHistoryConverter}, ConverterParameter='MachineName'}"/>
+                                                <TextBlock Grid.Row="3" Foreground="{Binding IsClosing, Converter={StaticResource ClosedItemForegroundConverter}}"
+                                                           Text="{Binding DateCreate, StringFormat='Начало выполнения: {0:dd.MM.yyyy}'}"/>
+                                                <WrapPanel Orientation="Horizontal" Grid.Row="4">
+                                                    <WrapPanel.Resources>
+                                                        <Style TargetType="{x:Type TextBlock}">
+                                                            <Setter Property="Foreground" Value="{Binding IsClosing, Converter={StaticResource ClosedItemForegroundConverter}}"/>
+                                                        </Style>
+                                                    </WrapPanel.Resources>
+                                                    <TextBlock Text="{Binding DateConfirm, StringFormat='Завершена: {0:dd.MM.yyyy HH:mm}  ', TargetNullValue={x:Null}}"/>
+                                                    <TextBlock Text="{Binding NeededConfirmationDate, StringFormat='Плановое окончание: {0:dd.MM.yyyy}'}"/>
+                                                    <TextBlock Visibility="{Binding IsClosing, Converter={StaticResource HideOnTrueConverter}}">
+                                                        <TextBlock.Text>
+                                                            <MultiBinding StringFormat=" (через {0} дней {1} часов)">
+                                                                <Binding Path="NeededConfirmationDate" Converter="{StaticResource UntilTimeCountConverter}" ConverterParameter="Days"/>
+                                                                <Binding Path="NeededConfirmationDate" Converter="{StaticResource UntilTimeCountConverter}" ConverterParameter="Hours"/>
+                                                            </MultiBinding>
+                                                        </TextBlock.Text>
+                                                    </TextBlock>
+                                                </WrapPanel>
+                                            </Grid>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <Button Name="ConfirmServiceAction" Content="Подтвердить выполнение" Grid.Row="2"
+                                    Style="{StaticResource BlueBtn}" Height="30" HorizontalAlignment="Left"
+                                    Width="200" IsEnabled="False"
+                                    Click="ConfirmServiceAction_Click"/>
+                        </Grid>
+                        <Grid Margin="0,2,2,2" Grid.Column="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Список ответственных" Foreground="#FF444444" FontSize="16"
+                                       Margin="5" FontWeight="Medium"/>
+                            <ItemsControl Name="ResponsibilitiesList" Margin="0,0,0,2" Grid.Row="1">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="5,2">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <WrapPanel Orientation="Horizontal" Grid.Row="0">
+                                                <TextBlock FontSize="16" Foreground="#FF3366CC"
+                                                               Text="{Binding WorkerID, Converter={StaticResource IdToNameConverter}, ConverterParameter='FullName'}"/>
+                                                <TextBlock FontSize="16" Foreground="#FF3366CC"
+                                                               Text="{Binding Converter={StaticResource ServiceResponsibilitiesIsOverdueConverer}, StringFormat='({0})', TargetNullValue={x:Null}}"/>
+                                            </WrapPanel>
+                                            <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="10,0,0,0">
+                                                <TextBlock Text="Дата принятия: " Foreground="Gray"/>
+                                                <TextBlock Foreground="#FF444444"
+                                                           Text="{Binding AcceptedDate, StringFormat='{}{0:dd.MM.yyyy}', FallbackValue='Не принята'}"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="10,0,0,0">
+                                                <TextBlock Text="Начата: " Foreground="Gray"/>
+                                                <TextBlock Foreground="#FF444444"
+                                                           Text="{Binding TimeStart, StringFormat='{}{0:dd.MM.yyyy HH:mm}', TargetNullValue='Не начата'}"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="10,0,0,0">
+                                                <TextBlock Text="Завершена: " Foreground="Gray"/>
+                                                <TextBlock Foreground="#FF444444"
+                                                           Text="{Binding TimeEnd, StringFormat='{}{0:dd.MM.yyyy HH:mm}', TargetNullValue='Не завершена'}"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Grid.Row="4" Margin="10,0,0,0">
+                                                <TextBlock Text="Примечание: " Foreground="Gray"/>
+                                                <TextBlock Foreground="#FF444444"
+                                                           Text="{Binding WorkerDescription, TargetNullValue='Отсудствует'}"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <Button Name="ExportServiceHistory" Content="Экспорт" Grid.Row="2"
+                                    Style="{StaticResource GreenBtn}" Width="100"
+                                    Height="30" HorizontalAlignment="Right" IsEnabled="False" Visibility="Hidden"/>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="ServiceJournal">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="250"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0" Margin="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Border BorderThickness="1" CornerRadius="1" Margin="0,0,0,2" 
+                                    BorderBrush="{DynamicResource BordersBrush}"
+                                    Background="{DynamicResource MidBackground}">
+                                <Grid Margin="5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <CheckBox Name="JournalFactoryFilterEnable" HorizontalAlignment="Left"
+                                              VerticalAlignment="Center"
+                                              Checked="JournalFactoryFilterEnable_Checked"
+                                              Unchecked="JournalFactoryFilterEnable_Unchecked"/>
+                                    <ComboBox Name="FactoryComboBox" Margin="20,0,0,0" Grid.Row="0"
+                                              SelectedValuePath="FactoryID"
+                                              DisplayMemberPath="FactoryName"
+                                              SelectionChanged="FactoryComboBox_SelectionChanged"
+                                              IsEnabled="{Binding ElementName=JournalFactoryFilterEnable, Path=IsChecked}"
+                                              behaviors:WatermarkComboBoxBehavior.EnableWatermark="True"
+                                              behaviors:WatermarkComboBoxBehavior.Label="Фабрика"
+                                              behaviors:WatermarkComboBoxBehavior.LabelStyle="{StaticResource WatermarkLabelStyle}"/>
+                                    <CheckBox Name="JournalFreeActionsFilterEnable" Margin="0,5" FontSize="14"
+                                              Content="Без исполнителя" Foreground="#FF444444" Grid.Row="1"
+                                              Checked="JournalFilterCheckStatesChanged"
+                                              Unchecked="JournalFilterCheckStatesChanged"/>
+                                    <CheckBox Name="JournalOverdueActionsFilterEnable" Grid.Row="2" Margin="0,5"
+                                              Content="Только просроченные" Foreground="#FF444444" FontSize="14"
+                                              Checked="JournalFilterCheckStatesChanged"
+                                              Unchecked="JournalFilterCheckStatesChanged"/>
+                                    <CheckBox Name="JournalMachineFilterEnable" Grid.Row="3" FontSize="14"
+                                              Content="Все станки" Margin="0,5,0,0"
+                                              Foreground="#FF444444"
+                                              Checked="JournalMachineFilterEnable_Checked"
+                                              Unchecked="JournalMachineFilterEnable_Unchecked"/>
+                                </Grid>
+                            </Border>
+                            <Grid Grid.Row="1" Margin="0,2,0,0" Name="JournalMachineFilteringPanel">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <ListBox Name="MachinesListBox" BorderThickness="1,1,1,0"
+                                             SelectedValuePath="MachineID"
+                                             DisplayMemberPath="MachineName"
+                                             SelectionChanged="MachinesListBox_SelectionChanged"/>
+                                    <TextBox Name="SearchMachineTextBox" Grid.Row="1" Height="30"
+                                             TextChanged="SearchMachineTextBox_TextChanged">
+                                        <TextBox.Background>
+                                            <ImageBrush ImageSource="/Resources/SearchIcon.png" AlignmentX="Right"
+                                                        Stretch="None" Viewport="0,0,1,1" Viewbox="0.5,0,1,1" />
+                                        </TextBox.Background>
+                                    </TextBox>
+                                </Grid>
+                                <Button Name="AddServiceRow" Content="Добавить операцию" Margin="0,2,0,0" Grid.Row="1"
+                                        Style="{StaticResource GreenBtn}" IsEnabled="False"
+                                        Click="AddServiceRow_Click" Height="30"/>
+                            </Grid>
+                        </Grid>
+                        <Grid Grid.Column="1" Margin="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <DataGrid Name="ServiceJournalDataGrid" IsReadOnly="True" 
+                                      SelectedValuePath="ServiceJournalID"
+                                      Style="{StaticResource CommonDataGridStyle}">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Header="Операция">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Rectangle Width="5" Margin="5,0"
+                                                                   Visibility="{Binding IsOverdue, Converter={StaticResource VisibleIfTrueConverter}}"
+                                                                   Fill="#B9E82121"/>
+                                                        <TextBlock Text="{Binding ActionName}"/>
+                                                        <TextBlock Text=" (Просрочена)">
+                                                            <TextBlock.Visibility>
+                                                                <Binding Path="IsOverdue">
+                                                                    <Binding.Converter>
+                                                                        <BooleanToVisibilityConverter/>
+                                                                    </Binding.Converter>
+                                                                </Binding>
+                                                            </TextBlock.Visibility>
+                                                        </TextBlock>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Header="Последний раз выполнена" Width="220"
+                                                        Binding="{Binding LastDate, StringFormat='dd.MM.yyyy HH:mm'}"/>
+                                    <DataGridTextColumn Header="След. выполнение через" Width="200">
+                                        <DataGridTextColumn.Binding>
+                                            <MultiBinding StringFormat="{}{0}дней {1}часов">
+                                                <Binding Path="NextDate" Converter="{StaticResource UntilTimeCountConverter}" ConverterParameter="Days"/>
+                                                <Binding Path="NextDate" Converter="{StaticResource UntilTimeCountConverter}" ConverterParameter="Hours"/>
+                                            </MultiBinding>
+                                        </DataGridTextColumn.Binding>
+                                    </DataGridTextColumn>
+                                </DataGrid.Columns>
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource CommonDataGridRowStyle}">
+                                        <EventSetter Event="MouseDoubleClick" Handler="OnServiceJournalRowMouseDoubleClick"/>
+                                        <Setter Property="ToolTip">
+                                            <Setter.Value>
+                                                <TextBlock Text="{Binding MachineID, Converter={StaticResource IdToMachineNameConverter}}"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </DataGrid.RowStyle>
+                            </DataGrid>
+                            <Button Name="AddResponsibleWorker" HorizontalAlignment="Left" Grid.Row="1"
+                                    Content="Назначить ответственного(ых)" Margin="0,2,0,0" Width="200"
+                                    Style="{StaticResource BlueBtn}" Height="30" IsEnabled="False"
+                                    Click="AddResponsibleWorker_Click"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+                                <Button Name="DeleteServiceRow" Content="Удалить" Margin="0,2,45,0" Width="100"
+                                        Style="{StaticResource RedBtn}" Height="30" IsEnabled="False"
+                                        Click="DeleteServiceRow_Click"/>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="Requests">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="400"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <Border Grid.Row="0" Margin="2" BorderThickness="1" BorderBrush="Gray" CornerRadius="1"
+                                    Background="{DynamicResource MidBackground}">
+                                <Button Name="AddRequestButton" Content="Заполнить новую заявку" 
+                                        Height="30" Margin="5" HorizontalAlignment="Left" Width="200"
+                                        Click="addRequestButton_Click" 
+                                        Style="{StaticResource GreenBtn}"/>
+                            </Border>
+                            
+                            <Border Grid.Row="1" BorderThickness="1" BorderBrush="Gray"
+                                    Margin="2" CornerRadius="1">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition />
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    
+                                    <Rectangle HorizontalAlignment="Stretch" Margin="0,0,0,1.5" 
+                                               VerticalAlignment="Bottom" Height="2" Fill="#CC000000" >
+                                        <Rectangle.Effect>
+                                            <BlurEffect Radius="5" />
+                                        </Rectangle.Effect>
+                                    </Rectangle>
+
+                                    <!--Filtering grid-->
+                                    <Grid Grid.Row="0" Background="#FFFAFAFA" Margin="0,0,0,2">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Загрузить заявки" FontSize="16" Foreground="#DD000000"
+                                                   HorizontalAlignment="Left" Margin="5,5,5,0"/>
+                                        <StackPanel Grid.Row="1" Orientation="Horizontal"
+                                                    HorizontalAlignment="Left" Margin="5,0">
+                                            <TextBlock Text="с:" FontSize="16" Foreground="#89000000" VerticalAlignment="Center"/>
+                                            <DatePicker Name="dateFromPicker" Margin="5" Width="120"
+                                                        Style="{DynamicResource CommonDatePickerStyle}" 
+                                                        VerticalContentAlignment="Center" Height="30" />
+                                            <TextBlock Text="по:" VerticalAlignment="Center" FontSize="16" Foreground="#89000000"/>
+                                            <DatePicker Name="dateUntilPicker" Margin="5" Width="120"
+                                                        Style="{DynamicResource CommonDatePickerStyle}"  
+                                                        VerticalContentAlignment="Center" Height="30" />
+                                            <Button x:Name="ShowButton"  Content="Загрузить"
+                                                    Margin="5" Width="85" Height="30" HorizontalAlignment="Left"
+                                                    Style="{StaticResource BlueBtn}"
+                                                    Click="showButton_Click" />
+                                        </StackPanel>
+                                        <Rectangle Grid.Row="2" VerticalAlignment="Top" SnapsToDevicePixels="True"
+                                                   Height="1" Fill="Gray" Margin="0,5"/>
+                                        <TextBlock Grid.Row="2" Text="Фильтровать заявки" FontSize="16" Foreground="#DD000000"
+                                                   HorizontalAlignment="Left" Margin="5,9,5,0"/>
+                                        <StackPanel Orientation="Horizontal" Grid.Row="3" 
+                                                    HorizontalAlignment="Left" Margin="5">
+                                            <CheckBox Name="RequestMachineFilterEnable" IsChecked="False"
+                                                      VerticalAlignment="Center"
+                                                      Checked="RequestMachineFilterEnable_OnChecked"
+                                                      Unchecked="RequestMachineFilterEnable_OnUnchecked"/>
+                                            <ComboBox Name="RequestFactoryFilter" Width="110" Height="30" MinWidth="0"
+                                                      DisplayMemberPath="FactoryName" Margin="5,0,0,0"
+                                                      SelectedValuePath="FactoryID"
+                                                      IsEnabled="{Binding ElementName=RequestMachineFilterEnable, Path=IsChecked}"
+                                                      SelectionChanged="RequestFactoryFilter_OnSelectionChanged"
+                                                      behaviors:WatermarkComboBoxBehavior.EnableWatermark="True"
+                                                      behaviors:WatermarkComboBoxBehavior.Label="Фабрика"
+                                                      behaviors:WatermarkComboBoxBehavior.LabelStyle="{StaticResource WatermarkLabelStyle}"/>
+                                            <ComboBox Name="RequestMachineFilter" Width="210" Margin="5,0" Height="30"
+                                                      DisplayMemberPath="MachineName"
+                                                      SelectedValuePath="WorkSubsectionID"
+                                                      IsEnabled="{Binding ElementName=RequestMachineFilterEnable, Path=IsChecked}"
+                                                      SelectionChanged="RequestMachineFilter_OnSelectionChanged"
+                                                      behaviors:WatermarkComboBoxBehavior.EnableWatermark="True"
+                                                      behaviors:WatermarkComboBoxBehavior.Label="Станок"
+                                                      behaviors:WatermarkComboBoxBehavior.LabelStyle="{StaticResource WatermarkLabelStyle}"/>
+                                        </StackPanel>
+                                        <CheckBox Name="showClosedRequestCheckBox" Grid.Row="4" 
+                                                  Content="Показать закрытые заявки" HorizontalAlignment="Left"
+                                                  VerticalContentAlignment="Center" Margin="5" 
+                                                  FontSize="16" Foreground="#DD000000"
+                                                  Checked="showClosedRequestCheckBox_Checked" 
+                                                  Unchecked="showClosedRequestCheckBox_Unchecked"/>
+                                    </Grid>
+                                    
+                                    <ListBox Name="CrashMachinesListBox" Grid.Row="1"
+                                             Background="White" Margin="0,2" BorderThickness="0"
+                                             SelectionChanged="OnCrashMachinesListBoxSelectionChanged">
+                                        <ListBox.ItemContainerStyle>
+                                            <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource LightListBoxItemStyle}">
+                                                <EventSetter Event="MouseDoubleClick" Handler="OnRequestMouseDoubleClick"></EventSetter>
+                                            </Style>
+                                        </ListBox.ItemContainerStyle>
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <DataTemplate.Resources>
+                                                    <Style x:Key="HeadTextBlockStyle" TargetType="{x:Type TextBlock}">
+                                                        <Setter Property="FontSize" Value="14"/>
+                                                        <Setter Property="FontWeight" Value="Medium"/>
+                                                        <Setter Property="Foreground" Value="{Binding RequestClose, Converter={StaticResource ClosedRequestsHeadForegroundConverter}}"/>
+                                                    </Style>
+                                                    <Style x:Key="AdditionalTextBlockStyle" TargetType="{x:Type TextBlock}">
+                                                        <Setter Property="FontSize" Value="12"/>
+                                                        <Setter Property="FontWeight" Value="Medium"/>
+                                                        <Setter Property="Foreground" Value="{Binding RequestClose, Converter={StaticResource ClosedRequestsAdditionalForegroundConverter}}"/>
+                                                    </Style>
+                                                    <Style x:Key="TitleTextBlockStyle" TargetType="{x:Type TextBlock}">
+                                                        <Setter Property="FontSize" Value="12"/>
+                                                        <Setter Property="FontWeight" Value="Medium"/>
+                                                        <Setter Property="Foreground" Value="#89000000"/>
+                                                    </Style>
+                                                </DataTemplate.Resources>
+                                                <Grid Background="Transparent"
+                                                      ContextMenuOpening="RowMenu_ContextMenuOpening">
+                                                    <Grid.ContextMenu>
+                                                        <ContextMenu>
+                                                            <MenuItem Header="Удалить" Click="MenuItem_Click"/>
+                                                        </ContextMenu>
+                                                    </Grid.ContextMenu>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                    </Grid.RowDefinitions>
+                                                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap"
+                                                               Text="{Binding WorkSubSectionID, Converter={StaticResource IdToWorkSubSectionConverter}}"
+                                                               Style="{StaticResource HeadTextBlockStyle}"/>
+                                                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left">
+                                                        <TextBlock Width="110"
+                                                                   Style="{StaticResource AdditionalTextBlockStyle}"
+                                                                   Text="{Binding GlobalID, StringFormat='№ {0}'}"/>
+                                                        <TextBlock Style="{StaticResource AdditionalTextBlockStyle}"
+                                                                   Text="{Binding RequestDate, StringFormat='{}{0:dd.MM.yyyy}'}"/>
+                                                    </StackPanel>
+                                                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left">
+                                                        <TextBlock Width="110"
+                                                                   Style="{StaticResource TitleTextBlockStyle}" 
+                                                                   Text="{Binding ReceivedDate, StringFormat='дата принятия: ',
+                                                            FallbackValue='не принята'}"/>
+                                                        <TextBlock Style="{StaticResource AdditionalTextBlockStyle}"
+                                                                   Text="{Binding ReceivedDate, StringFormat='{}{0:dd.MM.yyyy}'}"/>
+                                                    </StackPanel>
+                                                    <!--<StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left">
+                                                        <TextBlock Width="110"
+                                                                   Style="{StaticResource TitleTextBlockStyle}" 
+                                                                   Text="{Binding CompletionDate, StringFormat='дата завершения: ',
+                                                            FallbackValue='не завершена'}"/>
+                                                        <TextBlock Style="{StaticResource AdditionalTextBlockStyle}"
+                                                                   Text="{Binding CompletionDate, StringFormat='{}{0:dd.MM.yyyy}'}"/>
+                                                    </StackPanel>-->
+                                                    <Grid Grid.Row="4">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition />
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                                            <TextBlock Width="110"
+                                                                       Style="{StaticResource TitleTextBlockStyle}"
+                                                                       Text="{Binding LaunchDate, StringFormat='дата запуска: ',
+                                                                       FallbackValue='не запущена'}"/>
+                                                            <TextBlock Style="{StaticResource AdditionalTextBlockStyle}"
+                                                                       Text="{Binding LaunchDate, StringFormat='{}{0:dd.MM.yyyy}'}"/>
+                                                        </StackPanel>
+                                                        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left"
+                                                                    Visibility="{Binding RequestTypeID, Converter={StaticResource ServiceEquipmentConverter},
+                                                                    ConverterParameter='AdditionalRowVisibility'}">
+                                                            <!--<TextBlock FontSize="12" FontWeight="Medium" Foreground="#89000000" Width="110"
+                                                                       Text="время простоя: "/>-->
+                                                            <TextBlock FontSize="12"  FontWeight="Medium" Foreground="#89000000" Margin="3"
+                                                                       ToolTip="Время простоя"
+                                                                       Text="{Binding TimeOut, Converter={StaticResource TimeSpanStringConverter}}"/>
+                                                        </StackPanel>
+                                                    </Grid>
+                                                    <Grid Grid.Row="6"
+                                                          Visibility="{Binding RequestTypeID, Converter={StaticResource ServiceEquipmentConverter}, 
+                                                          ConverterParameter='AdditionalRowVisibility'}">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition/>
+                                                        </Grid.RowDefinitions>
+                                                        <!--<TextBlock FontSize="10" HorizontalAlignment="Left" 
+                                                                   Foreground="#89000000" FontWeight="Medium"
+                                                                   Text="{Binding CompletionPercent, StringFormat='{}{0} %'}"/>-->
+                                                        <Canvas Grid.Row="1" Height="5" HorizontalAlignment="Left" Margin="0,2"
+                                                                Background="LightGray" Width="375"/>
+                                                        <Canvas Grid.Row="1" Height="5" HorizontalAlignment="Left" Margin="0,2"
+                                                                Background="{Binding CompletionPercent, Converter={StaticResource CompletionPercentConverter}}"
+                                                                Width="{Binding CompletionPercent, Converter={StaticResource PercentWidthConverter}}"/>
+                                                    </Grid>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+
+                                    <Grid Grid.Row="2" Background="{DynamicResource LightBackground}">
+                                        <customControls:SwitchComboBox Name="ExportStatisticToExcelSwitchBox"
+                                                                       Content="Вывод статистики" Margin="5"
+                                                                       HorizontalAlignment="Left" Width="150"
+                                                                       Foreground="White" BorderBrush="#FF29691D"
+                                                                       Background="{DynamicResource GreenForeground}">
+                                            <ComboBoxItem Content="Статистика поломок и замечаний"
+                                                          PreviewMouseDown="OnExportCrashStatisticsToExcelButtonClick"/>
+                                            <ComboBoxItem Content="Диаграмма неисправностей/замечаний"
+                                                          PreviewMouseDown="OnExportDiagrammItemPreviewMouseDown"/>
+                                        </customControls:SwitchComboBox>
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                            
+                        </Grid>
+
+                        <Border Grid.Column="1" Name="MainRequestInfoGrid" BorderThickness="1"
+                                Margin="2" CornerRadius="1" BorderBrush="Gray" 
+                                x:FieldModifier="private">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition />
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Rectangle HorizontalAlignment="Stretch" Margin="0,0,0,1.5" Grid.RowSpan="2"
+                                           VerticalAlignment="Bottom" Height="2" Fill="#CC000000">
+                                    <Rectangle.Effect>
+                                        <BlurEffect Radius="5" />
+                                    </Rectangle.Effect>
+                                </Rectangle>
+
+                                <Grid Grid.Row="0" Background="#FFFAFAFA" Grid.RowSpan="2" Margin="0,0,0,2"/>
+                                
+                                <Grid Grid.Row="0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Foreground="#DD000000" VerticalAlignment="Center" Margin="5,5,5,0"
+                                               FontSize="16" HorizontalAlignment="Left"
+                                               Text="{Binding WorkSubSectionID, StringFormat='прибор/станок: {0}', 
+                                               Converter={StaticResource IdToWorkSubSectionConverter}, FallbackValue='прибор/станок: ---'}"/>
+                                    <TextBlock Foreground="#89000000" VerticalAlignment="Center" HorizontalAlignment="Left" 
+                                               Margin="6,0,0,0" Grid.Row="1"
+                                               Text="{Binding WorkUnitID, StringFormat='участок: {0}', 
+                                               Converter={StaticResource IdToWorkUnitConverter}, FallbackValue='участок: ---'}"/>
+                                    <TextBlock Foreground="#89000000" VerticalAlignment="Center" Margin="6,0,0,5" 
+                                               HorizontalAlignment="Left" Grid.Row="2"
+                                               Text="{Binding WorkSectionID, StringFormat='подучасток: {0}', 
+                                               Converter={StaticResource IdToWorkSectionConverter}, FallbackValue='подучасток: ---'}"/>
+                                </Grid>
+                                
+                                <Grid Grid.Row="1" HorizontalAlignment="Left"
+                                      Visibility="{Binding RequestTypeID, Converter={StaticResource ServiceEquipmentConverter}, 
+                                    ConverterParameter='AdditionalRowVisibility', FallbackValue={x:Static Visibility.Collapsed}}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <WrapPanel>
+                                        <Grid Width="475">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <TextBlock VerticalAlignment="Center" Margin="5" FontSize="14" Foreground="#FF444444"
+                                                       Text="{Binding TimeOut, StringFormat='время простоя оборудования: {0}', 
+                                                       Converter={StaticResource TimeSpanStringConverter}, FallbackValue='время простоя оборудования: ---'}"/>
+                                            <Grid Grid.Row="1" Margin="5,0,5,5">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="тип поломки:" Foreground="#FF444444" VerticalAlignment="Center"
+                                                           FontSize="14"/>
+                                                <ComboBox Name="damageTypeCombpBox" Height="30" FontSize="16"
+                                                          Padding="6,0" MinWidth="0" IsEnabled="False" Width="300"
+                                                          Foreground="#FF444444" Grid.Column="1"
+                                                          SelectedValue="{Binding DamageTypeID, TargetNullValue=1, FallbackValue=1}"/>
+                                            </Grid>
+                                        </Grid>
+                                        <Grid Width="475">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid Grid.Row="0" Margin="5,0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock VerticalAlignment="Center" FontSize="14" Foreground="#FF444444"
+                                                   Text="плановая дата запуска:"/>
+                                                <DatePicker Name="PlannedLaunchDatePicker" Margin="5,0" Grid.Column="1"
+                                                    Width="180" VerticalContentAlignment="Center"
+                                                    IsEnabled="False" MinWidth="0" Height="30"
+                                                    Style="{DynamicResource CommonDatePickerStyle}"
+                                                    SelectedDate="{Binding PlannedLaunchDate, Mode=OneWay}"/>
+                                                <userControls:TimeControl Name="TimePlannedControl" IsEnabled="False" Margin="0" 
+                                                                  Width="115" MinWidth="0" FontSize="18" Grid.Column="2"
+                                                                  SnapsToDevicePixels="True" Height="30"
+                                                                  TotalTime="{Binding PlannedLaunchDate.TimeOfDay, Mode=OneWay}"/>
+                                            </Grid>
+                                            <Grid Grid.Row="1" Margin="5">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="состояние выполнения:" VerticalAlignment="Center"
+                                                           FontSize="14"  Foreground="#FF444444"/>
+                                                <userControls:PercentControl Name="CompletionPercentControl" Height="25"
+                                                                             Step="5" Width="300" Mask="0" IsEnabled="False"
+                                                                             SnapsToDevicePixels="True" Grid.Column="1"
+                                                                             Percent="{Binding CompletionPercent, Mode=OneWay,
+                                                                             TargetNullValue=0, FallbackValue=0}"/>
+                                            </Grid>
+                                        </Grid>
+                                    </WrapPanel>
+                                    <customControls:WatermarkTextBox Name="CrashReasonTextBox" WatermarkText="Причина поломки"
+                                                                     Margin="5,0" FontSize="14" VerticalContentAlignment="Top"
+                                                                     Foreground="#FF444444" Background="White" Padding="0,3"
+                                                                     IsReadOnly="True" TextWrapping="Wrap" Height="65"
+                                                                     VerticalScrollBarVisibility="Auto" Grid.Row="1"
+                                                                     Text="{Binding CrashReason, Mode=OneWay}"/>
+                                    <Button Grid.Row="2" Content="Сохранить" HorizontalAlignment="Left" Height="30" Width="150"
+                                            Margin="5" Name="saveChangesButton" Click="saveChangesButton_Click"
+                                            IsEnabled="False" VerticalAlignment="Center" Style="{StaticResource BlueBtn}"/>
+                                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right"
+                                                VerticalAlignment="Top" Margin="5" ToolTip="Последнее редактирование">
+                                        <Image Height="10" Width="10" Source="/Resources\Pencil.png" Margin="5,0" Opacity="0.54"/>
+                                        <TextBlock Foreground="Gray">
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}{0:dd.MM.yyyy HH:mm:ss} {1}"
+                                                          FallbackValue="---">
+                                                    <Binding Path="EditingDate"/>
+                                                    <Binding Path="EditingWorkerID" Converter="{StaticResource IdToNameConverter}"
+                                                             ConverterParameter="ShortName"/>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Grid>
+                                
+                                <Grid Grid.Row="2" Margin="5,2">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock VerticalAlignment="Center" Foreground="#DD000000" 
+                                               FontSize="16" FontWeight="Medium"
+                                               Text="{Binding GlobalID, StringFormat='№ заявки: {0}', FallbackValue='№ заявки: ---'}"/>
+                                    
+                                    <ScrollViewer Grid.Row="1"
+                                                  HorizontalScrollBarVisibility="Disabled"
+                                                  VerticalScrollBarVisibility="Auto">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <Image Source="/Resources\Allert72.png" Grid.Row="0"
+                                                   VerticalAlignment="Top" HorizontalAlignment="Left"
+                                                   Stretch="Fill" Height="30" Width="30" Margin="10,10,5,5"/>
+                                            <Grid Grid.Row="0" Margin="50,0,0,0">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+                                                <StackPanel Grid.Row="0" HorizontalAlignment="Left" Margin="0,5,0,0">
+                                                    <TextBlock Foreground="#89000000" FontSize="14"
+                                                               Text="{Binding RequestDate, StringFormat='дата создания: {0:dd.MM.yyyy HH:mm}', 
+                                                               FallbackValue='заявка не создана'}"/>
+                                                    <TextBlock Foreground="#89000000" FontSize="14"
+                                                               Text="{Binding RequestWorkerID, Converter={StaticResource IdToNameConverter}, 
+                                                               ConverterParameter='ShortName', FallbackValue='---', TargetNullValue='---'}"/>
+                                                </StackPanel>
+                                                <TextBlock Grid.Row="1" FontSize="14"
+                                                           Margin="0,0,0,5" TextWrapping="Wrap"
+                                                           Text="{Binding RequestNotes, FallbackValue='примечание к заявке отсутствует'}">
+                                                    <TextBlock.Foreground>
+                                                        <Binding Path="RequestNotes">
+                                                            <Binding.FallbackValue>
+                                                                <SolidColorBrush Color="#DD000000"/>
+                                                            </Binding.FallbackValue>
+                                                            <Binding.TargetNullValue>
+                                                                <SolidColorBrush Color="#89000000"/>
+                                                            </Binding.TargetNullValue>
+                                                        </Binding>
+                                                    </TextBlock.Foreground>
+                                                </TextBlock>
+                                            </Grid>
+                                            <Rectangle Grid.Row="0" VerticalAlignment="Bottom" Fill="LightGray" Height="1"/>
+
+                                            <Image Source="/Resources\Visible48.png" Grid.Row="1"
+                                                   VerticalAlignment="Top" HorizontalAlignment="Left"
+                                                   Stretch="Fill" Height="30" Width="30" Margin="10,10,5,5"/>
+                                            <Grid Grid.Row="1" Margin="50,0,0,0">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+                                                <StackPanel Grid.Row="0" HorizontalAlignment="Left" Margin="0,5,0,0">
+                                                    <TextBlock FontSize="14" Foreground="#89000000"
+                                                               Text="{Binding ReceivedDate, StringFormat='дата принятия: {0:dd.MM.yyyy HH:mm}', 
+                                                               FallbackValue='заявка не принята'}"/>
+                                                    <TextBlock Foreground="#89000000" FontSize="14"
+                                                           Text="{Binding ReceivedWorkerID, Converter={StaticResource IdToNameConverter}, 
+                                                           ConverterParameter='ShortName', FallbackValue='---', TargetNullValue='---'}"/>
+                                                </StackPanel>
+                                                <Grid Grid.Row="1">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition />
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Name="ReceivedNotesTextBlock" FontSize="14"
+                                                               Margin="0,0,0,5" TextWrapping="Wrap"
+                                                               Text="{Binding ReceivedNotes, FallbackValue='примечание к принятию заявки отсутствует'}">
+                                                        <TextBlock.Foreground>
+                                                            <Binding Path="ReceivedNotes">
+                                                                <Binding.FallbackValue>
+                                                                    <SolidColorBrush Color="#DD000000"/>
+                                                                </Binding.FallbackValue>
+                                                                <Binding.TargetNullValue>
+                                                                    <SolidColorBrush Color="#89000000"/>
+                                                                </Binding.TargetNullValue>
+                                                            </Binding>
+                                                        </TextBlock.Foreground>
+                                                    </TextBlock>
+                                                    <TextBox Name="ChangeReceiveNotesTextBox" Grid.Column="0" Margin="0,0,0,5"
+                                                             Visibility="Collapsed" TextWrapping="Wrap"/>
+                                                    <Button Name="EditReceiveNotesButton" Grid.Column="1" 
+                                                            Height="12" Margin="5" VerticalAlignment="Bottom"
+                                                            Style="{StaticResource ActionIconButtonStyle}"
+                                                            Click="OnEditReceiveNotesButtonClick">
+                                                        <Image Source="/Resources\Pencil.png"/>
+                                                    </Button>
+                                                    <StackPanel Name="EditReceiveNotesPanel" Grid.Column="1" Margin="5,0,0,0"
+                                                                Orientation="Horizontal" Visibility="Collapsed"
+                                                                VerticalAlignment="Top">
+                                                        <Button Name="SaveReceiveNotesButton"
+                                                                Height="20" Width="20" Padding="0"
+                                                                Style="{StaticResource GreenBtn}"
+                                                                Click="OnSaveReceiveNotesButtonClick">
+                                                            <Grid>
+                                                                <Polygon Width="15" Height="15" HorizontalAlignment="Center" Fill="White"
+                                                                     VerticalAlignment="Center" Points="2,8 3.5,6.5 7,9.5 7,12.5"/>
+                                                                <Polygon Width="15" Height="15" HorizontalAlignment="Center" Fill="White"
+                                                                     Points="7,12.5 7,9.5 11.5,4.5 13,6" VerticalAlignment="Center"/>
+                                                            </Grid>
+                                                        </Button>
+                                                        <Button Name="CancelEditReceiveNotesButton" FontSize="17" Content="×" 
+                                                                Height="20" Width="20" Padding="0" Margin="2,0"
+                                                                Style="{StaticResource RedBtn}"
+                                                                Click="OnCancelEditReceiveNotesButtonClick"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Grid>
+                                            <Rectangle Grid.Row="1" VerticalAlignment="Bottom" Fill="LightGray" Height="1"/>
+
+                                            <Image Source="/Resources\Flag36.png" Grid.Row="2"
+                                                   VerticalAlignment="Top" HorizontalAlignment="Left"
+                                                   Stretch="Fill" Height="30" Width="30" Margin="10,10,5,5"/>
+                                            <Grid Grid.Row="2" Margin="50,0,0,0">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+                                                <StackPanel Grid.Row="0" HorizontalAlignment="Left" Margin="0,5,0,0">
+                                                    <TextBlock FontSize="14" Foreground="#89000000"
+                                                               Text="{Binding CompletionDate, StringFormat='дата завершения: {0:dd.MM.yyyy HH:mm}', 
+                                                               FallbackValue='заявка не завершена'}"/>
+                                                    <TextBlock Foreground="#89000000" FontSize="14"
+                                                           Text="{Binding CompletionWorkerID, Converter={StaticResource IdToNameConverter}, 
+                                                           ConverterParameter='ShortName', FallbackValue='---', TargetNullValue='---'}"/>
+                                                </StackPanel>
+                                                <Grid Grid.Row="1">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition />
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Name="CompletionNotesTextBlock" FontSize="14" Margin="0,0,0,5" TextWrapping="Wrap"
+                                                               Text="{Binding CompletionNotes, FallbackValue='примечание к завершению заявки отсутствует'}">
+                                                        <TextBlock.Foreground>
+                                                            <Binding Path="CompletionNotes">
+                                                                <Binding.FallbackValue>
+                                                                    <SolidColorBrush Color="#DD000000"/>
+                                                                </Binding.FallbackValue>
+                                                                <Binding.TargetNullValue>
+                                                                    <SolidColorBrush Color="#89000000"/>
+                                                                </Binding.TargetNullValue>
+                                                            </Binding>
+                                                        </TextBlock.Foreground>
+                                                    </TextBlock>
+                                                    <TextBox Name="ChangeCompletionNotesTextBox" Grid.Column="0" Margin="0,0,0,5"
+                                                             Visibility="Collapsed" TextWrapping="Wrap"/>
+                                                    <Button Name="EditCompletionNotesButton" Grid.Column="1" 
+                                                            Height="12" Margin="5" VerticalAlignment="Bottom"
+                                                            Style="{StaticResource ActionIconButtonStyle}"
+                                                            Click="OnEditCompletionNotesButtonClick">
+                                                        <Image Source="/Resources\Pencil.png"/>
+                                                    </Button>
+                                                    <StackPanel Name="EditCompletionNotesPanel" Grid.Column="1" Margin="5,0,0,0"
+                                                                Orientation="Horizontal" Visibility="Collapsed"
+                                                                VerticalAlignment="Top">
+                                                        <Button Name="SaveCompletionNotesButton"
+                                                                Height="20" Width="20" Padding="0"
+                                                                Style="{StaticResource GreenBtn}"
+                                                                Click="OnSaveCompletionNotesButtonClick">
+                                                            <Grid>
+                                                                <Polygon Width="15" Height="15" HorizontalAlignment="Center" Fill="White"
+                                                                     VerticalAlignment="Center" Points="2,8 3.5,6.5 7,9.5 7,12.5"/>
+                                                                <Polygon Width="15" Height="15" HorizontalAlignment="Center" Fill="White"
+                                                                     Points="7,12.5 7,9.5 11.5,4.5 13,6" VerticalAlignment="Center"/>
+                                                            </Grid>
+                                                        </Button>
+                                                        <Button Name="CancelCompletionNotesButton" FontSize="17" Content="×" 
+                                                                Height="20" Width="20" Padding="0" Margin="2,0"
+                                                                Style="{StaticResource RedBtn}"
+                                                                Click="OnCancelEditCompletionNotesButtonClick"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Grid>
+                                            <Rectangle Grid.Row="2" VerticalAlignment="Bottom" Fill="LightGray" Height="1"/>
+
+                                            <Image Source="/Resources\Check36.png" Grid.Row="3"
+                                                   VerticalAlignment="Top" HorizontalAlignment="Left"
+                                                   Stretch="Fill" Height="30" Width="30" Margin="10,10,5,5"/>
+                                            <Grid Grid.Row="3" Margin="50,0,0,0">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+                                                <StackPanel Grid.Row="0" HorizontalAlignment="Left" Margin="0,5,0,0">
+                                                    <TextBlock Foreground="#89000000" FontSize="14"
+                                                           Text="{Binding LaunchDate, StringFormat='дата подтверждения: {0:dd.MM.yyyy HH:mm}', 
+                                                           FallbackValue='заявка не устранена'}"/>
+                                                    <TextBlock Foreground="#89000000" FontSize="14"
+                                                           Text="{Binding LaunchWorkerID, Converter={StaticResource IdToNameConverter}, 
+                                                           ConverterParameter='ShortName', FallbackValue='---', TargetNullValue='---'}"/>
+                                                </StackPanel>
+                                                <TextBlock Grid.Row="1" FontSize="14" 
+                                                           Margin="0,0,0,5" TextWrapping="Wrap"
+                                                           Text="{Binding LaunchNotes, FallbackValue='примечание к устранению заявки отсутствует'}">
+                                                    <TextBlock.Foreground>
+                                                        <Binding Path="LaunchNotes">
+                                                            <Binding.FallbackValue>
+                                                                <SolidColorBrush Color="#DD000000"/>
+                                                            </Binding.FallbackValue>
+                                                            <Binding.TargetNullValue>
+                                                                <SolidColorBrush Color="#89000000"/>
+                                                            </Binding.TargetNullValue>
+                                                        </Binding>
+                                                    </TextBlock.Foreground>
+                                                </TextBlock>
+                                            </Grid>
+                                        </Grid>
+                                    </ScrollViewer>
+                                </Grid>
+                                
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="3" Margin="5,0">
+                                    <Button Content="Принять заявку" Margin="0,5" Width="00" Height="30" 
+                                            Name="ReceiveButton" MinWidth="0" Click="OnReceiveButtonClick" 
+                                            Style="{StaticResource GreenBtn}"/>
+                                    <!--<Button Content="Завершить ремонт" Margin="0,5" Width="0" Height="30" 
+                                            Name="CompletButton" MinWidth="0"  Click="infoButton_Click" 
+                                            Style="{StaticResource GreenBtn}"/>-->
+                                    <Button Content="Запуск оборудования" Margin="0,5" Width="0" Height="30" 
+                                            Name="launchButton" MinWidth="0"  Click="infoButton_Click" 
+                                            Style="{StaticResource GreenBtn}"/>
+                                    <Button Content="Полная информация" Margin="0,5" Width="0" Height="30" 
+                                            Name="infoButton" MinWidth="0"  Click="infoButton_Click" 
+                                            Style="{StaticResource GreenBtn}"/>
+                                </StackPanel>
+                                
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
+
+        <Grid Name="ShadowGrid" Background="#55000000" Opacity="0"
+              MouseLeftButtonDown="OnShadowGridMouseLeftButtonDown">
+            <Grid.Visibility>
+                <Binding ElementName="AdditionalMenuToggleButton" Path="IsChecked">
+                    <Binding.Converter>
+                        <BooleanToVisibilityConverter/>
+                    </Binding.Converter>
+                </Binding>
+            </Grid.Visibility>
+        </Grid>
+
+        <ToggleButton Name="AdditionalMenuToggleButton" Height="45" Width="45"
+                      VerticalAlignment="Bottom" HorizontalAlignment="Right" Padding="0,0,2,5"
+                      VerticalContentAlignment="Bottom" HorizontalContentAlignment="Right"
+                      Style="{DynamicResource AdditionalMenuToggleButtonStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Rectangle Fill="White" Height="3" Width="22" Grid.Row="0" Grid.Column="0" Margin="2"/>
+                <Rectangle Fill="White" Height="3" Width="22" Grid.Row="1" Grid.Column="0" Margin="2"/>
+                <Rectangle Fill="White" Height="3" Width="22" Grid.Row="2" Grid.Column="0" Margin="2"/>
+            </Grid>
+            <ToggleButton.Triggers>
+                <EventTrigger RoutedEvent="ToggleButton.Checked">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="DropDown" Storyboard.TargetProperty="Opacity"
+                                             Duration="0:0:0.3" From="0" To="1" DecelerationRatio="0.7"/>
+                            <DoubleAnimation Storyboard.TargetName="ShadowGrid" Storyboard.TargetProperty="Opacity"
+                                             Duration="0:0:0.3" From="0" To="1" DecelerationRatio="0.8"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </ToggleButton.Triggers>
+        </ToggleButton>
+
+        <Grid x:Name="DropDown" SnapsToDevicePixels="True" VerticalAlignment="Bottom"
+              HorizontalAlignment="Right" Margin="0,0,0,45" Opacity="0">
+            <Grid.Visibility>
+                <Binding ElementName="AdditionalMenuToggleButton" Path="IsChecked">
+                    <Binding.Converter>
+                        <BooleanToVisibilityConverter/>
+                    </Binding.Converter>
+                </Binding>
+            </Grid.Visibility>
+            <Border Background="Gray" VerticalAlignment="Top" Margin="0,2,0,0"
+                        Width="{Binding ElementName=DropDownBorder, Path=ActualWidth}"
+                        Height="{Binding ElementName=DropDownBorder, Path=ActualHeight}">
+                <Border.Effect>
+                    <BlurEffect Radius="7"/>
+                </Border.Effect>
+            </Border>
+            <Border x:Name="DropDownBorder" BorderThickness="1" Margin="5,1,5,5"
+                        BorderBrush="DarkGray" Background="White">
+                <StackPanel Margin="0,5">
+                    <RadioButton Content="История" Name="ServiceHistorySwitch" GroupName="AppBarSwitch"
+                                 Style="{DynamicResource AppBarRadioButtonStyle}"
+                                 Checked="Switch_Checked"/>
+                    <RadioButton Content="Журнал" Name="ServiceJournalSwitch" GroupName="AppBarSwitch"
+                                 Style="{DynamicResource AppBarRadioButtonStyle}"
+                                 Checked="Switch_Checked"/>
+                    <Rectangle Fill="LightGray" Margin="0,5" Height="1"/>
+                    <RadioButton Content="Неисправности оборудования" Name="appBarCrashButton" 
+                                 GroupName="AppBarSwitch"
+                                 Style="{DynamicResource AppBarRadioButtonStyle}"
+                                 Checked="appBarCrashButton_Checked"/>
+                    <RadioButton Content="Замечания по оборудованию" Name="AppBarNonCrashButton"
+                                 GroupName="AppBarSwitch"
+                                 Style="{DynamicResource AppBarRadioButtonStyle}"
+                                 Checked="appBarNonCrashButton_Checked"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <Popup Name="requestClosedPopup" IsOpen="False" Placement="Center" PopupAnimation="Fade" StaysOpen="True"
+               PlacementTarget="{Binding ElementName=MainDataGrid}" Width="300" Height="100" AllowsTransparency="True">
+            <Border BorderBrush="#FF017BCD" BorderThickness="1" Background="White">
+                <Grid>
+                    <StackPanel VerticalAlignment="Center">
+                        <Label Name="requestClosedLabel" ContentStringFormat="Заявка № {0}" Content="" FontSize="16"
+                               Foreground="#FF444444" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                        <Label Content="добавлена в архив" FontSize="16" Foreground="#FF444444"
+                               HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Popup>
+    </Grid>
+</Page>

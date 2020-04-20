@@ -1,0 +1,374 @@
+﻿<Page x:Class="FA2.XamlFiles.StimulationPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="860"
+      xmlns:userControls="clr-namespace:FAIIControlLibrary.UserControls;assembly=FAIIControlLibrary"
+      MinWidth="860" MinHeight="450" Background="White"
+	  Title="StimulationPage" WindowHeight="0" Loaded="Page_Loaded">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Themes\Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            
+            <Style x:Key="PromotionButtonStyle" TargetType="{x:Type Button}">
+                <Setter Property="Background" Value="#FF0FA861"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Grid Height="30" Width="30">
+                                <Polygon Points="0,10 10,10 10,0 20,0 20,10 30,10 30,20 20,20 20,30 10,30 10,20 0,20" Fill="{TemplateBinding Background}"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="Black"/>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter Property="Background" Value="Gray"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            
+            <Style x:Key="FineButtonStyle" TargetType="{x:Type Button}">
+                <Setter Property="Background" Value="#FFD84A35"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Grid Height="30" Width="30">
+                                <Polygon Points="0,10 30,10 30,20 0,20" Fill="{TemplateBinding Background}"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="Black"/>
+                    </Trigger>
+                    <Trigger Property="IsPressed" Value="True">
+                        <Setter Property="Background" Value="Gray"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <DataTemplate x:Key="WorkerStimulationRowDetailsTemplate">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" MaxHeight="200"
+                              VerticalScrollBarVisibility="Auto">
+                    <Grid Background="#FFFAEFAA">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <Grid>
+                            <Grid.MaxHeight>
+                                <Binding Path="StimulationID" Converter="{StaticResource StimulationsConverter}"
+                                         ConverterParameter="StimulationNotesWidth"/>
+                            </Grid.MaxHeight>
+                            <TextBlock TextWrapping="Wrap" Margin="5" Foreground="#DD000000"
+                                       Text="{Binding StimulationID, Converter={StaticResource StimulationsConverter},
+                                       ConverterParameter='StimulationNotes', StringFormat='Примечание: {0}'}"/>
+                        </Grid>
+
+                        <Grid Grid.Row="1">
+                            <Grid.MaxHeight>
+                                <Binding Path="Notes" Converter="{StaticResource StimulationsConverter}"
+                                         ConverterParameter="WorkerNotesWidth"/>
+                            </Grid.MaxHeight>
+                            <TextBlock TextWrapping="Wrap" Margin="5" FontSize="14"
+                                       Foreground="#DD000000" FontFamily="Comic Sans MS"
+                                       Text="{Binding Notes, StringFormat='Комментарий: {0}'}"/>
+                        </Grid>
+
+                    </Grid>
+                </ScrollViewer>
+            </DataTemplate>
+
+        </ResourceDictionary>
+    </Page.Resources>
+    
+    <Grid>   
+        <Grid Name="LayOutRoot">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Grid Name="FullVersionFilterGrid" Width="220">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Border BorderBrush="{DynamicResource BordersBrush}" 
+                        Background="{DynamicResource MidBackground}" BorderThickness="1"
+                        Margin="2" CornerRadius="1" SnapsToDevicePixels="True">
+                    <StackPanel>
+                        <Label Content="дата с" HorizontalAlignment="Left" FontSize="16" 
+                               Foreground="#FF444444" Padding="0" Margin="5,0,0,0"/>
+                        <DatePicker Name="FullVersionDateFrom" Height="30" Margin="5,0" 
+                                    Style="{DynamicResource CommonDatePickerStyle}"/>
+                        <Label Content="дата по" HorizontalAlignment="Left" FontSize="16" 
+                               Foreground="#FF444444" Padding="0" Margin="5,0,0,0"/>
+                        <DatePicker Name="FullVersionDateTo" Height="30" Margin="5,0" 
+                                    Style="{DynamicResource CommonDatePickerStyle}"/>
+                        <Button Name="ApplyFullVersionFilterButton" Content="Применить" Height="30" Margin="5"
+                                Style="{StaticResource BlueBtn}" 
+                                Click="ApplyFullVersionFilterButton_Click"/>
+                        <Rectangle Fill="White" Height="2"/>
+                    </StackPanel>
+                </Border>
+                <Border BorderBrush="{DynamicResource BordersBrush}" 
+                        Background="{DynamicResource MidBackground}" BorderThickness="1"
+                        Margin="2" CornerRadius="1" Grid.Row="1" SnapsToDevicePixels="True">
+                    <Grid Margin="5,0,5,5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="группа" FontSize="16" Foreground="#FF444444" HorizontalAlignment="Left"
+                               Margin="3,0,0,0" Padding="0" VerticalAlignment="Top" />
+                        <ComboBox FontSize="14" Grid.Row="0" Height="30" Margin="0,22,0,0" Name="WorkersGroupsComboBox"
+                                  SelectionChanged="FilterComboBox_SelectionChanged" Padding="5,0,0,0"
+                                  VerticalContentAlignment="Center"/>
+                        <Grid Grid.Row="1">
+                            <TextBlock Text="фабрика" FontSize="16" Foreground="#FF444444" Margin="3,0,0,0" />
+                            <ComboBox FontSize="14" Height="30" Margin="0,22,0,0" Name="FactoriesComboBox"
+                                      Padding="5,0,0,0" VerticalContentAlignment="Center"
+                                      SelectionChanged="FilterComboBox_SelectionChanged"/>
+                        </Grid>
+                        <CheckBox Name="ShowNotEmptyWorkerCheckBox" Grid.Row="2" FontSize="16"
+                                  Content="Только с записями" Margin="0,5,0,0" Foreground="#FF444444"
+                                  Checked="ShowNotEmptyWorkerCheckBox_CheckStateChanged"
+                                  Unchecked="ShowNotEmptyWorkerCheckBox_CheckStateChanged"/>
+                    </Grid>
+                </Border>
+                <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="2" Margin="2"
+                         Name="WorkersNameListBox" SelectionMode="Single"
+                         DisplayMemberPath="Name" SelectedValuePath="WorkerID"
+                         SelectionChanged="WorkersNameListBox_SelectionChanged"/>
+            </Grid>
+            
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Button Name="AddPromotionButton" HorizontalAlignment="Center" VerticalAlignment="Center"
+                            MinHeight="30" MinWidth="30" Cursor="Hand" Margin="5"
+                            Style="{StaticResource PromotionButtonStyle}"
+                            Click="AddPromotionButton_Click">
+                    </Button>
+                    <Button Name="AddFineButton" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                            MinHeight="30" MinWidth="30" Cursor="Hand" Grid.Column="1" Margin="5"
+                            Style="{StaticResource FineButtonStyle}"
+                            Click="AddFineButton_Click">
+                    </Button>
+                    <DataGrid Name="PromotionDataGrid" Grid.Row="1" Grid.Column="0" Margin="2"
+                              CanUserAddRows="False" IsReadOnly="True" 
+                              HorizontalScrollBarVisibility="Disabled"
+                              GridLinesVisibility="Vertical"
+                              Style="{StaticResource CommonDataGridStyle}"
+                              RowDetailsTemplate="{StaticResource WorkerStimulationRowDetailsTemplate}">
+                        <DataGrid.Resources>
+                            <ContextMenu Name="RowMenu" x:Key="RowMenu">
+                                <MenuItem Header="Удалить" Click="PromotionMenuItem_Click"/>
+                            </ContextMenu>
+                        </DataGrid.Resources>                   
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Дата" Binding="{Binding Date, StringFormat='{}{0:dd.MM.yyyy}'}" Width="70"/>
+                            <DataGridTemplateColumn Header="Причина">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock TextWrapping="Wrap"
+                                                   Text="{Binding StimulationID, Converter={StaticResource StimulationsConverter}, 
+                                                   ConverterParameter='StimulationName'}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Размер поощрения" MaxWidth="160">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Foreground="#FF4CAF50" 
+                                                       Text="{Binding StimulationSize}" Margin="2,0"/>
+                                            <TextBlock Foreground="#FF4CAF50" 
+                                                       Text="{Binding StimulationUnitID, Converter={StaticResource StimulationsConverter}, ConverterParameter='StimulationSize'}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                        <DataGrid.RowStyle>
+                            <Style TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource LightDataGridRowStyle}">
+                                <EventSetter Event="ContextMenuOpening" Handler="PromotionRowMenu_ContextMenuOpening"/>
+                                <EventSetter Event="MouseDoubleClick" Handler="PromotionRow_MouseDoubleClick"/>
+                                <Setter Property="ContextMenu" Value="{StaticResource RowMenu}"/>
+                            </Style>
+                        </DataGrid.RowStyle>
+                    </DataGrid>
+
+                    <DataGrid Name="FineDataGrid" Grid.Column="1" Grid.Row="1" IsReadOnly="True" 
+                              CanUserAddRows="False" Margin="2" GridLinesVisibility="Vertical"
+                              HorizontalScrollBarVisibility="Disabled" 
+                              Style="{StaticResource CommonDataGridStyle}"
+                              RowDetailsTemplate="{StaticResource WorkerStimulationRowDetailsTemplate}">
+                        <DataGrid.Resources>
+                            <ContextMenu Name="FineRowMenu" x:Key="FineRowMenu">
+                                <MenuItem Header="Удалить" Click="FineMenuItem_Click"/>
+                            </ContextMenu>
+                        </DataGrid.Resources>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Дата" Binding="{Binding Date, StringFormat='{}{0:dd.MM.yyyy}'}" Width="70"/>
+                            <DataGridTemplateColumn Header="Причина">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock TextWrapping="Wrap"
+                                                   Text="{Binding StimulationID, Converter={StaticResource StimulationsConverter}, 
+                                                   ConverterParameter='StimulationName'}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Размер поощрения" MaxWidth="160">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Foreground="#FFF44336" 
+                                                       Text="{Binding StimulationSize}" Margin="2,0"/>
+                                            <TextBlock Foreground="#FFF44336" 
+                                                       Text="{Binding StimulationUnitID, Converter={StaticResource StimulationsConverter}, ConverterParameter='StimulationSize'}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                        <DataGrid.RowStyle>
+                            <Style TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource LightDataGridRowStyle}">
+                                <EventSetter Event="ContextMenuOpening" Handler="FineRowMenu_ContextMenuOpening"/>
+                                <EventSetter Event="MouseDoubleClick" Handler="FineRow_MouseDoubleClick"/>
+                                <Setter Property="ContextMenu" Value="{StaticResource FineRowMenu}" />
+                            </Style>
+                        </DataGrid.RowStyle>
+                    </DataGrid>
+                    
+                    <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <userControls:RatioControl Name="HoursRatioControl" Width="300" Height="55"
+                                                   HorizontalAlignment="Center" Grid.Row="3" 
+                                                   Grid.ColumnSpan="2" ShowIcon="True" Icon="/Resources/clockico.png"/>
+                        <userControls:RatioControl Name="MoneyRatioControl" Grid.Column="0" Width="300" Height="55"
+                                                   HorizontalAlignment="Center" Grid.Row="1" ShowDifference="True"
+                                                   Grid.ColumnSpan="2" Icon="/Resources/dollarico.png" ShowIcon="True"/>
+                    </Grid>
+                </Grid>
+                
+                <Grid Name="LightVersionFilterGrid" Background="{DynamicResource MidBackground}" Grid.Row="1">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="дата с" HorizontalAlignment="Center" Margin="5" FontSize="16" VerticalAlignment="Center"/>
+                        <DatePicker Name="LightVersionDateFrom" Width="120" Height="30" 
+                                    Style="{DynamicResource CommonDatePickerStyle}"/>
+                        <Label Content="дата по" HorizontalAlignment="Center" Margin="5" FontSize="16" VerticalAlignment="Center"/>
+                        <DatePicker Name="LightVersionDateTo" Width="120" Height="30" 
+                                    Style="{DynamicResource CommonDatePickerStyle}"/>
+                        <Button Name="ApplyLightVersionFilterButton" Content="Применить" Margin="10,5" Height="30" Width="100"
+                                Style="{StaticResource BlueBtn}"
+                                Click="ApplyLightVersionFilterButton_Click"/>
+                    </StackPanel>
+                </Grid>
+                
+            </Grid>
+            
+        </Grid>
+
+        <Grid Name="ShadowGrid" Background="#55000000" Opacity="0"
+              MouseLeftButtonDown="OnShadowGridMouseLeftButtonDown">
+            <Grid.Visibility>
+                <Binding ElementName="AdditionalMenuToggleButton" Path="IsChecked">
+                    <Binding.Converter>
+                        <BooleanToVisibilityConverter/>
+                    </Binding.Converter>
+                </Binding>
+            </Grid.Visibility>
+        </Grid>
+
+        <ToggleButton Name="AdditionalMenuToggleButton" Height="45" Width="45"
+                      VerticalAlignment="Bottom" HorizontalAlignment="Right" Padding="0,0,2,5"
+                      VerticalContentAlignment="Bottom" HorizontalContentAlignment="Right"
+                      Style="{DynamicResource AdditionalMenuToggleButtonStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Rectangle Fill="White" Height="3" Width="22" Grid.Row="0" Grid.Column="0" Margin="2"/>
+                <Rectangle Fill="White" Height="3" Width="22" Grid.Row="1" Grid.Column="0" Margin="2"/>
+                <Rectangle Fill="White" Height="3" Width="22" Grid.Row="2" Grid.Column="0" Margin="2"/>
+            </Grid>
+            <ToggleButton.Triggers>
+                <EventTrigger RoutedEvent="ToggleButton.Checked">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="DropDown" Storyboard.TargetProperty="Opacity"
+                                             Duration="0:0:0.3" From="0" To="1" DecelerationRatio="0.7"/>
+                            <DoubleAnimation Storyboard.TargetName="ShadowGrid" Storyboard.TargetProperty="Opacity"
+                                             Duration="0:0:0.3" From="0" To="1" DecelerationRatio="0.8"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </ToggleButton.Triggers>
+        </ToggleButton>
+
+        <Grid x:Name="DropDown" SnapsToDevicePixels="True" VerticalAlignment="Bottom"
+              HorizontalAlignment="Right" Margin="0,0,0,45" Opacity="0">
+            <Grid.Visibility>
+                <Binding ElementName="AdditionalMenuToggleButton" Path="IsChecked">
+                    <Binding.Converter>
+                        <BooleanToVisibilityConverter/>
+                    </Binding.Converter>
+                </Binding>
+            </Grid.Visibility>
+            <Border Background="Gray" VerticalAlignment="Top" Margin="0,2,0,0"
+                        Width="{Binding ElementName=DropDownBorder, Path=ActualWidth}"
+                        Height="{Binding ElementName=DropDownBorder, Path=ActualHeight}">
+                <Border.Effect>
+                    <BlurEffect Radius="7"/>
+                </Border.Effect>
+            </Border>
+            <Border x:Name="DropDownBorder" BorderThickness="1" Margin="5,1,5,5"
+                        BorderBrush="DarkGray" Background="White">
+                <StackPanel Margin="0,5">
+                    <Button Content="Список предупреждений" Name="FineCatalogButton"
+                            Style="{DynamicResource AppBarButtonStyle}"
+                            Click="FineCatalogButton_Click"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>
